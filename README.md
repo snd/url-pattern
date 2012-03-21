@@ -13,6 +13,8 @@ npm install git://github.com/snd/url-pattern.git
 ### make a pattern from a string
 
 ```coffeescript
+Pattern = require 'url-pattern'
+
 pattern = new Pattern '/users/:id'
 ```
 

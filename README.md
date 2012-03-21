@@ -25,7 +25,7 @@ pattern.match '/projects/5' # => null
 pattern.match '/users/5' # => {id: 5}
 ```
 
-match returns either `null`, if there was no match, or an object with the named parameters.
+match returns either `null`, if there was no match, or the named parameters.
 
 ## Pattern examples
 

@@ -10,23 +10,41 @@ npm install git://github.com/snd/url-pattern.git
 
 ## Usage
 
-### make a pattern from a string
+### require it
 
 ```coffeescript
 Pattern = require 'url-pattern'
+```
 
+### make a pattern from a string
+
+```coffeescript
 pattern = new Pattern '/users/:id'
+```
+
+### make a pattern from a regex
+
+```coffeescript
+regexPattern = new Pattern /\/foo\/(.*)/
 ```
 
 ### match a pattern against a url
 
 ```coffeescript
 pattern.match '/projects/5' # => null
-pattern.match '/users/5' # => {id: "5"}
-pattern.match '/users/foo' # => {id: "foo"}
-```
+pattern.match '/users/5' # => {id: '5'}
+pattern.match '/users/foo' # => {id: 'foo'}
 
 match returns either `null`, if there was no match, or the named parameters.
+
+### match a regex pattern against a url
+
+```coffeescript
+regexPattern.match '/users/foo' # => null
+regexPattern.match '/foo/' # => ['']
+regexPattern.match '/foo/bar' # => ['bar']
+```
+if the pattern was created from a regex an array of the captured groups is returned on match.
 
 ## Pattern examples
 

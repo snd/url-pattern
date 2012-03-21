@@ -1,6 +1,6 @@
 # url-pattern
 
-match urls to patterns and extract named url segments
+match urls with patterns and extract named url segments
 
 ## Installation
 

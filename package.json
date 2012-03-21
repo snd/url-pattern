@@ -1,6 +1,6 @@
 {
     "name": "url-pattern",
-    "description": "match urls to patterns and extract named url segments",
+    "description": "match urls with patterns and extract named url segments",
     "author": "Maximilian Krüger <kruemaxi@googlemail.com> (http://github.com/snd)",
     "version": "0.1.0",
     "repository": {

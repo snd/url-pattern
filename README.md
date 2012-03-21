@@ -10,25 +10,25 @@ npm install git://github.com/snd/url-pattern.git
 
 ## Usage
 
-### require it
+### Require it
 
 ```coffeescript
 Pattern = require 'url-pattern'
 ```
 
-### make a pattern from a string
+### Make a pattern from a string
 
 ```coffeescript
 pattern = new Pattern '/users/:id'
 ```
 
-### make a pattern from a regex
+### Make a pattern from a regex
 
 ```coffeescript
 regexPattern = new Pattern /\/foo\/(.*)/
 ```
 
-### match a pattern against a url
+### Match a pattern against a url
 
 ```coffeescript
 pattern.match '/projects/5' # => null
@@ -38,7 +38,7 @@ pattern.match '/users/foo' # => {id: 'foo'}
 
 match returns either `null`, if there was no match, or the named parameters.
 
-### match a regex pattern against a url
+### Match a regex pattern against a url
 
 ```coffeescript
 regexPattern.match '/users/foo' # => null

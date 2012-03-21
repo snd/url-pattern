@@ -34,6 +34,7 @@ regexPattern = new Pattern /\/foo\/(.*)/
 pattern.match '/projects/5' # => null
 pattern.match '/users/5' # => {id: '5'}
 pattern.match '/users/foo' # => {id: 'foo'}
+```
 
 match returns either `null`, if there was no match, or the named parameters.
 
@@ -44,6 +45,7 @@ regexPattern.match '/users/foo' # => null
 regexPattern.match '/foo/' # => ['']
 regexPattern.match '/foo/bar' # => ['bar']
 ```
+
 if the pattern was created from a regex an array of the captured groups is returned on match.
 
 ## Pattern examples

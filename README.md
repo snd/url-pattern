@@ -22,7 +22,8 @@ pattern = new Pattern '/users/:id'
 
 ```coffeescript
 pattern.match '/projects/5' # => null
-pattern.match '/users/5' # => {id: 5}
+pattern.match '/users/5' # => {id: "5"}
+pattern.match '/users/foo' # => {id: "foo"}
 ```
 
 match returns either `null`, if there was no match, or the named parameters.

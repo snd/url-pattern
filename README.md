@@ -53,7 +53,7 @@ if the pattern was created from a regex an array of the captured groups is retur
 `/users` will match exactly `/users`
 
 `/projects/:projectId/supporters/:supporterId` will match any url where the first
-segment (url part delimited by `/`) is exactly `projects`, the second segment is not empty, the third segment is exactly
+segment is `projects`, the second segment is not empty, the third segment is
 `supporters` and the fourth segment is not empty. the second and fourth segments will be bound
 to `projectId` and `supporterId`
 

@@ -2,33 +2,33 @@
 
 match urls with patterns and extract named url segments
 
-## Installation
+### Install
 
 ```
-npm install git://github.com/snd/url-pattern.git
+npm install url-pattern
 ```
 
-## Usage
+### Use
 
-### Require it
+#### Require it
 
 ```coffeescript
 Pattern = require 'url-pattern'
 ```
 
-### Make a pattern from a string
+#### Make a pattern from a string
 
 ```coffeescript
 pattern = new Pattern '/users/:id'
 ```
 
-### Make a pattern from a regex
+#### Make a pattern from a regex
 
 ```coffeescript
 regexPattern = new Pattern /\/foo\/(.*)/
 ```
 
-### Match a pattern against a url
+#### Match a pattern against a url
 
 ```coffeescript
 pattern.match '/projects/5' # => null
@@ -36,9 +36,9 @@ pattern.match '/users/5' # => {id: '5'}
 pattern.match '/users/foo' # => {id: 'foo'}
 ```
 
-match returns either `null`, if there was no match, or the named parameters.
+match returns `null` if there was no match, otherwise the named parameters.
 
-### Match a regex pattern against a url
+#### Match a regex pattern against a url
 
 ```coffeescript
 regexPattern.match '/users/foo' # => null
@@ -48,7 +48,7 @@ regexPattern.match '/foo/bar' # => ['bar']
 
 if the pattern was created from a regex an array of the captured groups is returned on match.
 
-## Pattern examples
+### Possible patterns
 
 `/users` will match exactly the url `/users`
 
@@ -63,6 +63,4 @@ to `projectId` and `supporterId`
 
 `/users/*/projects` will match any url which starts with `/users/` and ends with `/projects`
 
-## License
-
-url-pattern is released under the MIT License (see LICENSE for details).
+### License: MIT

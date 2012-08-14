@@ -36,7 +36,7 @@ pattern.match '/users/5' # => {id: '5'}
 pattern.match '/users/foo' # => {id: 'foo'}
 ```
 
-match returns `null` if there was no match, otherwise the named parameters.
+match returns `null` if there was no match and the extracted parameters otherwise
 
 #### Match regex pattern against url
 

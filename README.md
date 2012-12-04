@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/snd/url-pattern.png)](https://travis-ci.org/snd/url-pattern)
 
-url-pattern matchies urls with patterns and extracts named url segments
+url-pattern matches urls with patterns and extracts named url segments
 
 ### install
 

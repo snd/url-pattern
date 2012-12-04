@@ -1,14 +1,30 @@
 {
     "name": "url-pattern",
-    "description": "url-pattern matches urls with patterns and extracts named url segments",
-    "author": "Maximilian Krüger <kruemaxi@googlemail.com> (http://github.com/snd)",
     "version": "0.1.0",
+    "description": "url-pattern matches urls with patterns and extracts named url segments",
+    "homepage": "http://github.com/snd/url-pattern",
+    "author": {
+        "name": "Maximilian Krüger",
+        "email": "kruemaxi@gmail.com",
+        "url": "http://github.com/snd"
+    },
+    "bugs": {
+        "url": "http://github.com/snd/url-pattern/issues",
+        "email": "kruemaxi@gmail.com"
+    },
     "repository": {
         "type": "git",
         "url": "git://github.com/snd/url-pattern.git"
     },
+    "licenses": {
+        "type": "MIT",
+        "url": "git://github.com/snd/url-pattern/LICENSE"
+    },
+    "engines": {
+        "node": ">=0.8.5"
+    },
     "dependencies": {
-        "underscore": "1.4.0"
+        "underscore": "1.4.2"
     },
     "devDependencies": {
         "nodeunit": "0.7.4"

@@ -50,7 +50,7 @@ regexPattern.match '/foo/bar' # => ['bar']
 
 if the pattern was created from a regex an array of the captured groups is returned on match.
 
-### possible patterns
+### patterns
 
 `/users` will match exactly `/users`
 

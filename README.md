@@ -1,34 +1,36 @@
 # url-pattern
 
-match urls with patterns and extract named url segments
+[![Build Status](https://travis-ci.org/snd/url-pattern.png)](https://travis-ci.org/snd/url-pattern)
 
-### Install
+url-pattern matchies urls with patterns and extracts named url segments
+
+### install
 
 ```
 npm install url-pattern
 ```
 
-### Use
+### use
 
-#### Require
+#### require
 
 ```coffeescript
 Pattern = require 'url-pattern'
 ```
 
-#### Make from string
+#### make pattern from string
 
 ```coffeescript
 pattern = new Pattern '/users/:id'
 ```
 
-#### Make from regex
+#### make pattern from regex
 
 ```coffeescript
 regexPattern = new Pattern /\/foo\/(.*)/
 ```
 
-#### Match against url
+#### match pattern against url
 
 ```coffeescript
 pattern.match '/projects/5' # => null
@@ -38,7 +40,7 @@ pattern.match '/users/foo' # => {id: 'foo'}
 
 match returns `null` if there was no match and the extracted parameters otherwise
 
-#### Match regex pattern against url
+#### match regex pattern against url
 
 ```coffeescript
 regexPattern.match '/users/foo' # => null
@@ -48,7 +50,7 @@ regexPattern.match '/foo/bar' # => ['bar']
 
 if the pattern was created from a regex an array of the captured groups is returned on match.
 
-### Possible patterns
+### possible patterns
 
 `/users` will match exactly `/users`
 
@@ -63,4 +65,4 @@ to `projectId` and `supporterId`
 
 `/users/*/projects` will match any url which starts with `/users/` and ends with `/projects`
 
-### License: MIT
+### license: MIT

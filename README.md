@@ -15,19 +15,19 @@ npm install url-pattern
 ##### require
 
 ```coffeescript
-Pattern = require 'url-pattern'
+newPattern = require 'url-pattern'
 ```
 
 ##### make pattern from string
 
 ```coffeescript
-pattern = new Pattern '/users/:id'
+pattern = newPattern '/users/:id'
 ```
 
 ##### make pattern from regex
 
 ```coffeescript
-regexPattern = new Pattern /\/foo\/(.*)/
+regexPattern = newPattern /\/foo\/(.*)/
 ```
 
 ##### match pattern against url
@@ -50,7 +50,7 @@ regexPattern.match '/foo/bar' # => ['bar']
 
 if the pattern was created from a regex an array of the captured groups is returned on match.
 
-### patterns
+### pattern examples
 
 `/users` will match exactly `/users`
 

@@ -1,24 +1,23 @@
-_ = require 'underscore'
+common = require './common'
 
-util = require './util'
-
-module.exports = class
-
-    constructor: (arg) ->
-        if not (_.isRegExp(arg) or _.isString(arg))
-            throw new TypeError 'argument must be either a regex or a string'
-
-        @isRegex = _.isRegExp arg
-        @regex = util.toRegex arg
-        @names = util.getNames arg if not @isRegex
-
+pattern =
     match: (url) ->
         match = @regex.exec url
-        return null if not match?
+        return null unless match?
 
-        captured = match[1..]
+        captured = match.slice(1)
         return captured if @isRegex
 
         bound = {}
-        _.each _.zip(captured, @names), ([value, name]) -> bound[name] = value
+        bound[@names[i]] = captured[i] for i in [0...captured.length]
         bound
+
+module.exports = (arg) ->
+    isRegex = arg instanceof RegExp
+    unless ('string' is typeof arg) or isRegex
+        throw new TypeError 'argument must be a regex or a string'
+    p = Object.create pattern
+    p.isRegex = isRegex
+    p.regex = if isRegex then arg else new RegExp common.toRegexString arg
+    p.names = common.getNames arg unless isRegex
+    p

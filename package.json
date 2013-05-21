@@ -28,5 +28,11 @@
     },
     "devDependencies": {
         "nodeunit": "0.7.4"
+    },
+    "main": "lib/url-pattern",
+    "scripts": {
+        "prepublish": "coffee --bare --compile --lint --output lib src/*.coffee",
+        "postpublish": "rm -rf lib",
+        "test": "nodeunit test.coffee"
     }
 }

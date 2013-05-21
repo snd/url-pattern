@@ -1,5 +1,5 @@
-{getNames, toRegexString} = require './common'
-newPattern = require './index'
+{getNames, toRegexString} = require './src/common'
+newPattern = require './src/url-pattern'
 
 module.exports =
 

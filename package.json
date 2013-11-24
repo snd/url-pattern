@@ -1,6 +1,6 @@
 {
     "name": "url-pattern",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "description": "url-pattern matches urls with patterns and extracts named url segments",
     "homepage": "http://github.com/snd/url-pattern",
     "author": {

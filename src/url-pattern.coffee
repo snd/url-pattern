@@ -1,6 +1,6 @@
 common = require './common'
 
-pattern =
+patternPrototype =
     match: (url) ->
         match = @regex.exec url
         return null unless match?
@@ -16,7 +16,7 @@ module.exports = (arg) ->
     isRegex = arg instanceof RegExp
     unless ('string' is typeof arg) or isRegex
         throw new TypeError 'argument must be a regex or a string'
-    p = Object.create pattern
+    p = Object.create patternPrototype
     p.isRegex = isRegex
     p.regex = if isRegex then arg else new RegExp common.toRegexString arg
     p.names = common.getNames arg unless isRegex

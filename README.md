@@ -10,42 +10,56 @@ url-pattern matches urls with patterns and extracts named url segments
 npm install url-pattern
 ```
 
+**or**
+
+put this line in the dependencies section of your `package.json`:
+
+```
+"url-pattern": "0.3.0"
+```
+
+then run:
+
+```
+npm install
+```
+
 ### use
 
 ##### require
 
-```coffeescript
-newPattern = require 'url-pattern'
+```javascript
+var newUrlPattern = require('url-pattern');
 ```
 
 ##### make pattern from string
 
-```coffeescript
-pattern = newPattern '/users/:id'
+```javascript
+var pattern = newUrlPattern('/users/:id');
 ```
 
 ##### make pattern from regex
 
-```coffeescript
-regexPattern = newPattern /\/foo\/(.*)/
+```javascript
+regexPattern = newUrlPattern(/\/foo\/(.*)/);
 ```
 
 ##### match pattern against url
 
-```coffeescript
-pattern.match '/projects/5' # => null
-pattern.match '/users/5' # => {id: '5'}
-pattern.match '/users/foo' # => {id: 'foo'}
+```javascript
+pattern.match('/projects/5'); // => null
+pattern.match('/users/5'); // => {id: '5'}
+pattern.match('/users/foo'); // => {id: 'foo'}
 ```
 
 match returns the extracted parameters or `null` if there was no match
 
 ##### match regex pattern against url
 
-```coffeescript
-regexPattern.match '/users/foo' # => null
-regexPattern.match '/foo/' # => ['']
-regexPattern.match '/foo/bar' # => ['bar']
+```javascript
+regexPattern.match('/users/foo'); // => null
+regexPattern.match('/foo/'); // => ['']
+regexPattern.match('/foo/bar'); // => ['bar']
 ```
 
 if the pattern was created from a regex an array of the captured groups is returned on match.

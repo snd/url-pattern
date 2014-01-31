@@ -1,7 +1,8 @@
 {
     "name": "url-pattern",
-    "version": "0.2.2",
+    "version": "0.3.0",
     "description": "url-pattern matches urls with patterns and extracts named url segments",
+    "keywords": ["url", "pattern", "matching", "routing", "route", "regex", "match"],
     "homepage": "http://github.com/snd/url-pattern",
     "author": {
         "name": "Maximilian Krüger",
@@ -26,13 +27,15 @@
     "dependencies": {
     },
     "devDependencies": {
-        "nodeunit": "0.7.4",
-        "coffee-script": "1.4.0"
+        "nodeunit": "0.8.4",
+        "coffee-script": "1.7.1"
     },
-    "main": "lib/url-pattern",
+    "main": "src/url-pattern",
     "scripts": {
-        "prepublish": "coffee --bare --compile --lint --output lib src/*.coffee",
-        "postpublish": "rm -rf lib",
-        "test": "nodeunit test.coffee"
+        "prepublish": "coffee --bare --compile --output src src/*.coffee",
+        "postpublish": "rm src/*.js",
+        "pretest": "coffee --bare --compile --output src src/*.coffee && coffee --bare --compile --output test test/*.coffee",
+        "posttest": "rm src/*.js && rm test/*.js",
+        "test": "node_modules/nodeunit/bin/nodeunit test/*.js"
     }
 }

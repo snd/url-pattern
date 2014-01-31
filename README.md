@@ -15,7 +15,7 @@ npm install url-pattern
 put this line in the dependencies section of your `package.json`:
 
 ```
-"url-pattern": "0.3.0"
+"url-pattern": "0.3.1"
 ```
 
 then run:

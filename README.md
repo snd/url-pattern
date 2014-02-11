@@ -4,6 +4,8 @@
 
 url-pattern matches urls with patterns and extracts named url segments
 
+if you are looking for simple composable routing with middleware that builds on top of url-pattern - [check out passage](https://github.com/snd/passage)
+
 ### install
 
 ```
@@ -41,7 +43,7 @@ var pattern = newUrlPattern('/users/:id');
 ##### make pattern from regex
 
 ```javascript
-regexPattern = newUrlPattern(/\/foo\/(.*)/);
+var regexPattern = newUrlPattern(/\/foo\/(.*)/);
 ```
 
 ##### match pattern against url

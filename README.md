@@ -4,7 +4,7 @@
 
 url-pattern matches urls with patterns and extracts named url segments
 
-if you are looking for simple composable routing with middleware that builds on top of url-pattern - [check out passage](https://github.com/snd/passage)
+if you are looking for simple composable routing that builds on top of url-pattern - [check out passage](https://github.com/snd/passage)
 
 ### install
 

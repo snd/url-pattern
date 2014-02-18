@@ -30,6 +30,16 @@ module.exports =
             test.deepEqual ['foo', 'bar', '_'], getNames '/foo/:foo/bar/:bar/baz/*'
             test.done()
 
+        'name _ is disallowed': (test) ->
+            test.throws ->
+              getNames '/foo/:_'
+            test.done()
+
+        'duplicate pattern names are disallowed': (test) ->
+            test.throws ->
+              getNames '/:foo/:foo'
+            test.done()
+
     'toRegexString':
 
         '^ and $ are added': (test) ->
@@ -91,17 +101,23 @@ module.exports =
         'prefix wildcard works': (test) ->
             pattern = newPattern '*/user/:userId'
             test.deepEqual pattern.match('/school/10/user/10'),
-              {_: '/school/10', userId: '10'}
+              {_: ['/school/10'], userId: '10'}
             test.done()
 
         'suffix wildcard works': (test) ->
             pattern = newPattern '/admin*'
             test.deepEqual pattern.match('/admin/school/10/user/10'),
-              {_: '/school/10/user/10'}
+              {_: ['/school/10/user/10']}
             test.done()
 
         'infix wildcard works': (test) ->
             pattern = newPattern '/admin/*/user/:userId'
             test.deepEqual pattern.match('/admin/school/10/user/10'),
-              {_: 'school/10', userId: '10'}
+              {_: ['school/10'], userId: '10'}
+            test.done()
+
+        'multiple wildcards works': (test) ->
+            pattern = newPattern '/admin/*/user/*/tail'
+            test.deepEqual pattern.match('/admin/school/10/user/10/12/tail'),
+              {_: ['school/10', '10/12']}
             test.done()

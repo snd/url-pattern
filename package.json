@@ -32,7 +32,7 @@
     "dependencies": {
     },
     "devDependencies": {
-        "nodeunit": "0.8.4",
+        "nodeunit": "0.8.5",
         "coffee-script": "1.7.1"
     },
     "main": "src/url-pattern",

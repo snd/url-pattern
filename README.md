@@ -76,7 +76,7 @@ wildcard matches are collected in the `_` property:
 
 ```javascript
 wildcardPattern.match('/api/v1/users/10/followers/20');
-// => {id: '10', _: ['/api/v1', 'followers/20'}
+// => {id: '10', _: ['/api/v1', 'followers/20']}
 ```
 
 ### pattern examples

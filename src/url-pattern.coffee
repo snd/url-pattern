@@ -11,9 +11,9 @@ patternPrototype =
         bound = {}
         for value, i in captured
           name = this.names[i]
-          if name == '_'
-            bound[name] = bound[name] || []
-            bound[name].push value
+          if name is '_'
+            bound._ ?= []
+            bound._.push value
           else
             bound[name] = value
 

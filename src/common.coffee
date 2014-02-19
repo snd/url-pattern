@@ -10,10 +10,10 @@ module.exports = common =
         while results?
             name = results[1].slice(1)
 
-            if name == '_'
+            if name is '_'
               throw new TypeError(":_ can't be used as a pattern name in pattern #{arg}")
 
-            if names.indexOf(name) > -1
+            if name in names
               throw new TypeError("duplicate pattern name :#{name} in pattern #{arg}")
 
             names.push name || '_'

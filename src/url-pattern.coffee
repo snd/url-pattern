@@ -9,7 +9,14 @@ patternPrototype =
         return captured if @isRegex
 
         bound = {}
-        bound[@names[i]] = captured[i] for i in [0...captured.length]
+        for value, i in captured
+          name = @names[i]
+          if name == '_'
+            bound[name] = bound[name] || []
+            bound[name].push value
+          else
+            bound[name] = value
+
         bound
 
 module.exports = (arg) ->

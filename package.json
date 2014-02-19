@@ -9,6 +9,11 @@
         "email": "kruemaxi@gmail.com",
         "url": "http://github.com/snd"
     },
+    "contributors": [{
+        "name": "Andrey Popp",
+        "email": "8mayday@gmail.com",
+        "url": "https://github.com/andreypopp"
+    }],
     "bugs": {
         "url": "http://github.com/snd/url-pattern/issues",
         "email": "kruemaxi@gmail.com"

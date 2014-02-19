@@ -2,15 +2,15 @@ common = require './common'
 
 patternPrototype =
     match: (url) ->
-        match = @regex.exec url
+        match = this.regex.exec url
         return null unless match?
 
         captured = match.slice(1)
-        return captured if @isRegex
+        return captured if this.isRegex
 
         bound = {}
         for value, i in captured
-          name = @names[i]
+          name = this.names[i]
           if name == '_'
             bound[name] = bound[name] || []
             bound[name].push value

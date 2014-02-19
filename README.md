@@ -4,7 +4,7 @@
 
 url-pattern matches urls with patterns and extracts named url segments
 
-if you are looking for simple composable routing that builds on top of url-pattern - [check out passage](https://github.com/snd/passage)
+if you are looking for simple composable routing that builds on top of url-pattern [check out passage](https://github.com/snd/passage)
 
 ### install
 
@@ -45,8 +45,8 @@ var pattern = newUrlPattern('/users/:id');
 match returns the extracted parameters or `null` if there was no match:
 
 ```javascript
-pattern.match('/projects/5'); // => null
 pattern.match('/users/5'); // => {id: '5'}
+pattern.match('/projects/5'); // => null
 ```
 
 ##### make pattern from regex
@@ -60,9 +60,8 @@ var regexPattern = newUrlPattern(/\/test\/(.*)/);
 if the pattern was created from a regex an array of the captured groups is returned on match:
 
 ```javascript
-regexPattern.match('/users/test'); // => null
-regexPattern.match('/test/'); // => ['']
 regexPattern.match('/test/users'); // => ['users']
+regexPattern.match('/users/test'); // => null
 ```
 
 ##### make wildcard pattern from string
@@ -76,7 +75,8 @@ var wildcardPattern = newUrlPattern('*/users/:id/*');
 wildcard matches are collected in the `_` property:
 
 ```javascript
-pattern.match('/api/v1/users/10/followers/20'); // => {id: '10', _: ['/api/v1', 'followers/20'}
+wildcardPattern.match('/api/v1/users/10/followers/20');
+// => {id: '10', _: ['/api/v1', 'followers/20'}
 ```
 
 ### pattern examples

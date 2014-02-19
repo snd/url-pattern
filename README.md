@@ -40,31 +40,44 @@ var newUrlPattern = require('url-pattern');
 var pattern = newUrlPattern('/users/:id');
 ```
 
-##### make pattern from regex
-
-```javascript
-var regexPattern = newUrlPattern(/\/foo\/(.*)/);
-```
-
 ##### match pattern against url
+
+match returns the extracted parameters or `null` if there was no match:
 
 ```javascript
 pattern.match('/projects/5'); // => null
 pattern.match('/users/5'); // => {id: '5'}
-pattern.match('/users/foo'); // => {id: 'foo'}
 ```
 
-match returns the extracted parameters or `null` if there was no match
+##### make pattern from regex
+
+```javascript
+var regexPattern = newUrlPattern(/\/test\/(.*)/);
+```
 
 ##### match regex pattern against url
 
+if the pattern was created from a regex an array of the captured groups is returned on match:
+
 ```javascript
-regexPattern.match('/users/foo'); // => null
-regexPattern.match('/foo/'); // => ['']
-regexPattern.match('/foo/bar'); // => ['bar']
+regexPattern.match('/users/test'); // => null
+regexPattern.match('/test/'); // => ['']
+regexPattern.match('/test/users'); // => ['users']
 ```
 
-if the pattern was created from a regex an array of the captured groups is returned on match.
+##### make wildcard pattern from string
+
+```javascript
+var wildcardPattern = newUrlPattern('*/users/:id/*');
+```
+
+##### match wildcard pattern against url
+
+wildcard matches are collected in the `_` property:
+
+```javascript
+pattern.match('/api/v1/users/10/followers/20'); // => {id: '10', _: ['/api/v1', 'followers/20'}
+```
 
 ### pattern examples
 

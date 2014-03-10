@@ -1,8 +1,8 @@
 module.exports =
 
-  getNames: (arg) ->
+  getNames: (arg, separator = '/') ->
     return [] if arg instanceof RegExp
-    regex = /((:?:[^\/]+)|(?:[\*]))/g
+    regex = new RegExp '((:?:[^\/]+)|(?:[\*]))', 'g'
 
     names = []
     results = regex.exec arg

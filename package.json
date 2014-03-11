@@ -1,8 +1,8 @@
 {
   "name": "url-pattern",
-  "version": "0.4.0",
-  "description": "url-pattern matches urls with patterns and extracts named url segments",
-  "keywords": ["url", "pattern", "matching", "routing", "route", "regex", "match"],
+  "version": "0.5.0",
+  "description": "url-pattern is easy pattern matching and segment extraction for urls, domains, filepaths and any string composed of segments joined by a seperator character",
+  "keywords": ["url", "pattern", "matching", "routing", "route", "regex", "match", "segment", "path", "domain", "separator"],
   "homepage": "http://github.com/snd/url-pattern",
   "author": {
     "name": "Maximilian Krüger",

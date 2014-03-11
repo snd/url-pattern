@@ -9,6 +9,7 @@ by a seperator character
 [check out **passage** if you are looking for simple composable routing that builds on top of url-pattern](https://github.com/snd/passage)
 
 - [install](#install)
+- [require](#require)
 - [match urls or filepaths](#match-urls-or-filepaths)
 - [match domains](#match-domains)
 - [license](#license-mit)

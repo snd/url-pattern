@@ -4,7 +4,7 @@
 
 url-pattern is easy pattern matching and segment extraction for
 urls, domains, filepaths and any string composed of segments joined
-by a seperator character
+by a separator character
 
 [check out **passage** if you are looking for simple composable routing that builds on top of url-pattern](https://github.com/snd/passage)
 

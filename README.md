@@ -12,7 +12,7 @@ that builds on top of url-pattern - check out passage](https://github.com/snd/pa
 - [install](#install)
 - [match urls or filepaths](#match-urls-or-filepaths)
 - [match domains](#match-domains)
-- [license](#match-domains)
+- [license](#license-mit)
 
 ### install
 

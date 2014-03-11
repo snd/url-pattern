@@ -6,8 +6,7 @@ url-pattern is easy pattern matching and segment extraction for
 urls, domains, filepaths and any string composed of segments joined
 by a seperator character
 
-[if you are looking for simple composable routing (url matching and dispatch)
-that builds on top of url-pattern - check out passage](https://github.com/snd/passage)
+[check out **passage** if you are looking for simple composable routing that builds on top of url-pattern](https://github.com/snd/passage)
 
 - [install](#install)
 - [match urls or filepaths](#match-urls-or-filepaths)

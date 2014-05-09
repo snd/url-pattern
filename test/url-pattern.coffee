@@ -80,6 +80,40 @@ module.exports =
         id: '10'
       test.done()
 
+    'wildcard with ambiguous trail': (test) ->
+      pattern = newPattern '/*/admin(/:path)'
+      test.deepEqual pattern.match('/admin/admin/admin'),
+        _: ['admin']
+        path: 'admin'
+      test.done()
+
+    'root optional params': (test) ->
+      pattern = newPattern '(/)'
+      test.deepEqual pattern.match(''), {}
+      test.deepEqual pattern.match('/'), {}
+      test.done()
+
+    'path optional params': (test) ->
+      pattern = newPattern '/admin(/foo)/bar'
+      test.deepEqual pattern.match('/admin/foo/bar'), {}
+      test.deepEqual pattern.match('/admin/bar'), {}
+      test.done()
+
+    'optional params with named param': (test) ->
+      pattern = newPattern '/admin(/:foo)/bar'
+      test.deepEqual pattern.match('/admin/baz/bar'),
+        foo: 'baz'
+      test.deepEqual pattern.match('/admin/bar'), {}
+      test.done()
+
+    'optional params with splat': (test) ->
+      pattern = newPattern '/admin/(*/)foo'
+      test.deepEqual pattern.match('/admin/foo'), {}
+      test.deepEqual pattern.match('/admin/baz/bar/biff/foo'), {
+        _: ['baz/bar/biff']
+      }
+      test.done()
+
   'Pattern.match with custom separators':
 
     'trivial route is matched': (test) ->
@@ -213,8 +247,8 @@ module.exports =
       test.done()
 
     'wildcards are replaced': (test) ->
-      test.equals '^(.*)foo$', toRegexString '*foo'
-      test.equals '^(.*)foo(.*)$', toRegexString '*foo*'
+      test.equals '^(.*?)foo$', toRegexString '*foo'
+      test.equals '^(.*?)foo(.*?)$', toRegexString '*foo*'
       test.done()
 
     'dot as custom separator': (test) ->
@@ -223,6 +257,6 @@ module.exports =
       test.done()
 
     'dollar as custom separator': (test) ->
-      test.equals '^\\$admin\\$(.*)\\$user\\$([^\\$]+)$',
+      test.equals '^\\$admin\\$(.*?)\\$user\\$([^\\$]+)$',
         toRegexString '$admin$*$user$:userId', '$'
       test.done()

@@ -41,9 +41,7 @@
   "main": "src/url-pattern",
   "scripts": {
     "prepublish": "coffee --bare --compile --output src src/*.coffee",
-    "postpublish": "rm src/*.js",
     "pretest": "coffee --bare --compile --output src src/*.coffee && coffee --bare --compile --output test test/*.coffee",
-    "posttest": "rm src/*.js && rm test/*.js",
     "test": "node_modules/nodeunit/bin/nodeunit test/*.js"
   }
 }

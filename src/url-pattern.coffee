@@ -11,6 +11,7 @@ module.exports =
       bound = {}
       for value, i in captured
         name = this.names[i]
+        continue if value is undefined
         if name is '_'
           bound._ ?= []
           bound._.push value
@@ -44,7 +45,7 @@ module.exports =
   getNames: (arg, separator = '/') ->
     return [] if arg instanceof RegExp
     escapedSeparator = module.exports.escapeForRegex separator
-    regex = new RegExp "((:?:[^#{escapedSeparator}]+)|(?:[\*]))", 'g'
+    regex = new RegExp "((:?:[^#{escapedSeparator}\(\)]+)|(?:[\*]))", 'g'
 
     names = []
     results = regex.exec arg
@@ -72,6 +73,13 @@ module.exports =
     # regex command chars (., ^, $, ...) can be used as separators
     stringWithEscapedSeparators = module.exports.escapeSeparators string, separator
 
+    stringWithEscapedSeparators = stringWithEscapedSeparators
+      # replace optional param
+      .replace(/\((.*?)\)/g, '(?:$1)?')
+      # replace wildcard patterns
+      .replace(/\*/g, '(.*?)')
+
+
     # replace named segment pattern strings (:pattern) with
     # regexes that capture and match everything until the \\ char (in case the
     # separator was escaped) or the separator char (in case the separator
@@ -81,5 +89,4 @@ module.exports =
       stringWithEscapedSeparators = stringWithEscapedSeparators
         .replace(':' + name,"([^\\#{separator}]+)")
 
-    # finally replace wildcard patterns
-    '^'  + stringWithEscapedSeparators.replace(/\*/g, '(.*)') + '$'
+    return "^#{stringWithEscapedSeparators}$"

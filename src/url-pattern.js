@@ -17,6 +17,9 @@ module.exports = {
       for (i = _i = 0, _len = captured.length; _i < _len; i = ++_i) {
         value = captured[i];
         name = this.names[i];
+        if (value === void 0) {
+          continue;
+        }
         if (name === '_') {
           if (bound._ == null) {
             bound._ = [];
@@ -63,7 +66,7 @@ module.exports = {
       return [];
     }
     escapedSeparator = module.exports.escapeForRegex(separator);
-    regex = new RegExp("((:?:[^" + escapedSeparator + "]+)|(?:[\*]))", 'g');
+    regex = new RegExp("((:?:[^" + escapedSeparator + "\(\)]+)|(?:[\*]))", 'g');
     names = [];
     results = regex.exec(arg);
     while (results != null) {
@@ -94,10 +97,11 @@ module.exports = {
       separator = '/';
     }
     stringWithEscapedSeparators = module.exports.escapeSeparators(string, separator);
+    stringWithEscapedSeparators = stringWithEscapedSeparators.replace(/\((.*?)\)/g, '(?:$1)?').replace(/\*/g, '(.*?)');
     escapedSeparator = module.exports.escapeForRegex(separator);
     module.exports.getNames(string, separator).forEach(function(name) {
       return stringWithEscapedSeparators = stringWithEscapedSeparators.replace(':' + name, "([^\\" + separator + "]+)");
     });
-    return '^' + stringWithEscapedSeparators.replace(/\*/g, '(.*)') + '$';
+    return "^" + stringWithEscapedSeparators + "$";
   }
 };

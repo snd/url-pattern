@@ -90,6 +90,27 @@ wildcardPattern.match('/api/v1/users/10/followers/20');
 // => {id: '10', _: ['/api/v1', 'followers/20']}
 ```
 
+##### optional params
+
+```javascript
+var patternWithOptional = urlPattern.newPattern('(/)users(/:foo)/bar(/*)');
+```
+
+##### match optional pattern against url
+
+optional matches are stored in the corresponding property, if they exist.
+
+```javascript
+patternWithOptional.match('users/bar');
+// => {}
+patternWithOptional.match('/users/bar');
+// => {}
+patternWithOptional.match('/users/biff/bar');
+// => {foo: 'biff'}
+patternWithOptional.match('/users/biff/bar/beep/boop');
+// => {foo: 'biff', _: ['beep/boop']}
+```
+
 ### match domains
 
 ##### make pattern from string

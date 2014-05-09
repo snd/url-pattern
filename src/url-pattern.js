@@ -17,7 +17,7 @@ module.exports = {
       for (i = _i = 0, _len = captured.length; _i < _len; i = ++_i) {
         value = captured[i];
         name = this.names[i];
-        if (value === void 0) {
+        if (value == null) {
           continue;
         }
         if (name === '_') {

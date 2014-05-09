@@ -11,7 +11,8 @@ module.exports =
       bound = {}
       for value, i in captured
         name = this.names[i]
-        continue if value is undefined
+        unless value?
+          continue
         if name is '_'
           bound._ ?= []
           bound._.push value

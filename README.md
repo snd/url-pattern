@@ -90,10 +90,10 @@ wildcardPattern.match('/api/v1/users/10/followers/20');
 // => {id: '10', _: ['/api/v1', 'followers/20']}
 ```
 
-##### optional params
+##### make optional pattern from string
 
 ```javascript
-var patternWithOptional = urlPattern.newPattern('(/)users(/:foo)/bar(/*)');
+var optionalPattern = urlPattern.newPattern('(/)users(/:foo)/bar(/*)');
 ```
 
 ##### match optional pattern against url
@@ -101,13 +101,13 @@ var patternWithOptional = urlPattern.newPattern('(/)users(/:foo)/bar(/*)');
 optional matches are stored in the corresponding property, if they exist.
 
 ```javascript
-patternWithOptional.match('users/bar');
+optionalPattern.match('users/bar');
 // => {}
-patternWithOptional.match('/users/bar');
+optionalPattern.match('/users/bar');
 // => {}
-patternWithOptional.match('/users/biff/bar');
+optionalPattern.match('/users/biff/bar');
 // => {foo: 'biff'}
-patternWithOptional.match('/users/biff/bar/beep/boop');
+optionalPattern.match('/users/biff/bar/beep/boop');
 // => {foo: 'biff', _: ['beep/boop']}
 ```
 

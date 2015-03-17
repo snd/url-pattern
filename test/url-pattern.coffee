@@ -260,3 +260,14 @@ module.exports =
       test.equals '^\\$admin\\$(.*?)\\$user\\$([^\\$]+)$',
         toRegexString '$admin$*$user$:userId', '$'
       test.done()
+
+  'pattern can have a constant prefix': (test) ->
+    pattern = newPattern '/vvv:version/*'
+    test.ok null is pattern.match('/vvv/resource')
+    test.deepEqual pattern.match('/vvv1/resource'),
+      _: ['resource']
+      version: '1'
+    test.deepEqual pattern.match('/vvv1.1/resource'),
+      _: ['resource']
+      version: '1.1'
+    test.done()

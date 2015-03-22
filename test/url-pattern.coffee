@@ -265,3 +265,11 @@ module.exports =
       _: ['resource']
       version: '1.1'
     test.done()
+
+  'self awareness': (test) ->
+      pattern = new Pattern '/user/:userId/task/:taskId'
+      copy = new Pattern pattern
+      test.deepEqual copy.match('/user/10/task/52'),
+        userId: '10'
+        taskId: '52'
+      test.done()

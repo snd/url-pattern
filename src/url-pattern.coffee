@@ -1,51 +1,63 @@
-module.exports =
+((root, factory) ->
+  # AMD
+  if ('function' is typeof define) and define.amd?
+    define([], factory)
+  # CommonJS
+  else if exports?
+    module.exports = factory()
+  # no module system
+  else
+    root.UrlPattern = factory()
+)(this, ->
+  UrlPattern = (arg, separator) ->
+    # self awareness
+    if arg instanceof UrlPattern
+      this.isRegex = arg.isRegex
+      this.regex = arg.regex
+      this.names = arg.names
+      return this
 
-  PatternPrototype:
-    match: (url) ->
-      match = this.regex.exec url
-      return null unless match?
-
-      captured = match.slice(1)
-      return captured if this.isRegex
-
-      bound = {}
-      for value, i in captured
-        name = this.names[i]
-        unless value?
-          continue
-        if name is '_'
-          bound._ ?= []
-          bound._.push value
-        else
-          bound[name] = value
-
-      return bound
-
-  newPattern: (arg, separator = '/') ->
-    isRegex = arg instanceof RegExp
-    unless ('string' is typeof arg) or isRegex
+    this.isRegex = arg instanceof RegExp
+    unless ('string' is typeof arg) or this.isRegex
       throw new TypeError 'argument must be a regex or a string'
     [':', '*'].forEach (forbidden) ->
       if separator is forbidden
         throw new Error "separator can't be #{forbidden}"
-    pattern = Object.create module.exports.PatternPrototype
-    pattern.isRegex = isRegex
-    pattern.regex =
-      if isRegex
-        arg
+    if this.isRegex
+      this.regex = arg
+    else
+      this.regex = new RegExp this.toRegexString arg, separator
+      this.names = this.getNames arg, separator
+    return this
+
+  UrlPattern.prototype.match = (url) ->
+    match = this.regex.exec url
+    return null unless match?
+
+    captured = match.slice(1)
+    if this.isRegex
+      return captured
+
+    bound = {}
+    for value, i in captured
+      name = this.names[i]
+      unless value?
+        continue
+      if name is '_'
+        bound._ ?= []
+        bound._.push value
       else
-        regexString = module.exports.toRegexString arg, separator
-        new RegExp regexString
-    pattern.names = module.exports.getNames arg, separator unless isRegex
-    return pattern
+        bound[name] = value
+
+    return bound
 
   # source: http://stackoverflow.com/a/3561711
-  escapeForRegex: (string) ->
+  UrlPattern.prototype.escapeForRegex = (string) ->
     string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
 
-  getNames: (arg, separator = '/') ->
+  UrlPattern.prototype.getNames = (arg, separator = '/') ->
     return [] if arg instanceof RegExp
-    escapedSeparator = module.exports.escapeForRegex separator
+    escapedSeparator = this.escapeForRegex separator
     regex = new RegExp "((:?:[^#{escapedSeparator}\(\)]+)|(?:[\*]))", 'g'
 
     names = []
@@ -64,15 +76,15 @@ module.exports =
       results = regex.exec arg
     names
 
-  escapeSeparators: (string, separator = '/') ->
-    escapedSeparator = module.exports.escapeForRegex separator
+  UrlPattern.prototype.escapeSeparators = (string, separator = '/') ->
+    escapedSeparator = UrlPattern.prototype.escapeForRegex separator
     regex = new RegExp escapedSeparator, 'g'
     string.replace regex, escapedSeparator
 
-  toRegexString: (string, separator = '/') ->
+  UrlPattern.prototype.toRegexString = (string, separator = '/') ->
     # escape the seperators in the pattern string such that
     # regex command chars (., ^, $, ...) can be used as separators
-    stringWithEscapedSeparators = module.exports.escapeSeparators string, separator
+    stringWithEscapedSeparators = UrlPattern.prototype.escapeSeparators string, separator
 
     stringWithEscapedSeparators = stringWithEscapedSeparators
       # replace optional param
@@ -85,9 +97,12 @@ module.exports =
     # regexes that capture and match everything until the \\ char (in case the
     # separator was escaped) or the separator char (in case the separator
     # didn't need escaping)
-    escapedSeparator = module.exports.escapeForRegex separator
-    module.exports.getNames(string, separator).forEach (name) ->
+    escapedSeparator = UrlPattern.prototype.escapeForRegex separator
+    UrlPattern.prototype.getNames(string, separator).forEach (name) ->
       stringWithEscapedSeparators = stringWithEscapedSeparators
         .replace(':' + name,"([^\\#{separator}]+)")
 
     return "^#{stringWithEscapedSeparators}$"
+
+  return UrlPattern
+)

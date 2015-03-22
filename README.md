@@ -1,55 +1,38 @@
 # url-pattern
 
-[![Build Status](https://travis-ci.org/snd/url-pattern.png)](https://travis-ci.org/snd/url-pattern)
+[![NPM Package](https://img.shields.io/npm/v/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
+[![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
+[![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern)
 
-url-pattern is easy pattern matching and segment extraction for
-urls, domains, filepaths and any string composed of segments joined
-by a separator character
+> url-pattern is easy pattern matching and segment extraction for
+> urls, domains, filepaths and any string composed of segments joined
+> by a separator character
 
 [check out **passage** if you are looking for simple composable routing that builds on top of url-pattern](https://github.com/snd/passage)
-
-- [install](#install)
-- [require](#require)
-- [match urls or filepaths](#match-urls-or-filepaths)
-- [match domains](#match-domains)
-- [license](#license-mit)
-
-### install
 
 ```
 npm install url-pattern
 ```
 
-**or**
-
-put this line in the dependencies section of your `package.json`:
-
-```
-"url-pattern": "0.6.0"
-```
-
-then run:
-
-```
-npm install
-```
-
-### require
+require with commonjs:
 
 ```javascript
-var urlPattern = require('url-pattern');
+var Pattern = require('url-pattern');
 ```
+
+[lib/url-pattern.js](lib/url-pattern.js) can be used in the browser.
+it supports AMD as well.
 
 ### match urls or filepaths
 
 ##### make pattern from string
 
 ```javascript
-var pattern = urlPattern.newPattern('/users/:id');
+var pattern = new Pattern('/users/:id');
 ```
 
 the default separator is `/`. you can pass a custom separator
-as the second argument to `newPattern`.
+as the second argument.
 
 ##### match pattern against url
 
@@ -63,7 +46,7 @@ pattern.match('/projects/5'); // => null
 ##### make pattern from regex
 
 ```javascript
-var regexPattern = urlPattern.newPattern(/\/test\/(.*)/);
+var regexPattern = new Pattern(/\/test\/(.*)/);
 ```
 
 ##### match regex pattern against url
@@ -78,7 +61,7 @@ regexPattern.match('/users/test'); // => null
 ##### make wildcard pattern from string
 
 ```javascript
-var wildcardPattern = urlPattern.newPattern('*/users/:id/*');
+var wildcardPattern = new Pattern('*/users/:id/*');
 ```
 
 ##### match wildcard pattern against url
@@ -93,7 +76,7 @@ wildcardPattern.match('/api/v1/users/10/followers/20');
 ##### make optional pattern from string
 
 ```javascript
-var optionalPattern = urlPattern.newPattern('(/)users(/:foo)/bar(/*)');
+var optionalPattern = new Pattern('(/)users(/:foo)/bar(/*)');
 ```
 
 ##### match optional pattern against url
@@ -116,7 +99,7 @@ optionalPattern.match('/users/biff/bar/beep/boop');
 ##### make pattern from string
 
 ```javascript
-var pattern = urlPattern.newPattern(':sub.google.com', '.');
+var pattern = new Pattern(':sub.google.com', '.');
 ```
 
 the default separator is `/`. you can pass a custom separator
@@ -149,7 +132,7 @@ regexPattern.match('google.com'); // => null
 ##### make wildcard pattern from string
 
 ```javascript
-var wildcardPattern = urlPattern.newPattern('*.:sub.google.*');
+var wildcardPattern = new Pattern('*.:sub.google.*');
 ```
 
 ##### match wildcard pattern against url
@@ -161,4 +144,4 @@ wildcardPattern.match('subsub.www.google.com');
 // => {sub: 'www', _: ['subsub', 'com']}
 ```
 
-### license: MIT
+## [license: MIT](LICENSE)

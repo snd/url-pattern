@@ -35,13 +35,14 @@
   "dependencies": {
   },
   "devDependencies": {
-    "nodeunit": "0.8.6",
-    "coffee-script": "1.7.1"
+    "nodeunit": "0.9.1",
+    "coffee-script": "1.9.1"
   },
   "main": "src/url-pattern",
   "scripts": {
-    "prepublish": "coffee --bare --compile --output src src/*.coffee",
-    "pretest": "coffee --bare --compile --output src src/*.coffee && coffee --bare --compile --output test test/*.coffee",
-    "test": "node_modules/nodeunit/bin/nodeunit test/*.js"
+    "compile": "node_modules/coffee-script/bin/coffee --bare --compile --output lib src",
+    "prepublish": "npm run compile",
+    "pretest": "npm run compile",
+    "test": "node_modules/nodeunit/bin/nodeunit test/*.coffee"
   }
 }

@@ -144,9 +144,9 @@ wildcardPattern.match('subsub.www.google.com');
 // => {sub: 'www', _: ['subsub', 'com']}
 ```
 
-## changelog
+### changelog
 
-### 0.7
+#### 0.7
 
 instead of
 

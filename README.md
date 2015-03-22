@@ -144,4 +144,22 @@ wildcardPattern.match('subsub.www.google.com');
 // => {sub: 'www', _: ['subsub', 'com']}
 ```
 
+## changelog
+
+### 0.7
+
+instead of
+
+``` js
+var urlPattern = require('url-pattern');
+var pattern = urlPattern.newPattern('/example');
+```
+
+now use
+
+``` js
+var Pattern = require('url-pattern');
+var pattern = new Pattern('/example');
+```
+
 ## [license: MIT](LICENSE)

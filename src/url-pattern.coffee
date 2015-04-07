@@ -103,6 +103,10 @@
         .replace(':' + name,"([^\\#{separator}]+)")
 
     return "^#{stringWithEscapedSeparators}$"
+  
+  UrlPattern.newPattern = () ->
+    # helpful hint for new API
+    throw Error('`urlPattern.newPattern` is no longer supported.  Use `new Pattern` instead.');
 
   return UrlPattern
 )

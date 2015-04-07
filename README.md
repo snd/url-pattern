@@ -103,7 +103,7 @@ var pattern = new Pattern(':sub.google.com', '.');
 ```
 
 the default separator is `/`. you can pass a custom separator
-as the second argument to `newPattern`.
+as the second argument to `Pattern`.
 
 ##### match pattern against domain
 
@@ -117,7 +117,7 @@ pattern.match('www.google.io'); // => null
 ##### make pattern from regex
 
 ```javascript
-var regexPattern = urlPattern.newPattern(/example\.(.*)/);
+var regexPattern = new Pattern(/example\.(.*)/);
 ```
 
 ##### match regex pattern against domain

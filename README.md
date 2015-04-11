@@ -4,9 +4,14 @@
 [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
 [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern)
 
-> url-pattern is easy pattern matching and segment extraction for
-> urls, domains, filepaths and any string composed of segments joined
-> by a separator character
+**
+url-pattern is easy pattern matching and segment extraction for
+urls, domains, filepaths and any string composed of segments joined
+by a separator character
+**
+
+> This is a great little library -- thanks!
+> <small>[michael](https://github.com/snd/url-pattern/pull/7)</small>
 
 [check out **passage** if you are looking for simple composable routing that builds on top of url-pattern](https://github.com/snd/passage)
 

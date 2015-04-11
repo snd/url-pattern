@@ -273,3 +273,7 @@ module.exports =
         userId: '10'
         taskId: '52'
       test.done()
+
+  'new API warning': (test) ->
+    test.throws Pattern.newPattern
+    test.done()

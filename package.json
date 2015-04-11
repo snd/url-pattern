@@ -9,14 +9,21 @@
     "email": "kruemaxi@gmail.com",
     "url": "http://github.com/snd"
   },
-  "contributors": [{
-    "name": "Andrey Popp",
-    "email": "8mayday@gmail.com",
-    "url": "https://github.com/andreypopp"
-  }, {
-    "name": "Samuel Reed",
-    "url": "https://github.com/STRML"
-  }],
+  "contributors": [
+    {
+      "name": "Andrey Popp",
+      "email": "8mayday@gmail.com",
+      "url": "https://github.com/andreypopp"
+    },
+    {
+      "name": "Samuel Reed",
+      "url": "https://github.com/STRML"
+    },
+    {
+      "name": "Michael Trotter",
+      "url": "https://github.com/spicydonuts"
+    }
+  ],
   "bugs": {
     "url": "http://github.com/snd/url-pattern/issues",
     "email": "kruemaxi@gmail.com"

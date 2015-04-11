@@ -161,5 +161,34 @@ now use
 var Pattern = require('url-pattern');
 var pattern = new Pattern('/example');
 ```
+### contribution
+
+**TLDR: bugfixes, issues and discussion are always welcome.
+ask me before implementing new features.**
+
+i will happily merge pull requests that fix bugs with reasonable code.
+
+i will only merge pull requests that modify/add functionality
+if the changes align with my goals for this package
+and only if the changes are well written, documented and tested.
+
+**communicate:** write an issue to start a discussion
+before writing code that may or may not get merged.
+
+### todo
+
+- https://github.com/snd/url-pattern/issues/6
+  - parse string into array of objects describing structure
+    - constant
+    - binding
+    - wildcard
+    - optional
+  - multiple occurences of the same name are collected into an array
+    - this elegantly normalizes * and :
+  - binding parsing is flexible and has a start and end regex
+    - default: `:` and `[^a-zA-Z0-9]
+    - custom: `#{` and `}`
+  - test that empty names are not allowed
+- browser tests
 
 ## [license: MIT](LICENSE)

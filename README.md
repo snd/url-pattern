@@ -149,6 +149,7 @@ now use
 var Pattern = require('url-pattern');
 var pattern = new Pattern('/example');
 ```
+
 ### contribution
 
 **TLDR: bugfixes, issues and discussion are always welcome.

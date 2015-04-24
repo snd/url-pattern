@@ -75,7 +75,7 @@
       switch mode
         when 'variable'
           if (index - sliceBegin) < 2
-            throw new Error '`:` must be followed by at least one alphanumeric character that is the variable name'
+            throw new Error "`:` must be followed by at least one alphanumeric character that is the variable name at #{index}"
           names.push string.slice(sliceBegin + 1, index)
           regexString += "([a-zA-Z0-9]+)"
         when 'static'
@@ -94,8 +94,7 @@
       char = string.charAt(index)
       if char is ':'
         if mode is 'variable'
-          # TODO print last variable name as well as position in the source string
-          throw new Error 'cannot start variable right after variable'
+          throw new Error "cannot start variable right after variable at #{index}"
         enter('variable')
       else if char is '('
         leave()
@@ -105,7 +104,7 @@
         leave()
         openParens--
         if openParens < 0
-          throw new Error 'did not expect )'
+          throw new Error "did not expect ) at #{index}"
         regexString += ')?'
       else if char is '*'
         leave()
@@ -120,7 +119,7 @@
             enter('static')
 
     if openParens > 0
-      throw new Error 'unclosed parentheses'
+      throw new Error "unclosed parentheses at #{index}"
 
     leave()
 

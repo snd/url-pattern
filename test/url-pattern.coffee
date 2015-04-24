@@ -292,15 +292,19 @@ module.exports =
       test.done()
 
     'throw on invalid variable name': (test) ->
-      test.expect 2
+      test.expect 3
       try
         pattern = new UrlPattern ':'
       catch e
-        test.equal e.message, '`:` must be followed by at least one alphanumeric character that is the variable name'
+        test.equal e.message, '`:` must be followed by at least one alphanumeric character that is the variable name at 1'
       try
         pattern = new UrlPattern ':.'
       catch e
-        test.equal e.message, '`:` must be followed by at least one alphanumeric character that is the variable name'
+        test.equal e.message, '`:` must be followed by at least one alphanumeric character that is the variable name at 1'
+      try
+        pattern = new UrlPattern 'foo:.'
+      catch e
+        test.equal e.message, '`:` must be followed by at least one alphanumeric character that is the variable name at 4'
       test.done()
 
     'throw when variable directly after variable': (test) ->
@@ -308,11 +312,11 @@ module.exports =
       try
         pattern = new UrlPattern ':foo:bar'
       catch e
-        test.equal e.message, 'cannot start variable right after variable'
+        test.equal e.message, 'cannot start variable right after variable at 4'
       try
         pattern = new UrlPattern 'foo:foo:bar.bar'
       catch e
-        test.equal e.message, 'cannot start variable right after variable'
+        test.equal e.message, 'cannot start variable right after variable at 7'
       test.done()
 
     'throw when too many closing parentheses': (test) ->
@@ -320,11 +324,11 @@ module.exports =
       try
         pattern = new UrlPattern ')'
       catch e
-        test.equal e.message, 'did not expect )'
+        test.equal e.message, 'did not expect ) at 0'
       try
         pattern = new UrlPattern '((foo)))bar'
       catch e
-        test.equal e.message, 'did not expect )'
+        test.equal e.message, 'did not expect ) at 7'
       test.done()
 
     'throw when unclosed parentheses': (test) ->
@@ -332,11 +336,11 @@ module.exports =
       try
         pattern = new UrlPattern '('
       catch e
-        test.equal e.message, 'unclosed parentheses'
+        test.equal e.message, 'unclosed parentheses at 1'
       try
         pattern = new UrlPattern '(((foo)bar(boo)far)'
       catch e
-        test.equal e.message, 'unclosed parentheses'
+        test.equal e.message, 'unclosed parentheses at 19'
       test.done()
 
   'readme':

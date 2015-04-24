@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "nodeunit": "0.9.1",
-    "coffee-script": "1.9.1"
+    "coffee-script": "1.9.2"
   },
   "main": "lib/url-pattern",
   "scripts": {

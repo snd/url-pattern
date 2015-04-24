@@ -4,132 +4,144 @@
 [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
 [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern)
 
-**url-pattern is easy pattern matching and segment extraction for
-urls, domains, filepaths and any string composed of segments joined
-by a separator character.**
+**url-pattern is simple pattern matching and segment extraction for
+urls, domains, filepaths and other strings**
 
 > This is a great little library -- thanks!  
 > <small>[michael](https://github.com/snd/url-pattern/pull/7)</small>
-
-[check out **passage** if you are looking for simple composable routing that builds on top of url-pattern](https://github.com/snd/passage)
 
 ```
 npm install url-pattern
 ```
 
-require with commonjs:
+``` javascript
+> var UrlPattern = require('url-pattern');
+```
+``` javascript
+> var pattern = new UrlPattern('/api/users/:id');
 
-```javascript
-var Pattern = require('url-pattern');
+> pattern.match('/api/users/10');
+{id: '10'}
+
+> pattern.match('/api/products/5');
+null
+```
+``` javascript
+> var pattern = new UrlPattern('/v:major(.:minor)/*');
+
+> pattern.match('/v1.2/');
+{major: '1', minor: '2', _: ''}
+
+> pattern.match('/v2/users');
+{major: '2', _: 'users'}
+
+> pattern.match('/v/');
+null
 ```
 
-[lib/url-pattern.js](lib/url-pattern.js) can be used in the browser.
-it supports AMD as well.
+[lib/url-pattern.js](lib/url-pattern.js) supports [AMD](http://requirejs.org/docs/whyamd.html).  
+if [AMD](http://requirejs.org/docs/whyamd.html) is not available it sets the global variable `UrlPattern`.
 
-### match urls or filepaths
+[check out **passage** if you are looking for simple composable routing that builds on top of url-pattern](https://github.com/snd/passage)
 
-##### make pattern from string
-
-```javascript
-var pattern = new Pattern('/users/:id');
-```
-
-the default separator is `/`. you can pass a custom separator
-as the second argument.
-
-##### match pattern against url
-
-match returns the extracted parameters or `null` if there was no match:
+### make pattern from string
 
 ```javascript
-pattern.match('/users/5');    // -> {id: '5'}
-pattern.match('/projects/5'); // -> null
+> var pattern = new UrlPattern('/users/:id');
 ```
 
-##### make pattern from regex
+### match pattern against string
+
+match returns the extracted segments:
 
 ```javascript
-var regexPattern = new Pattern(/\/test\/(.*)/);
+> pattern.match('/users/5');
+{id: '5'}
 ```
 
-##### match regex pattern against url
+or `null` if there was no match:
 
-if the pattern was created from a regex an array of the captured groups is returned on match:
+``` javascript
+> pattern.match('/projects/5');
+null
+```
+
+named segment names (starting with `:`) and named segment values
+stop at the next non-alphanumeric character.
+
+### make pattern from regex
 
 ```javascript
-regexPattern.match('/test/users');  // -> ['users']
-regexPattern.match('/users/test');  // -> null
+> var pattern = new UrlPattern(/\/test\/(.*)/);
 ```
 
-##### make wildcard pattern from string
+### match regex pattern against string
+
+if the pattern was created from a regex an array of the captured groups is returned on a match:
 
 ```javascript
-var wildcardPattern = new Pattern('*/users/:id/*');
+> pattern.match('/test/users');
+['users']
+
+> pattern.match('/users/test');
+null
 ```
 
-##### match wildcard pattern against url
+### wildcards
+
+```javascript
+var pattern = new Pattern('*/users/:id/*');
+```
 
 wildcard matches are collected in the `_` property:
 
 ```javascript
-wildcardPattern.match('/api/v1/users/10/followers/20');
-// -> {id: '10', _: ['/api/v1', 'followers/20']}
+> pattern.match('/api/v1/users/10/followers/20');
+{id: '10', _: ['/api/v1', 'followers/20']}
 ```
 
-##### make optional pattern from string
+if there is only one wildcard `_` contains the matching string.
+otherwise `_` contains an array of matching strings.
+
+### optional segments
 
 ```javascript
-var optionalPattern = new Pattern('(/)users(/:foo)/bar(/*)');
+var pattern = new Pattern('(/)users(/:foo)/bar(/*)');
 ```
-
-##### match optional pattern against url
 
 optional matches are stored in the corresponding property, if they exist:
 
 ```javascript
-optionalPattern.match('users/bar');
-// -> {}
-optionalPattern.match('/users/bar');
-// -> {}
-optionalPattern.match('/users/biff/bar');
-// -> {foo: 'biff'}
-optionalPattern.match('/users/biff/bar/beep/boop');
-// -> {foo: 'biff', _: ['beep/boop']}
+> pattern.match('users/bar');
+{}
+
+> pattern.match('/users/bar');
+{}
+
+> pattern.match('/users/biff/bar');
+{foo: 'biff'}
+
+> pattern.match('/users/biff/bar/beep/boop');
+{foo: 'biff', _: 'beep/boop'}
 ```
 
-### match domains
+### matching domains
 
-##### make pattern from string
+``` javascript
+> var pattern = new Pattern(':sub.google.com');
 
-```javascript
-var pattern = new Pattern(':sub.google.com', '.');
+> pattern.match('www.google.com');
+{sub: 'www'}
+
+> pattern.match('www.google.io');
+null
 ```
 
-the default separator is `/`. you can pass a custom separator
-as the second argument to `Pattern`.
+``` javascript
+> var pattern = new Pattern('*.:sub.google.*');
 
-##### match pattern against domain
-
-match returns the extracted parameters or `null` if there was no match:
-
-```javascript
-pattern.match('www.google.com');  // -> {sub: 'www'}
-pattern.match('www.google.io');   // -> null
-```
-
-##### make wildcard pattern from string
-
-```javascript
-var wildcardPattern = new Pattern('*.:sub.google.*');
-```
-
-##### match wildcard pattern against url
-
-wildcard matches are collected in the `_` property:
-
-```javascript
-wildcardPattern.match('subsub.www.google.com');
-// -> {sub: 'www', _: ['subsub', 'com']}
+> pattern.match('subsub.www.google.com');;
+{sub: 'www', _: ['subsub', 'com']}
 ```
 
 ### changelog
@@ -138,16 +150,50 @@ wildcardPattern.match('subsub.www.google.com');
 
 instead of
 
-``` js
+``` javascript
 var urlPattern = require('url-pattern');
 var pattern = urlPattern.newPattern('/example');
 ```
 
 now use
 
-``` js
+``` javascript
 var Pattern = require('url-pattern');
 var pattern = new Pattern('/example');
+```
+
+#### 0.8
+
+single wildcard matches are now saved directly as a
+string on the `_` property and not as an array with 1 element:
+
+``` javascript
+> var pattern = new Pattern('/api/*');
+> pattern.match('/api/users/5')
+{_: 'users/5'}
+```
+
+if named segments occur more than once the results are collected in an array.
+
+parsing of named segment names (`:foo`) and named segment values now
+stops at the next non-alphanumeric character.
+it is no longer needed to declare separators other than `/` explicitely.
+it was previously necessary to use the second argument to `new UrlPattern` to
+override the default separator `/`.
+the second argument is now ignored.
+mixing of separators is now possible (`/` and `.` in this example):
+
+``` javascript
+> var pattern = new UrlPattern('/v:major(.:minor)/*');
+
+> pattern.match('/v1.2/');
+{major: '1', minor: '2', _: ''}
+
+> pattern.match('/v2/users');
+{major: '2', _: 'users'}
+
+> pattern.match('/v/');
+null
 ```
 
 ### contribution
@@ -163,21 +209,5 @@ are well written, documented and tested.
 
 **communicate:** write an issue to start a discussion
 before writing code that may or may not get merged.
-
-### todo
-
-- https://github.com/snd/url-pattern/issues/6
-  - parse string into array of objects describing structure
-    - constant
-    - binding
-    - wildcard
-    - optional
-  - multiple occurences of the same name are collected into an array
-    - this elegantly normalizes * and :
-  - binding parsing is flexible and has a start and end regex
-    - default: `:` and `[^a-zA-Z0-9]
-    - custom: `#{` and `}`
-  - test that empty names are not allowed
-- browser tests
 
 ## [license: MIT](LICENSE)

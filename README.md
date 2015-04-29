@@ -8,7 +8,7 @@
 urls, domains, filepaths and other strings**
 
 > This is a great little library -- thanks!  
-> <small>[michael](https://github.com/snd/url-pattern/pull/7)</small>
+> [@michael](https://github.com/snd/url-pattern/pull/7)
 
 ```
 npm install url-pattern
@@ -207,7 +207,7 @@ i will only merge pull requests that modify/add functionality
 if the changes align with my goals for this package,
 are well written, documented and tested.
 
-**communicate:** write an issue to start a discussion
+**communicate!** write an issue to start a discussion
 before writing code that may or may not get merged.
 
 ## [license: MIT](LICENSE)

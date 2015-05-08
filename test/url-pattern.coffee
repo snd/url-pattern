@@ -219,6 +219,8 @@ module.exports =
       test.ok UrlPattern.prototype.isAlphanumeric 'Z'
       test.ok UrlPattern.prototype.isAlphanumeric '0'
       test.ok UrlPattern.prototype.isAlphanumeric '9'
+      test.ok UrlPattern.prototype.isAlphanumeric '_'
+      test.ok UrlPattern.prototype.isAlphanumeric '-'
       test.ok UrlPattern.prototype.isAlphanumeric 'adlkjf9080945lkjd'
       test.done()
 
@@ -251,13 +253,13 @@ module.exports =
 
     'just single char variable': (test) ->
       pattern = new UrlPattern ':a'
-      test.equal pattern.regex.source, '^([a-zA-Z0-9]+)$'
+      test.equal pattern.regex.source, '^([a-zA-Z0-9-_]+)$'
       test.deepEqual pattern.names, ['a']
       test.done()
 
     'just variable': (test) ->
       pattern = new UrlPattern ':variable'
-      test.equal pattern.regex.source, '^([a-zA-Z0-9]+)$'
+      test.equal pattern.regex.source, '^([a-zA-Z0-9-_]+)$'
       test.deepEqual pattern.names, ['variable']
       test.done()
 
@@ -281,7 +283,7 @@ module.exports =
 
     'just optional variable': (test) ->
       pattern = new UrlPattern '(:foo)'
-      test.equal pattern.regex.source, '^(?:([a-zA-Z0-9]+))?$'
+      test.equal pattern.regex.source, '^(?:([a-zA-Z0-9-_]+))?$'
       test.deepEqual pattern.names, ['foo']
       test.done()
 
@@ -356,5 +358,10 @@ module.exports =
       test.deepEqual pattern.match('/v1.2/'), {major: '1', minor: '2', _: ''}
       test.deepEqual pattern.match('/v2/users'), {major: '2', _: 'users'}
       test.equal pattern.match('/v/'), null
+      test.done()
+
+    '3': (test) ->
+      pattern = new UrlPattern('/foo/:bar')
+      test.deepEqual pattern.match('/foo/bar-foo'), {bar: 'bar-foo'}
       test.done()
 

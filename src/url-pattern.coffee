@@ -51,7 +51,7 @@
         bound[name] = value
     return bound
 
-  alphanumericRegex = new RegExp '^[a-zA-Z0-9]+$'
+  alphanumericRegex = new RegExp '^[a-zA-Z0-9-_]+$'
 
   UrlPattern.prototype.isAlphanumeric = (string) ->
     alphanumericRegex.test(string)
@@ -77,7 +77,7 @@
           if (index - sliceBegin) < 2
             throw new Error "`:` must be followed by at least one alphanumeric character that is the variable name at #{index}"
           names.push string.slice(sliceBegin + 1, index)
-          regexString += "([a-zA-Z0-9]+)"
+          regexString += "([a-zA-Z0-9-_]+)"
         when 'static'
           regexString += that.escapeForRegex(string.slice(sliceBegin, index))
       mode = '?'

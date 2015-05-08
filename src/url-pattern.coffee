@@ -9,7 +9,11 @@
   else
     root.UrlPattern = factory()
 )(this, ->
-  UrlPattern = (arg) ->
+  UrlPattern = (arg, allowedSegmentChars) ->
+
+    if allowedSegmentChars
+      this.allowedSegmentChars = allowedSegmentChars
+
     # self awareness
     if arg instanceof UrlPattern
       this.isRegex = arg.isRegex
@@ -25,6 +29,8 @@
     else
       this.compile(arg)
     return this
+
+  UrlPattern.prototype.allowedSegmentChars = 'a-zA-Z0-9-_ %'
 
   UrlPattern.prototype.match = (url) ->
     match = this.regex.exec url
@@ -51,7 +57,7 @@
         bound[name] = value
     return bound
 
-  alphanumericRegex = new RegExp '^[a-zA-Z0-9-_]+$'
+  alphanumericRegex = new RegExp '^[a-zA-Z0-9]+$'
 
   UrlPattern.prototype.isAlphanumeric = (string) ->
     alphanumericRegex.test(string)
@@ -77,7 +83,7 @@
           if (index - sliceBegin) < 2
             throw new Error "`:` must be followed by at least one alphanumeric character that is the variable name at #{index}"
           names.push string.slice(sliceBegin + 1, index)
-          regexString += "([a-zA-Z0-9-_]+)"
+          regexString += "([" + that.allowedSegmentChars + "]+)"
         when 'static'
           regexString += that.escapeForRegex(string.slice(sliceBegin, index))
       mode = '?'

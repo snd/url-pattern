@@ -219,8 +219,6 @@ module.exports =
       test.ok UrlPattern.prototype.isAlphanumeric 'Z'
       test.ok UrlPattern.prototype.isAlphanumeric '0'
       test.ok UrlPattern.prototype.isAlphanumeric '9'
-      test.ok UrlPattern.prototype.isAlphanumeric '_'
-      test.ok UrlPattern.prototype.isAlphanumeric '-'
       test.ok UrlPattern.prototype.isAlphanumeric 'adlkjf9080945lkjd'
       test.done()
 
@@ -229,6 +227,33 @@ module.exports =
       test.ok not UrlPattern.prototype.isAlphanumeric '+'
       test.ok not UrlPattern.prototype.isAlphanumeric 'akld+'
       test.ok not UrlPattern.prototype.isAlphanumeric ''
+      test.done()
+
+  'allowedSegmentChars':
+    'true': (test) ->
+      strings = [
+        'a',
+        'A',
+        '0',
+        '-',
+        '_',
+        ' ',
+        '%'
+        'adlkjf9080945lkjd-_ %'
+      ]
+      for string in strings
+        test.ok new RegExp('([' + UrlPattern.prototype.allowedSegmentChars + ']+)').test(string);
+      test.done()
+    'false': (test) ->
+      strings = ['+']
+      for string in strings
+        test.ok not new RegExp('([' + UrlPattern.prototype.allowedSegmentChars + ']+)').test(string);
+      test.done()
+
+    'set custom allowedSegmentChars': (test) ->
+      pattern = new UrlPattern '/foo/:bar', 'a-zA-Z0-9'
+      test.equal pattern.match('/foo/bar-baz'), null
+      test.deepEqual pattern.match('/foo/bar'), {bar: 'bar'}
       test.done()
 
   'compile':
@@ -253,13 +278,13 @@ module.exports =
 
     'just single char variable': (test) ->
       pattern = new UrlPattern ':a'
-      test.equal pattern.regex.source, '^([a-zA-Z0-9-_]+)$'
+      test.equal pattern.regex.source, '^([' + UrlPattern.prototype.allowedSegmentChars + ']+)$'
       test.deepEqual pattern.names, ['a']
       test.done()
 
     'just variable': (test) ->
       pattern = new UrlPattern ':variable'
-      test.equal pattern.regex.source, '^([a-zA-Z0-9-_]+)$'
+      test.equal pattern.regex.source, '^([' + UrlPattern.prototype.allowedSegmentChars + ']+)$'
       test.deepEqual pattern.names, ['variable']
       test.done()
 
@@ -283,7 +308,7 @@ module.exports =
 
     'just optional variable': (test) ->
       pattern = new UrlPattern '(:foo)'
-      test.equal pattern.regex.source, '^(?:([a-zA-Z0-9-_]+))?$'
+      test.equal pattern.regex.source, '^(?:([' + UrlPattern.prototype.allowedSegmentChars + ']+))?$'
       test.deepEqual pattern.names, ['foo']
       test.done()
 
@@ -351,6 +376,10 @@ module.exports =
       pattern = new UrlPattern('/api/users/:id')
       test.deepEqual pattern.match('/api/users/10'), {id: '10'}
       test.equal pattern.match('/api/products/5'), null
+      test.deepEqual pattern.match('/api/users/foo-bar'), {id: 'foo-bar'}
+      test.deepEqual pattern.match('/api/users/foo_bar'), {id: 'foo_bar'}
+      test.deepEqual pattern.match('/api/users/foo bar'), {id: 'foo bar'}
+      test.deepEqual pattern.match('/api/users/foo%20bar'), {id: 'foo%20bar'}
       test.done()
 
     '2': (test) ->
@@ -359,9 +388,3 @@ module.exports =
       test.deepEqual pattern.match('/v2/users'), {major: '2', _: 'users'}
       test.equal pattern.match('/v/'), null
       test.done()
-
-    '3': (test) ->
-      pattern = new UrlPattern('/foo/:bar')
-      test.deepEqual pattern.match('/foo/bar-foo'), {bar: 'bar-foo'}
-      test.done()
-

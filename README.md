@@ -50,6 +50,19 @@ if [AMD](http://requirejs.org/docs/whyamd.html) is not available it sets the glo
 > var pattern = new UrlPattern('/users/:id');
 ```
 
+## accepted character set
+
+By default, `url-pattern` will use `a-zA-Z0-9-_ %` as the accepted character set. To use a custom accepted character set, pass it in as the second parameter:
+
+```javascript
+> var custom = new UrlPattern('/users/:id');
+> custom.match('/users/foo_bar')
+true
+> var custom = new UrlPattern('/users/:id', 'a-zA-Z0-9');
+> custom.match('/users/foo_bar')
+false
+```
+
 ### match pattern against string
 
 match returns the extracted segments:

@@ -47,9 +47,9 @@
   },
   "main": "lib/url-pattern",
   "scripts": {
-    "compile": "node_modules/coffee-script/bin/coffee --bare --compile --output lib src",
+    "compile": "coffee --bare --compile --output lib src",
     "prepublish": "npm run compile",
     "pretest": "npm run compile",
-    "test": "node_modules/nodeunit/bin/nodeunit test/*.coffee"
+    "test": "nodeunit test/*.coffee"
   }
 }

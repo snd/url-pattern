@@ -33,59 +33,41 @@
   Compiler.prototype.segmentNameCharRegex = ->
     new RegExp '^['  + @segmentNameCharset + ']$'
 
-  # helper for debugging
-  Compiler.prototype.state = ->
-    {
-      string: @string
-      index: @index
-      char: @char
-      mode: @mode
-      segment: @segment
-      names: @names
-      regexString: @regexString
-      openParens: @openParens
-    }
-
-  Compiler.prototype.continueOrEnterMode = (nextMode) ->
-    # console.log("continueOrEnterMode(#{mode})")
-    # console.log @state()
-
-    # continue with same mode
+  # transition to another mode in the state machine
+  Compiler.prototype.transition = (nextMode) ->
+    # continue with current mode
     if @mode is nextMode
       if @mode is 'namedSegment' or @mode is 'staticSegment'
         # consume segment
         @segment += @char
+      return
 
     # enter different mode
-    else
-      if nextMode is 'staticSegmentEscapeNextChar'
-        if @mode isnt 'staticSegment'
-          @exitMode(nextMode)
-          @segment = ''
-        # do nothing when staticSegment -> staticSegmentEscapeNextChar
-      else if @mode is 'staticSegmentEscapeNextChar' and nextMode is 'staticSegment'
-        @segment += @char
-      else
-        @exitMode(nextMode)
-        if nextMode is 'namedSegment' or nextMode is 'staticSegment'
-          @segment = @char
 
+    if @mode is 'staticSegmentEscapeNextChar' and nextMode is 'staticSegment'
+      @segment += @char
       @mode = nextMode
+      return
 
-  Compiler.prototype.exitMode = (nextMode = 'unknown') ->
-    # console.log("exitMode(#{mode})")
-    # console.log @state()
+    unless @mode is 'staticSegment' and nextMode is 'staticSegmentEscapeNextChar'
+      # exit current mode
+      switch @mode
+        when 'namedSegment'
+          @names.push @segment
+          @regexString += @segmentValueRegexString()
+        when 'staticSegment'
+          @regexString += escapeForRegex(@segment)
+        when 'namedSegmentStart'
+          unless nextMode is 'namedSegment'
+            throw new Error "`#{@segmentNameStartChar}` must be followed by the name of the named segment consisting of at least one character in character set `#{@segmentNameCharset}` at #{@index}"
 
-    switch @mode
-      when 'namedSegment'
-        @names.push @segment
-        @regexString += @segmentValueRegexString()
-      when 'staticSegment'
-        @regexString += escapeForRegex(@segment)
-      when 'namedSegmentStart'
-        unless nextMode is 'namedSegment'
-          throw new Error "`#{@segmentNameStartChar}` must be followed by the name of the named segment consisting of at least one character in character set `#{@segmentNameCharset}` at #{@index}"
-    @mode = 'unknown'
+    if @mode isnt 'staticSegment' and nextMode is 'staticSegmentEscapeNextChar'
+      @segment = ''
+
+    if nextMode is 'namedSegment' or nextMode is 'staticSegment'
+      @segment = @char
+
+    @mode = nextMode
 
   Compiler.prototype.compile = (string) ->
     # input
@@ -112,28 +94,28 @@
       @char = @string.charAt(@index)
 
       if @mode is 'staticSegmentEscapeNextChar'
-        @continueOrEnterMode('staticSegment')
+        @transition('staticSegment')
         continue
 
       switch @char
         when @segmentNameStartChar
           if @mode is 'namedSegment'
             throw new Error "cannot start named segment right after named segment at #{@index}"
-          @continueOrEnterMode('namedSegmentStart')
+          @transition('namedSegmentStart')
         when @escapeChar
-          @continueOrEnterMode('staticSegmentEscapeNextChar')
+          @transition('staticSegmentEscapeNextChar')
         when '('
-          @exitMode()
+          @transition('unknown')
           @openParens++
           @regexString += '(?:'
         when ')'
-          @exitMode()
+          @transition('unknown')
           @openParens--
           if @openParens < 0
             throw new Error "did not expect ) at #{@index}"
           @regexString += ')?'
         when '*'
-          @exitMode()
+          @transition('unknown')
           @regexString += '(.*?)'
           @names.push '_'
         # char without special meaning
@@ -141,26 +123,26 @@
           switch @mode
             when 'namedSegmentStart'
               if segmentNameCharRegex.test(@char)
-                @continueOrEnterMode('namedSegment')
+                @transition('namedSegment')
               else
                 # this throws an error because named segment start must be followed
                 # by a named segment
-                @continueOrEnterMode('staticSegment')
+                @transition('staticSegment')
             when 'namedSegment'
               if segmentNameCharRegex.test(@char)
-                @continueOrEnterMode('namedSegment')
+                @transition('namedSegment')
               else
                 # end named segment and start static segment
-                @continueOrEnterMode('staticSegment')
+                @transition('staticSegment')
             when 'staticSegment'
-              @continueOrEnterMode('staticSegment')
+              @transition('staticSegment')
             when 'unknown'
-              @continueOrEnterMode('staticSegment')
+              @transition('staticSegment')
 
     if @openParens > 0
       throw new Error "unclosed parentheses at #{@index}"
 
-    @exitMode()
+    @transition('unknown')
 
     @regexString += '$'
     @regex = new RegExp @regexString

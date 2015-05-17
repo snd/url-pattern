@@ -15,26 +15,26 @@
     string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
 
 ################################################################################
-# PatternToRegexCompiler
+# Compiler
 # compiles a regex string while parsing a pattern string.
 # state machine that iterates through an input `string` (representing an
 # url pattern) and writes a `regexString` that matches the pattern.
 
-  PatternToRegexCompiler = ->
+  Compiler = ->
 
-  PatternToRegexCompiler.prototype.escapeChar = '\\'
-  PatternToRegexCompiler.prototype.segmentValueCharset = 'a-zA-Z0-9-_ %'
-  PatternToRegexCompiler.prototype.segmentNameStartChar = ':'
-  PatternToRegexCompiler.prototype.segmentNameCharset = 'a-zA-Z0-9'
+  Compiler.prototype.escapeChar = '\\'
+  Compiler.prototype.segmentValueCharset = 'a-zA-Z0-9-_ %'
+  Compiler.prototype.segmentNameStartChar = ':'
+  Compiler.prototype.segmentNameCharset = 'a-zA-Z0-9'
 
-  PatternToRegexCompiler.prototype.segmentValueRegexString = ->
+  Compiler.prototype.segmentValueRegexString = ->
     "([" + @segmentValueCharset + "]+)"
 
-  PatternToRegexCompiler.prototype.segmentNameCharRegex = ->
+  Compiler.prototype.segmentNameCharRegex = ->
     new RegExp '^['  + @segmentNameCharset + ']$'
 
   # helper for debugging
-  PatternToRegexCompiler.prototype.state = ->
+  Compiler.prototype.state = ->
     {
       string: @string
       index: @index
@@ -46,7 +46,7 @@
       openParens: @openParens
     }
 
-  PatternToRegexCompiler.prototype.continueOrEnterMode = (nextMode) ->
+  Compiler.prototype.continueOrEnterMode = (nextMode) ->
     # console.log("continueOrEnterMode(#{mode})")
     # console.log @state()
 
@@ -72,7 +72,7 @@
 
       @mode = nextMode
 
-  PatternToRegexCompiler.prototype.exitMode = (nextMode = 'unknown') ->
+  Compiler.prototype.exitMode = (nextMode = 'unknown') ->
     # console.log("exitMode(#{mode})")
     # console.log @state()
 
@@ -87,7 +87,7 @@
           throw new Error "`#{@segmentNameStartChar}` must be followed by the name of the named segment consisting of at least one character in character set `#{@segmentNameCharset}` at #{@index}"
     @mode = 'unknown'
 
-  PatternToRegexCompiler.prototype.compile = (string) ->
+  Compiler.prototype.compile = (string) ->
     # input
     @string = string
 
@@ -170,7 +170,7 @@
 ################################################################################
 # UrlPattern
 
-  UrlPattern = (arg, compiler = new PatternToRegexCompiler) ->
+  UrlPattern = (arg, compiler = new Compiler) ->
     # self awareness
     if arg instanceof UrlPattern
       @isRegex = arg.isRegex
@@ -219,7 +219,7 @@
 ################################################################################
 # exports
 
-  UrlPattern.PatternToRegexCompiler = PatternToRegexCompiler
+  UrlPattern.Compiler = Compiler
   UrlPattern.escapeForRegex = escapeForRegex
 
   return UrlPattern

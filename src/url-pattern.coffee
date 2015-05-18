@@ -155,7 +155,8 @@
 ################################################################################
 # UrlPattern
 
-  UrlPattern = (arg, compiler = new Compiler) ->
+  UrlPattern = (arg, compiler) ->
+    compiler ?= new UrlPattern.Compiler
     # self awareness
     if arg instanceof UrlPattern
       @isRegex = arg.isRegex

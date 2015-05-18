@@ -248,182 +248,151 @@ module.exports =
           test.equal e.message, 'unclosed parentheses at 19'
         test.done()
 
-  'UrlPattern.match() strings separated by /':
+  'UrlPattern.match()': (test) ->
+    pattern = new UrlPattern '/foo'
+    test.deepEqual pattern.match('/foo'), {}
 
-    'trivial route is matched': (test) ->
-      pattern = new UrlPattern '/foo'
-      test.deepEqual pattern.match('/foo'), {}
-      test.done()
+    pattern = new UrlPattern '.foo'
+    test.deepEqual pattern.match('.foo'), {}
 
-    'suffix is not matched': (test) ->
-      pattern = new UrlPattern '/foo'
-      test.equals pattern.match('/foobar'), null
-      test.done()
+    pattern = new UrlPattern '/foo'
+    test.equals pattern.match('/foobar'), null
 
-    'prefix is not matched': (test) ->
-      pattern = new UrlPattern '/foo'
-      test.equals pattern.match('/bar/foo'), null
-      test.done()
+    pattern = new UrlPattern '.foo'
+    test.equals pattern.match('.foobar'), null
 
-    'regex without bindings is matched': (test) ->
-      pattern = new UrlPattern /foo/
-      test.deepEqual pattern.match('foo'), []
-      test.done()
+    pattern = new UrlPattern '/foo'
+    test.equals pattern.match('/bar/foo'), null
 
-    'regex with binding is matched': (test) ->
-      pattern = new UrlPattern /\/foo\/(.*)/
-      test.deepEqual pattern.match('/foo/bar'), ['bar']
-      test.done()
+    pattern = new UrlPattern '.foo'
+    test.equals pattern.match('.bar.foo'), null
 
-    'regex with empty binding is matched': (test) ->
-      pattern = new UrlPattern /\/foo\/(.*)/
-      test.deepEqual pattern.match('/foo/'), ['']
-      test.done()
+    pattern = new UrlPattern /foo/
+    test.deepEqual pattern.match('foo'), []
 
-    'parameter bindings are returned': (test) ->
-      pattern = new UrlPattern '/user/:userId/task/:taskId'
-      test.deepEqual pattern.match('/user/10/task/52'),
-        userId: '10'
-        taskId: '52'
-      test.done()
+    pattern = new UrlPattern /\/foo\/(.*)/
+    test.deepEqual pattern.match('/foo/bar'), ['bar']
 
-    'prefix wildcard': (test) ->
-      pattern = new UrlPattern '*/user/:userId'
-      test.deepEqual pattern.match('/school/10/user/10'),
-        _: '/school/10',
-        userId: '10'
-      test.done()
+    pattern = new UrlPattern /\/foo\/(.*)/
+    test.deepEqual pattern.match('/foo/'), ['']
 
-    'suffix wildcard': (test) ->
-      pattern = new UrlPattern '/admin*'
-      test.deepEqual pattern.match('/admin/school/10/user/10'),
-        _: '/school/10/user/10'
-      test.done()
+    pattern = new UrlPattern '/user/:userId/task/:taskId'
+    test.deepEqual pattern.match('/user/10/task/52'),
+      userId: '10'
+      taskId: '52'
 
-    'infix wildcard': (test) ->
-      pattern = new UrlPattern '/admin/*/user/:userId'
-      test.deepEqual pattern.match('/admin/school/10/user/10'),
-        _: 'school/10',
-        userId: '10'
-      test.done()
+    pattern = new UrlPattern '.user.:userId.task.:taskId'
+    test.deepEqual pattern.match('.user.10.task.52'),
+      userId: '10'
+      taskId: '52'
 
-    'multiple wildcards': (test) ->
-      pattern = new UrlPattern '/admin/*/user/*/tail'
-      test.deepEqual pattern.match('/admin/school/10/user/10/12/tail'),
-        _: ['school/10', '10/12']
-      test.done()
+    pattern = new UrlPattern '*/user/:userId'
+    test.deepEqual pattern.match('/school/10/user/10'),
+      _: '/school/10',
+      userId: '10'
 
-    'multiple wildcards and parameter binding': (test) ->
-      pattern = new UrlPattern '/admin/*/user/:id/*/tail'
-      test.deepEqual pattern.match('/admin/school/10/user/10/12/13/tail'),
-        _: ['school/10', '12/13']
-        id: '10'
-      test.done()
+    pattern = new UrlPattern '*-user-:userId'
+    test.deepEqual pattern.match('-school-10-user-10'),
+      _: '-school-10'
+      userId: '10'
 
-    'wildcard with ambiguous tail': (test) ->
-      pattern = new UrlPattern '/*/admin(/:path)'
-      test.deepEqual pattern.match('/admin/admin/admin'),
-        _: 'admin'
-        path: 'admin'
-      test.done()
+    pattern = new UrlPattern '/admin*'
+    test.deepEqual pattern.match('/admin/school/10/user/10'),
+      _: '/school/10/user/10'
 
-    'root optional params': (test) ->
-      pattern = new UrlPattern '(/)'
-      test.deepEqual pattern.match(''), {}
-      test.deepEqual pattern.match('/'), {}
-      test.done()
+    pattern = new UrlPattern '#admin*'
+    test.deepEqual pattern.match('#admin#school#10#user#10'),
+      _: '#school#10#user#10'
 
-    'path optional params': (test) ->
-      pattern = new UrlPattern '/admin(/foo)/bar'
-      test.deepEqual pattern.match('/admin/foo/bar'), {}
-      test.deepEqual pattern.match('/admin/bar'), {}
-      test.done()
+    pattern = new UrlPattern '/admin/*/user/:userId'
+    test.deepEqual pattern.match('/admin/school/10/user/10'),
+      _: 'school/10',
+      userId: '10'
 
-    'optional params with named param': (test) ->
-      pattern = new UrlPattern '/admin(/:foo)/bar'
-      test.deepEqual pattern.match('/admin/baz/bar'),
-        foo: 'baz'
-      test.deepEqual pattern.match('/admin/bar'), {}
-      test.done()
+    pattern = new UrlPattern '$admin$*$user$:userId'
+    test.deepEqual pattern.match('$admin$school$10$user$10'),
+      _: 'school$10'
+      userId: '10'
 
-    'optional params with splat': (test) ->
-      pattern = new UrlPattern '/admin/(*/)foo'
-      test.deepEqual pattern.match('/admin/foo'), {}
-      test.deepEqual pattern.match('/admin/baz/bar/biff/foo'),
-        _: 'baz/bar/biff'
-      test.done()
+    pattern = new UrlPattern '/admin/*/user/*/tail'
+    test.deepEqual pattern.match('/admin/school/10/user/10/12/tail'),
+      _: ['school/10', '10/12']
 
-  'UrlPattern.match() strings separated by various characters':
+    pattern = new UrlPattern '$admin$*$user$*$tail'
+    test.deepEqual pattern.match('$admin$school$10$user$10$12$tail'),
+      _: ['school$10', '10$12']
 
-    'trivial route is matched': (test) ->
-      pattern = new UrlPattern '.foo'
-      test.deepEqual pattern.match('.foo'), {}
-      test.done()
+    pattern = new UrlPattern '/admin/*/user/:id/*/tail'
+    test.deepEqual pattern.match('/admin/school/10/user/10/12/13/tail'),
+      _: ['school/10', '12/13']
+      id: '10'
 
-    'suffix is not matched': (test) ->
-      pattern = new UrlPattern '.foo'
-      test.equals pattern.match('.foobar'), null
-      test.done()
+    pattern = new UrlPattern '^admin^*^user^:id^*^tail'
+    test.deepEqual pattern.match('^admin^school^10^user^10^12^13^tail'),
+      _: ['school^10', '12^13']
+      id: '10'
 
-    'prefix is not matched': (test) ->
-      pattern = new UrlPattern '.foo'
-      test.equals pattern.match('.bar.foo'), null
-      test.done()
+    pattern = new UrlPattern '/*/admin(/:path)'
+    test.deepEqual pattern.match('/admin/admin/admin'),
+      _: 'admin'
+      path: 'admin'
 
-    'parameter bindings are returned': (test) ->
-      pattern = new UrlPattern '.user.:userId.task.:taskId'
-      test.deepEqual pattern.match('.user.10.task.52'),
-        userId: '10'
-        taskId: '52'
-      test.done()
+    pattern = new UrlPattern '(/)'
+    test.deepEqual pattern.match(''), {}
+    test.deepEqual pattern.match('/'), {}
 
-    'prefix wildcard': (test) ->
-      pattern = new UrlPattern '*-user-:userId'
-      test.deepEqual pattern.match('-school-10-user-10'),
-        _: '-school-10'
-        userId: '10'
-      test.done()
+    pattern = new UrlPattern '/admin(/foo)/bar'
+    test.deepEqual pattern.match('/admin/foo/bar'), {}
+    test.deepEqual pattern.match('/admin/bar'), {}
 
-    'suffix wildcard': (test) ->
-      pattern = new UrlPattern '#admin*'
-      test.deepEqual pattern.match('#admin#school#10#user#10'),
-        _: '#school#10#user#10'
-      test.done()
+    pattern = new UrlPattern '/admin(/:foo)/bar'
+    test.deepEqual pattern.match('/admin/baz/bar'),
+      foo: 'baz'
+    test.deepEqual pattern.match('/admin/bar'), {}
 
-    'infix wildcard': (test) ->
-      pattern = new UrlPattern '$admin$*$user$:userId'
-      test.deepEqual pattern.match('$admin$school$10$user$10'),
-        _: 'school$10'
-        userId: '10'
-      test.done()
+    pattern = new UrlPattern '/admin/(*/)foo'
+    test.deepEqual pattern.match('/admin/foo'), {}
+    test.deepEqual pattern.match('/admin/baz/bar/biff/foo'),
+      _: 'baz/bar/biff'
 
-    'multiple wildcards': (test) ->
-      pattern = new UrlPattern '$admin$*$user$*$tail'
-      test.deepEqual pattern.match('$admin$school$10$user$10$12$tail'),
-        _: ['school$10', '10$12']
-      test.done()
+    pattern = new UrlPattern '/admin/(*/)foo'
+    test.deepEqual pattern.match('/admin/foo'), {}
+    test.deepEqual pattern.match('/admin/baz/bar/biff/foo'),
+      _: 'baz/bar/biff'
 
-    'multiple wildcards and parameter binding': (test) ->
-      pattern = new UrlPattern '^admin^*^user^:id^*^tail'
-      test.deepEqual pattern.match('^admin^school^10^user^10^12^13^tail'),
-        _: ['school^10', '12^13']
-        id: '10'
-      test.done()
+    pattern = new UrlPattern '/v:major.:minor/*'
+    test.deepEqual pattern.match('/v1.2/resource/'),
+      _: 'resource/'
+      major: '1'
+      minor: '2'
 
-    'mixed separators': (test) ->
-      pattern = new UrlPattern '/v:major.:minor/*'
-      test.deepEqual pattern.match('/v1.2/resource/'),
-        _: 'resource/'
-        major: '1'
-        minor: '2'
-      test.done()
+    pattern = new UrlPattern '/v:v.:v/*'
+    test.deepEqual pattern.match('/v1.2/resource/'),
+      _: 'resource/'
+      v: ['1', '2']
 
-    'repeated names are collected into array': (test) ->
-      pattern = new UrlPattern '/v:v.:v/*'
-      test.deepEqual pattern.match('/v1.2/resource/'),
-        _: 'resource/'
-        v: ['1', '2']
-      test.done()
+    pattern = new UrlPattern '/:foo_bar'
+    test.equal pattern.match('/_bar'), null
+    test.deepEqual pattern.match('/a_bar'),
+      foo: 'a'
+    test.deepEqual pattern.match('/a__bar'),
+      foo: 'a_'
+    test.deepEqual pattern.match('/a-b-c-d__bar'),
+      foo: 'a-b-c-d_'
+    test.deepEqual pattern.match('/a b%c-d__bar'),
+      foo: 'a b%c-d_'
+
+    pattern = new UrlPattern '((((a)b)c)d)'
+    test.deepEqual pattern.match(''), {}
+    test.equal pattern.match('a'), null
+    test.equal pattern.match('ab'), null
+    test.equal pattern.match('abc'), null
+    test.deepEqual pattern.match('abcd'), {}
+    test.deepEqual pattern.match('bcd'), {}
+    test.deepEqual pattern.match('cd'), {}
+    test.deepEqual pattern.match('d'), {}
+
+    test.done()
 
   'special':
 

@@ -142,7 +142,7 @@ optional named segments are stored in the corresponding property, if they exist:
 {subdomain: 'www', domain: 'google', tld: 'com'}
 ```
 
-`*` are wildcards and match anything.
+`*` in patterns are wildcards and match anything.
 wildcard matches are collected in the `_` property:
 
 ```javascript

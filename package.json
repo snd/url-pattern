@@ -1,6 +1,6 @@
 {
   "name": "url-pattern",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "url-pattern is simple pattern matching and segment extraction for urls, domains, filepaths and other strings",
   "keywords": ["url", "pattern", "matching", "routing", "route", "regex", "match", "segment", "parsing", "parser", "path", "domain", "separator"],
   "homepage": "http://github.com/snd/url-pattern",

@@ -92,7 +92,7 @@ null
 ```
 
 pattern strings are compiled into regexes at construction.
-this makes `.match()` fast.
+this makes `.match()` superfast.
 
 ### named segments
 
@@ -123,7 +123,7 @@ to make part of a pattern optional just wrap it in `(` and `)`:
 
 
 ```javascript
-> var pattern = new UrlPattern('(http(s)\\://)(:subdomain.):domain.:tld(/*)')
+> var pattern = new UrlPattern('(http(s)\\://)(:subdomain.):domain.:tld(/*)');
 ```
 
 note that `\\` escapes the `:` in `http\\://`.
@@ -221,7 +221,10 @@ let's change the char used to denote a wildcard:
 make url-pattern use our compiler by passing it in as the second argument to the constructor:
 
 ```javascript
-> var pattern = new UrlPattern('[http[s]!://][$sub_domain.]$domain.$toplevel-domain[/?]', compiler);
+> var pattern = new UrlPattern(
+  '[http[s]!://][$sub_domain.]$domain.$toplevel-domain[/?]',
+  compiler
+);
 ```
 
 ### changelog

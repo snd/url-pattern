@@ -187,8 +187,11 @@
       return captured
 
     bound = {}
-    for value, i in captured
-      name = @names[i]
+    index = -1
+    length = captured.length
+    while ++index < length
+      value = captured[index]
+      name = @names[index]
       # nothing captured for this binding
       unless value?
         continue

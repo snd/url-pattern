@@ -23,9 +23,12 @@
   Compiler = ->
 
   Compiler.prototype.escapeChar = '\\'
-  Compiler.prototype.segmentValueCharset = 'a-zA-Z0-9-_ %'
   Compiler.prototype.segmentNameStartChar = ':'
   Compiler.prototype.segmentNameCharset = 'a-zA-Z0-9'
+  Compiler.prototype.segmentValueCharset = 'a-zA-Z0-9-_ %'
+  Compiler.prototype.optionalSegmentStartChar = '('
+  Compiler.prototype.optionalSegmentEndChar = ')'
+  Compiler.prototype.wildcardChar = '*'
 
   Compiler.prototype.segmentValueRegexString = ->
     "([" + @segmentValueCharset + "]+)"
@@ -104,17 +107,17 @@
           @transition('namedSegmentStart')
         when @escapeChar
           @transition('staticSegmentEscapeNextChar')
-        when '('
+        when @optionalSegmentStartChar
           @transition('unknown')
           @openParens++
           @regexString += '(?:'
-        when ')'
+        when @optionalSegmentEndChar
           @transition('unknown')
           @openParens--
           if @openParens < 0
-            throw new Error "did not expect ) at #{@index}"
+            throw new Error "did not expect #{@optionalSegmentEndChar} at #{@index}"
           @regexString += ')?'
-        when '*'
+        when @wildcardChar
           @transition('unknown')
           @regexString += '(.*?)'
           @names.push '_'

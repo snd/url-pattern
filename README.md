@@ -212,7 +212,7 @@ let's change the chars used to surround an optional segment (default `(` and `)`
 > compiler.optionalSegmentEndChar = ']';
 ```
 
-let's change the char used to denote a wildcard:
+let's change the char used to denote a wildcard (default `*`):
 
 ```javascript
 > compiler.wildcardChar = '?';

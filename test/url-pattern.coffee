@@ -184,67 +184,69 @@ module.exports =
       test.deepEqual compiler.names, ['_']
       test.done()
 
-    'throw on invalid variable name': (test) ->
-      test.expect 3
-      try
-        compiler = new Compiler
-        compiler.compile ':'
-      catch e
-        test.equal e.message, "`:` must be followed by the name of the named segment consisting of at least one character in character set `a-zA-Z0-9` at 1"
-      try
-        compiler = new Compiler
-        compiler.compile ':.'
-      catch e
-        test.equal e.message, "`:` must be followed by the name of the named segment consisting of at least one character in character set `a-zA-Z0-9` at 1"
-      try
-        compiler = new Compiler
-        compiler.compile 'foo:.'
-      catch e
-        test.equal e.message, "`:` must be followed by the name of the named segment consisting of at least one character in character set `a-zA-Z0-9` at 4"
-      test.done()
+    'throw':
 
-    'throw when variable directly after variable': (test) ->
-      test.expect 2
-      try
-        compiler = new Compiler
-        compiler.compile ':foo:bar'
-      catch e
-        test.equal e.message, 'cannot start named segment right after named segment at 4'
-      try
-        compiler = new Compiler
-        compiler.compile 'foo:foo:bar.bar'
-      catch e
-        test.equal e.message, 'cannot start named segment right after named segment at 7'
-      test.done()
+      'invalid variable name': (test) ->
+        test.expect 3
+        try
+          compiler = new Compiler
+          compiler.compile ':'
+        catch e
+          test.equal e.message, "`:` must be followed by the name of the named segment consisting of at least one character in character set `a-zA-Z0-9` at 1"
+        try
+          compiler = new Compiler
+          compiler.compile ':.'
+        catch e
+          test.equal e.message, "`:` must be followed by the name of the named segment consisting of at least one character in character set `a-zA-Z0-9` at 1"
+        try
+          compiler = new Compiler
+          compiler.compile 'foo:.'
+        catch e
+          test.equal e.message, "`:` must be followed by the name of the named segment consisting of at least one character in character set `a-zA-Z0-9` at 4"
+        test.done()
 
-    'throw when too many closing parentheses': (test) ->
-      test.expect 2
-      try
-        compiler = new Compiler
-        compiler.compile ')'
-      catch e
-        test.equal e.message, 'did not expect ) at 0'
-      try
-        compiler = new Compiler
-        compiler.compile '((foo)))bar'
-      catch e
-        test.equal e.message, 'did not expect ) at 7'
-      test.done()
+      'variable directly after variable': (test) ->
+        test.expect 2
+        try
+          compiler = new Compiler
+          compiler.compile ':foo:bar'
+        catch e
+          test.equal e.message, 'cannot start named segment right after named segment at 4'
+        try
+          compiler = new Compiler
+          compiler.compile 'foo:foo:bar.bar'
+        catch e
+          test.equal e.message, 'cannot start named segment right after named segment at 7'
+        test.done()
 
-    'throw when unclosed parentheses': (test) ->
-      test.expect 2
-      compiler = new Compiler
-      try
+      'too many closing parentheses': (test) ->
+        test.expect 2
+        try
+          compiler = new Compiler
+          compiler.compile ')'
+        catch e
+          test.equal e.message, 'did not expect ) at 0'
+        try
+          compiler = new Compiler
+          compiler.compile '((foo)))bar'
+        catch e
+          test.equal e.message, 'did not expect ) at 7'
+        test.done()
+
+      'unclosed parentheses': (test) ->
+        test.expect 2
         compiler = new Compiler
-        compiler.compile '('
-      catch e
-        test.equal e.message, 'unclosed parentheses at 1'
-      try
-        compiler = new Compiler
-        compiler.compile '(((foo)bar(boo)far)'
-      catch e
-        test.equal e.message, 'unclosed parentheses at 19'
-      test.done()
+        try
+          compiler = new Compiler
+          compiler.compile '('
+        catch e
+          test.equal e.message, 'unclosed parentheses at 1'
+        try
+          compiler = new Compiler
+          compiler.compile '(((foo)bar(boo)far)'
+        catch e
+          test.equal e.message, 'unclosed parentheses at 19'
+        test.done()
 
   'UrlPattern.match() strings separated by /':
 
@@ -423,19 +425,21 @@ module.exports =
         v: ['1', '2']
       test.done()
 
-  'named segment can have a static prefix': (test) ->
-    pattern = new UrlPattern '/vvv:version/*'
-    test.equal null, pattern.match('/vvv/resource')
-    test.deepEqual pattern.match('/vvv1/resource'),
-      _: 'resource'
-      version: '1'
-    test.equal null, pattern.match('/vvv1.1/resource'),
-    test.done()
+  'special':
 
-  'instance of UrlPattern is handled correctly as constructor argument': (test) ->
-      pattern = new UrlPattern '/user/:userId/task/:taskId'
-      copy = new UrlPattern pattern
-      test.deepEqual copy.match('/user/10/task/52'),
-        userId: '10'
-        taskId: '52'
+    'named segment can have a static prefix': (test) ->
+      pattern = new UrlPattern '/vvv:version/*'
+      test.equal null, pattern.match('/vvv/resource')
+      test.deepEqual pattern.match('/vvv1/resource'),
+        _: 'resource'
+        version: '1'
+      test.equal null, pattern.match('/vvv1.1/resource'),
       test.done()
+
+    'instance of UrlPattern is handled correctly as constructor argument': (test) ->
+        pattern = new UrlPattern '/user/:userId/task/:taskId'
+        copy = new UrlPattern pattern
+        test.deepEqual copy.match('/user/10/task/52'),
+          userId: '10'
+          taskId: '52'
+        test.done()

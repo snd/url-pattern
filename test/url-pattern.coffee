@@ -1,8 +1,252 @@
 UrlPattern = require '../src/url-pattern'
+Compiler = UrlPattern.Compiler
 
 module.exports =
 
-  'match with / separator':
+  'examples in README.md':
+
+    'simple': (test) ->
+      pattern = new UrlPattern('/api/users/:id')
+      test.deepEqual pattern.match('/api/users/10'), {id: '10'}
+      test.equal pattern.match('/api/products/5'), null
+      test.done()
+
+    'api versioning': (test) ->
+      pattern = new UrlPattern('/v:major(.:minor)/*')
+      test.deepEqual pattern.match('/v1.2/'), {major: '1', minor: '2', _: ''}
+      test.deepEqual pattern.match('/v2/users'), {major: '2', _: 'users'}
+      test.equal pattern.match('/v/'), null
+      test.done()
+
+    'domain': (test) ->
+      pattern = new UrlPattern('(http(s)\\://)(:subdomain.):domain.:tld(/*)')
+      test.deepEqual pattern.match('google.de'),
+        domain: 'google'
+        tld: 'de'
+      test.deepEqual pattern.match('https://www.google.com'),
+        subdomain: 'www'
+        domain: 'google'
+        tld: 'com'
+      test.deepEqual pattern.match('http://mail.google.com/mail'),
+        subdomain: 'mail'
+        domain: 'google'
+        tld: 'com'
+        _: 'mail'
+      test.equal pattern.match('google'), null
+
+      test.deepEqual pattern.match('www.google.com'),
+        subdomain: 'www'
+        domain: 'google'
+        tld: 'com'
+      test.equal pattern.match('httpp://mail.google.com/mail'), null
+      test.deepEqual pattern.match('google.de/search'),
+        domain: 'google'
+        tld: 'de'
+        _: 'search'
+
+      test.done()
+
+    'named segment occurs more than once': (test) ->
+      pattern = new UrlPattern('/api/users/:ids/posts/:ids')
+      test.deepEqual pattern.match('/api/users/10/posts/5'), {ids: ['10', '5']}
+      test.done()
+
+    'regex': (test) ->
+      pattern = new UrlPattern(/\/api\/(.*)/)
+      test.deepEqual pattern.match('/api/users'), ['users']
+      test.equal pattern.match('/apiii/users'), null
+      test.done()
+
+    'modifying the compiler': (test) ->
+      compiler = new UrlPattern.Compiler()
+      compiler.escapeChar = '!'
+      compiler.segmentNameStartChar = '$'
+      compiler.segmentNameCharset = 'a-zA-Z0-9_-'
+      compiler.segmentValueCharset = 'a-zA-Z0-9'
+      compiler.optionalSegmentStartChar = '['
+      compiler.optionalSegmentEndChar = ']'
+      compiler.wildcardChar = '?'
+
+      pattern = new UrlPattern(
+        '[http[s]!://][$sub_domain.]$domain.$toplevel-domain[/?]'
+        compiler
+      )
+
+      test.deepEqual pattern.match('google.de'),
+        domain: 'google'
+        'toplevel-domain': 'de'
+      test.deepEqual pattern.match('http://mail.google.com/mail'),
+        sub_domain: 'mail'
+        domain: 'google'
+        'toplevel-domain': 'com'
+        _: 'mail'
+      test.equal pattern.match('http://mail.this-should-not-match.com/mail'), null
+      test.equal pattern.match('google'), null
+      test.deepEqual pattern.match('www.google.com'),
+        sub_domain: 'www'
+        domain: 'google'
+        'toplevel-domain': 'com'
+      test.deepEqual pattern.match('https://www.google.com'),
+        sub_domain: 'www'
+        domain: 'google'
+        'toplevel-domain': 'com'
+      test.equal pattern.match('httpp://mail.google.com/mail'), null
+      test.deepEqual pattern.match('google.de/search'),
+        domain: 'google'
+        'toplevel-domain': 'de'
+        _: 'search'
+      test.done()
+
+  'helpers':
+
+    'UrlPattern.escapeForRegex()': (test) ->
+      test.equal 'a', UrlPattern.escapeForRegex 'a'
+      test.equal '!', UrlPattern.escapeForRegex '!'
+      test.equal '\\.', UrlPattern.escapeForRegex '.'
+      test.equal '\\/', UrlPattern.escapeForRegex '/'
+      test.equal '\\-', UrlPattern.escapeForRegex '-'
+      test.equal '\\-', UrlPattern.escapeForRegex '-'
+      test.equal '\\[', UrlPattern.escapeForRegex '['
+      test.equal '\\]', UrlPattern.escapeForRegex ']'
+      test.equal '\\(', UrlPattern.escapeForRegex '('
+      test.equal '\\)', UrlPattern.escapeForRegex ')'
+      test.done()
+
+  'Compiler.compile() compiles patterns into correct regexes':
+
+    'empty string': (test) ->
+      compiler = new Compiler
+      compiler.compile ''
+      test.equal compiler.regexString, '^$'
+      test.deepEqual compiler.names, []
+      test.done()
+
+    'just static alphanumeric': (test) ->
+      compiler = new Compiler
+      compiler.compile 'user42'
+      test.equal compiler.regexString, '^user42$'
+      test.deepEqual compiler.names, []
+      test.done()
+
+    'just static escaped': (test) ->
+      compiler = new Compiler
+      compiler.compile '/api/v1/users'
+      test.equal compiler.regexString, '^\\/api\\/v1\\/users$'
+      test.deepEqual compiler.names, []
+      test.done()
+
+    'just single char variable': (test) ->
+      compiler = new Compiler
+      compiler.compile ':a'
+      test.equal compiler.regexString, '^' + Compiler.prototype.segmentValueRegexString() + '$'
+      test.deepEqual compiler.names, ['a']
+      test.done()
+
+    'just variable': (test) ->
+      compiler = new Compiler
+      compiler.compile ':variable'
+      test.equal compiler.regexString, '^' + Compiler.prototype.segmentValueRegexString() + '$'
+      test.deepEqual compiler.names, ['variable']
+      test.done()
+
+    'just wildcard': (test) ->
+      compiler = new Compiler
+      compiler.compile '*'
+      test.equal compiler.regexString, '^(.*?)$'
+      test.deepEqual compiler.names, ['_']
+      test.done()
+
+    'just wildcard': (test) ->
+      compiler = new Compiler
+      compiler.compile '*'
+      test.equal compiler.regexString, '^(.*?)$'
+      test.deepEqual compiler.names, ['_']
+      test.done()
+
+    'just optional static': (test) ->
+      compiler = new Compiler
+      compiler.compile '(foo)'
+      test.equal compiler.regexString, '^(?:foo)?$'
+      test.deepEqual compiler.names, []
+      test.done()
+
+    'just optional variable': (test) ->
+      compiler = new Compiler
+      compiler.compile '(:foo)'
+      test.equal compiler.regexString, '^(?:' + Compiler.prototype.segmentValueRegexString() + ')?$'
+      test.deepEqual compiler.names, ['foo']
+      test.done()
+
+    'just optional wildcard': (test) ->
+      compiler = new Compiler
+      compiler.compile '(*)'
+      test.equal compiler.regexString, '^(?:(.*?))?$'
+      test.deepEqual compiler.names, ['_']
+      test.done()
+
+    'throw on invalid variable name': (test) ->
+      test.expect 3
+      try
+        compiler = new Compiler
+        compiler.compile ':'
+      catch e
+        test.equal e.message, "`:` must be followed by the name of the named segment consisting of at least one character in character set `a-zA-Z0-9` at 1"
+      try
+        compiler = new Compiler
+        compiler.compile ':.'
+      catch e
+        test.equal e.message, "`:` must be followed by the name of the named segment consisting of at least one character in character set `a-zA-Z0-9` at 1"
+      try
+        compiler = new Compiler
+        compiler.compile 'foo:.'
+      catch e
+        test.equal e.message, "`:` must be followed by the name of the named segment consisting of at least one character in character set `a-zA-Z0-9` at 4"
+      test.done()
+
+    'throw when variable directly after variable': (test) ->
+      test.expect 2
+      try
+        compiler = new Compiler
+        compiler.compile ':foo:bar'
+      catch e
+        test.equal e.message, 'cannot start named segment right after named segment at 4'
+      try
+        compiler = new Compiler
+        compiler.compile 'foo:foo:bar.bar'
+      catch e
+        test.equal e.message, 'cannot start named segment right after named segment at 7'
+      test.done()
+
+    'throw when too many closing parentheses': (test) ->
+      test.expect 2
+      try
+        compiler = new Compiler
+        compiler.compile ')'
+      catch e
+        test.equal e.message, 'did not expect ) at 0'
+      try
+        compiler = new Compiler
+        compiler.compile '((foo)))bar'
+      catch e
+        test.equal e.message, 'did not expect ) at 7'
+      test.done()
+
+    'throw when unclosed parentheses': (test) ->
+      test.expect 2
+      compiler = new Compiler
+      try
+        compiler = new Compiler
+        compiler.compile '('
+      catch e
+        test.equal e.message, 'unclosed parentheses at 1'
+      try
+        compiler = new Compiler
+        compiler.compile '(((foo)bar(boo)far)'
+      catch e
+        test.equal e.message, 'unclosed parentheses at 19'
+      test.done()
+
+  'UrlPattern.match() strings separated by /':
 
     'trivial route is matched': (test) ->
       pattern = new UrlPattern '/foo'
@@ -74,7 +318,7 @@ module.exports =
         id: '10'
       test.done()
 
-    'wildcard with ambiguous trail': (test) ->
+    'wildcard with ambiguous tail': (test) ->
       pattern = new UrlPattern '/*/admin(/:path)'
       test.deepEqual pattern.match('/admin/admin/admin'),
         _: 'admin'
@@ -107,7 +351,7 @@ module.exports =
         _: 'baz/bar/biff'
       test.done()
 
-  'match with various separators':
+  'UrlPattern.match() strings separated by various characters':
 
     'trivial route is matched': (test) ->
       pattern = new UrlPattern '.foo'
@@ -179,21 +423,7 @@ module.exports =
         v: ['1', '2']
       test.done()
 
-  'escapeForRegex': (test) ->
-    test.equal 'a', UrlPattern.prototype.escapeForRegex 'a'
-    test.equal '!', UrlPattern.prototype.escapeForRegex '!'
-    test.equal '\\.', UrlPattern.prototype.escapeForRegex '.'
-    test.equal '\\/', UrlPattern.prototype.escapeForRegex '/'
-    test.equal '\\-', UrlPattern.prototype.escapeForRegex '-'
-    test.equal '\\-', UrlPattern.prototype.escapeForRegex '-'
-    test.equal '\\[', UrlPattern.prototype.escapeForRegex '['
-    test.equal '\\]', UrlPattern.prototype.escapeForRegex ']'
-    test.equal '\\(', UrlPattern.prototype.escapeForRegex '('
-    test.equal '\\)', UrlPattern.prototype.escapeForRegex ')'
-
-    test.done()
-
-  'segment can have a constant prefix': (test) ->
+  'named segment can have a static prefix': (test) ->
     pattern = new UrlPattern '/vvv:version/*'
     test.equal null, pattern.match('/vvv/resource')
     test.deepEqual pattern.match('/vvv1/resource'),
@@ -202,189 +432,10 @@ module.exports =
     test.equal null, pattern.match('/vvv1.1/resource'),
     test.done()
 
-  'self awareness': (test) ->
+  'instance of UrlPattern is handled correctly as constructor argument': (test) ->
       pattern = new UrlPattern '/user/:userId/task/:taskId'
       copy = new UrlPattern pattern
       test.deepEqual copy.match('/user/10/task/52'),
         userId: '10'
         taskId: '52'
-      test.done()
-
-  'isAlphanumeric':
-
-    'true': (test) ->
-      test.ok UrlPattern.prototype.isAlphanumeric 'a'
-      test.ok UrlPattern.prototype.isAlphanumeric 'z'
-      test.ok UrlPattern.prototype.isAlphanumeric 'A'
-      test.ok UrlPattern.prototype.isAlphanumeric 'Z'
-      test.ok UrlPattern.prototype.isAlphanumeric '0'
-      test.ok UrlPattern.prototype.isAlphanumeric '9'
-      test.ok UrlPattern.prototype.isAlphanumeric 'adlkjf9080945lkjd'
-      test.done()
-
-    'false': (test) ->
-      test.ok not UrlPattern.prototype.isAlphanumeric '.'
-      test.ok not UrlPattern.prototype.isAlphanumeric '+'
-      test.ok not UrlPattern.prototype.isAlphanumeric 'akld+'
-      test.ok not UrlPattern.prototype.isAlphanumeric ''
-      test.done()
-
-  'allowedSegmentChars':
-    'true': (test) ->
-      strings = [
-        'a',
-        'A',
-        '0',
-        '-',
-        '_',
-        ' ',
-        '%'
-        'adlkjf9080945lkjd-_ %'
-      ]
-      for string in strings
-        test.ok new RegExp('([' + UrlPattern.prototype.allowedSegmentChars + ']+)').test(string);
-      test.done()
-    'false': (test) ->
-      strings = ['+']
-      for string in strings
-        test.ok not new RegExp('([' + UrlPattern.prototype.allowedSegmentChars + ']+)').test(string);
-      test.done()
-
-    'set custom allowedSegmentChars': (test) ->
-      pattern = new UrlPattern '/foo/:bar', 'a-zA-Z0-9'
-      test.equal pattern.match('/foo/bar-baz'), null
-      test.deepEqual pattern.match('/foo/bar'), {bar: 'bar'}
-      test.done()
-
-  'compile':
-
-    'empty string': (test) ->
-      pattern = new UrlPattern ''
-      test.equal pattern.regex.source, '^$'
-      test.deepEqual pattern.names, []
-      test.done()
-
-    'just static alphanumeric': (test) ->
-      pattern = new UrlPattern 'user42'
-      test.equal pattern.regex.source, '^user42$'
-      test.deepEqual pattern.names, []
-      test.done()
-
-    'just static escaped': (test) ->
-      pattern = new UrlPattern '/api/v1/users'
-      test.equal pattern.regex.source, '^\\/api\\/v1\\/users$'
-      test.deepEqual pattern.names, []
-      test.done()
-
-    'just single char variable': (test) ->
-      pattern = new UrlPattern ':a'
-      test.equal pattern.regex.source, '^([' + UrlPattern.prototype.allowedSegmentChars + ']+)$'
-      test.deepEqual pattern.names, ['a']
-      test.done()
-
-    'just variable': (test) ->
-      pattern = new UrlPattern ':variable'
-      test.equal pattern.regex.source, '^([' + UrlPattern.prototype.allowedSegmentChars + ']+)$'
-      test.deepEqual pattern.names, ['variable']
-      test.done()
-
-    'just wildcard': (test) ->
-      pattern = new UrlPattern '*'
-      test.equal pattern.regex.source, '^(.*?)$'
-      test.deepEqual pattern.names, ['_']
-      test.done()
-
-    'just wildcard': (test) ->
-      pattern = new UrlPattern '*'
-      test.equal pattern.regex.source, '^(.*?)$'
-      test.deepEqual pattern.names, ['_']
-      test.done()
-
-    'just optional static': (test) ->
-      pattern = new UrlPattern '(foo)'
-      test.equal pattern.regex.source, '^(?:foo)?$'
-      test.deepEqual pattern.names, []
-      test.done()
-
-    'just optional variable': (test) ->
-      pattern = new UrlPattern '(:foo)'
-      test.equal pattern.regex.source, '^(?:([' + UrlPattern.prototype.allowedSegmentChars + ']+))?$'
-      test.deepEqual pattern.names, ['foo']
-      test.done()
-
-    'just optional wildcard': (test) ->
-      pattern = new UrlPattern '(*)'
-      test.equal pattern.regex.source, '^(?:(.*?))?$'
-      test.deepEqual pattern.names, ['_']
-      test.done()
-
-    'throw on invalid variable name': (test) ->
-      test.expect 3
-      try
-        pattern = new UrlPattern ':'
-      catch e
-        test.equal e.message, '`:` must be followed by at least one alphanumeric character that is the variable name at 1'
-      try
-        pattern = new UrlPattern ':.'
-      catch e
-        test.equal e.message, '`:` must be followed by at least one alphanumeric character that is the variable name at 1'
-      try
-        pattern = new UrlPattern 'foo:.'
-      catch e
-        test.equal e.message, '`:` must be followed by at least one alphanumeric character that is the variable name at 4'
-      test.done()
-
-    'throw when variable directly after variable': (test) ->
-      test.expect 2
-      try
-        pattern = new UrlPattern ':foo:bar'
-      catch e
-        test.equal e.message, 'cannot start variable right after variable at 4'
-      try
-        pattern = new UrlPattern 'foo:foo:bar.bar'
-      catch e
-        test.equal e.message, 'cannot start variable right after variable at 7'
-      test.done()
-
-    'throw when too many closing parentheses': (test) ->
-      test.expect 2
-      try
-        pattern = new UrlPattern ')'
-      catch e
-        test.equal e.message, 'did not expect ) at 0'
-      try
-        pattern = new UrlPattern '((foo)))bar'
-      catch e
-        test.equal e.message, 'did not expect ) at 7'
-      test.done()
-
-    'throw when unclosed parentheses': (test) ->
-      test.expect 2
-      try
-        pattern = new UrlPattern '('
-      catch e
-        test.equal e.message, 'unclosed parentheses at 1'
-      try
-        pattern = new UrlPattern '(((foo)bar(boo)far)'
-      catch e
-        test.equal e.message, 'unclosed parentheses at 19'
-      test.done()
-
-  'readme':
-
-    '1': (test) ->
-      pattern = new UrlPattern('/api/users/:id')
-      test.deepEqual pattern.match('/api/users/10'), {id: '10'}
-      test.equal pattern.match('/api/products/5'), null
-      test.deepEqual pattern.match('/api/users/foo-bar'), {id: 'foo-bar'}
-      test.deepEqual pattern.match('/api/users/foo_bar'), {id: 'foo_bar'}
-      test.deepEqual pattern.match('/api/users/foo bar'), {id: 'foo bar'}
-      test.deepEqual pattern.match('/api/users/foo%20bar'), {id: 'foo%20bar'}
-      test.done()
-
-    '2': (test) ->
-      pattern = new UrlPattern('/v:major(.:minor)/*')
-      test.deepEqual pattern.match('/v1.2/'), {major: '1', minor: '2', _: ''}
-      test.deepEqual pattern.match('/v2/users'), {major: '2', _: 'users'}
-      test.equal pattern.match('/v/'), null
       test.done()

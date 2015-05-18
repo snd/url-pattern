@@ -104,11 +104,11 @@ the **name** must be at least one character in the regex character set `a-zA-Z0-
 
 when matching, a named segment consumes all characters in the regex character set
 `a-zA-Z0-9-_ %`.
-this means a named segment match stops at `/`, `.`, ... but not at `_`, `-` and ` `.
+this means a named segment match stops at `/`, `.`, ... but not at `_`, `-`, ` ` and `%`.
 
 [click here to see how you can change these character sets.](#modifying-the-compiler)
 
-if a named segment name occurs more than once in the pattern string the multiple results
+if a named segment **name** occurs more than once in the pattern string the multiple results
 are stored in an array on the returned object:
 
 ```javascript
@@ -126,7 +126,7 @@ to make part of a pattern optional just wrap it in `(` and `)`:
 > var pattern = new UrlPattern('(http(s)\\://)(:subdomain.):domain.:tld(/*)');
 ```
 
-note that `\\` escapes the `:` in `http\\://`.
+note that `\\` escapes the `:` in `http(s)\\://`.
 you can use `\\` to escape any character that has special meaning within
 url-pattern: `(`, `)`, `:`, `*`.
 

@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
 [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern)
 
-**url-pattern is simple pattern matching and segment extraction for
+**simple pattern matching and segment extraction for
 urls, domains, filepaths and other strings**
 
 > This is a great little library -- thanks!  

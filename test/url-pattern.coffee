@@ -412,3 +412,12 @@ module.exports =
           userId: '10'
           taskId: '52'
         test.done()
+
+  'match full stops in segment values': (test) ->
+      compiler = new UrlPattern.Compiler()
+      compiler.segmentValueCharset = 'a-zA-Z0-9-_ %.'
+      pattern = new UrlPattern '/api/v1/user/:id/', compiler
+      copy = new UrlPattern pattern
+      test.deepEqual copy.match('/api/v1/user/test.name/'),
+        id: 'test.name'
+      test.done()

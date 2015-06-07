@@ -15,6 +15,165 @@
     string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
 
 ################################################################################
+# parser combinators
+
+  # parsers
+  P = {}
+
+  P.Result = (value, rest) ->
+    this.value = value
+    this.rest = rest
+    return
+
+  P.nothing = (input) ->
+    return new P.Result null, input
+
+  P.anyChar = (input) ->
+    if input is ''
+      return
+    return new P.Result input.charAt(0), input.slice(1)
+
+  P.string = (string) ->
+    if string is ''
+      throw new Error '`string` must not be blank'
+    (input) ->
+      # TODO could optimize this for chars (if string.length is 1)
+      if input.slice(0, string.length) is string
+        return new P.Result string, input.slice(string.length)
+
+  P.charset = (charset) ->
+    regex = new RegExp '^['  + charset + ']$'
+    (input) ->
+      char = input.charAt(0)
+      unless regex.test char
+        return
+      return new P.Result char, input.slice(1)
+
+  P.choice = (parsers) ->
+    (input) ->
+      index = -1
+      length = parsers.length
+      while ++index < length
+        result = parsers[index] input
+        if result?
+          return result
+      return
+
+  P.baseMany = (parser, end, stringResult, atLeastOneResultRequired, input) ->
+    rest = input
+    results = if stringResult then '' else []
+    while true
+      if end?
+        endResult = end rest
+        if endResult?
+          break
+      parserResult = parser rest
+      unless parserResult?
+        break
+      if stringResult
+        results += parserResult.value
+      else
+        results.push parserResult.value
+      rest = parserResult.rest
+
+    if atLeastOneResultRequired and results.length is 0
+      return
+
+    return new P.Result results, rest
+
+  P.many1 = (parser) ->
+    (input) ->
+      P.baseMany parser, null, false, true, input
+
+  P.concatMany1 = (parser) ->
+    (input) ->
+      P.baseMany parser, null, true, true, input
+
+  P.concatMany1Till = (parser, end) ->
+    (input) ->
+      P.baseMany parser, end, true, true, input
+
+  P.lazy = (fn) ->
+    cached = null
+    (input) ->
+      unless cached?
+        cached = fn()
+      return cached input
+
+  P.Tagged = (tag, value) ->
+    this.tag = tag
+    this.value = value
+    return
+
+  P.tag = (tag, parser) ->
+    (input) ->
+      result = parser input
+      unless result
+        return
+      tagged = new P.Tagged tag, result.value
+      return new P.Result tagged, result.rest
+
+  P.between = (open, parser, close) ->
+    (input) ->
+      openResult = open input
+      unless openResult?
+        return
+      parserResult = parser openResult.rest
+      unless parserResult?
+        return
+      closeResult = close parserResult.rest
+      unless closeResult?
+        return
+      return new P.Result(parserResult.value, closeResult.rest)
+
+  # url pattern specific parsers
+  U = {}
+
+  U.wildcard = P.tag 'wildcard', P.string('*')
+
+  U.optional = P.tag(
+    'optional'
+    P.between(
+      P.string('(')
+      P.lazy(-> U.pattern)
+      P.string(')')
+    )
+  )
+
+  U.name = P.concatMany1 P.charset 'a-zA-Z0-9'
+
+  U.named = P.tag(
+    'named',
+    P.between(
+      P.string(':')
+      P.lazy(-> U.name)
+      P.nothing
+    )
+  )
+
+  U.escapedChar = P.between(
+    P.string('\\')
+    P.anyChar
+    P.nothing
+  )
+
+  U.static = P.tag(
+    'static'
+    P.concatMany1Till(
+      P.choice([
+        P.lazy(-> U.escapedChar)
+        P.anyChar
+      ])
+      P.charset('\\*\\(\\):')
+    )
+  )
+
+  U.token = P.lazy ->
+    P.choice [U.wildcard, U.optional, U.named, U.static]
+
+  U.pattern = P.many1 P.lazy(-> U.token)
+
+################################################################################
 # Compiler
 # compiles a regex string while parsing a pattern string.
 # state machine that iterates through an input `string` (representing an
@@ -210,6 +369,8 @@
 
   UrlPattern.Compiler = Compiler
   UrlPattern.escapeForRegex = escapeForRegex
+  UrlPattern.P = P
+  UrlPattern.U = U
 
   return UrlPattern
 )

@@ -355,11 +355,6 @@ module.exports =
     test.deepEqual pattern.match('/admin/baz/bar/biff/foo'),
       _: 'baz/bar/biff'
 
-    pattern = new UrlPattern '/admin/(*/)foo'
-    test.deepEqual pattern.match('/admin/foo'), {}
-    test.deepEqual pattern.match('/admin/baz/bar/biff/foo'),
-      _: 'baz/bar/biff'
-
     pattern = new UrlPattern '/v:major.:minor/*'
     test.deepEqual pattern.match('/v1.2/resource/'),
       _: 'resource/'

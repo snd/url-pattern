@@ -175,14 +175,11 @@
   U.pattern = P.many1 P.lazy(-> U.token)
 
 ################################################################################
-# functions that further process ASTs returned by parsers
+# functions that further process ASTs returned as `.value` by parsers
 
   baseAstNodeToRegexString = (astNode) ->
-    if Array.isArray astNode.value
-      inner = astNode.value.map(baseAstNodeToRegexString).join('')
-      if astNode.tag is 'optional'
-        return '(?:' + inner + ')?'
-      return inner
+    if Array.isArray astNode
+      return astNode.map(baseAstNodeToRegexString).join('')
 
     if astNode.tag is 'wildcard'
       return '(.*?)'
@@ -194,16 +191,19 @@
     if astNode.tag is 'static'
       return escapeForRegex(astNode.value)
 
+    if astNode.tag is 'optional'
+      return '(?:' + baseAstNodeToRegexString(astNode.value) + ')?'
+
   astNodeToRegexString = (astNode) ->
     '^' + baseAstNodeToRegexString(astNode) + '$'
 
   astNodeToNames = (astNode) ->
-    if Array.isArray astNode.value
+    if Array.isArray astNode
       results = []
       index = -1
-      length = astNode.value.length
+      length = astNode.length
       while ++index < length
-        results = results.concat astNodeToNames astNode.value[index]
+        results = results.concat astNodeToNames astNode[index]
       return results
 
     if astNode.tag is 'wildcard'
@@ -214,6 +214,9 @@
 
     if astNode.tag is 'static'
       return []
+
+    if astNode.tag is 'optional'
+      return astNodeToNames(astNode.value)
 
 ################################################################################
 # Compiler
@@ -372,14 +375,14 @@
     if @isRegex
       @regex = arg
     else
-      ast = U.pattern arg
-      unless ast?
+      parsed = U.pattern arg
+      unless parsed?
         # TODO better error message
         throw new Error 'couldnt parse'
-      if ast.rest isnt ''
+      if parsed.rest isnt ''
         # TODO better error message
         throw new Error 'couldnt parse completely'
-      @ast = ast
+      @ast = parsed.value
 
       @regex = new RegExp astNodeToRegexString @ast
       @names = astNodeToNames @ast

@@ -356,12 +356,12 @@
 ################################################################################
 # UrlPattern
 
-  UrlPattern = (arg, compiler) ->
-    compiler ?= new UrlPattern.Compiler
+  UrlPattern = (arg) ->
     # self awareness
     if arg instanceof UrlPattern
       @isRegex = arg.isRegex
       @regex = arg.regex
+      @ast = arg.ast
       @names = arg.names
       return
 
@@ -372,9 +372,17 @@
     if @isRegex
       @regex = arg
     else
-      compiler.compile(arg)
-      @regex = compiler.regex
-      @names = compiler.names
+      ast = U.pattern arg
+      unless ast?
+        # TODO better error message
+        throw new Error 'couldnt parse'
+      if ast.rest isnt ''
+        # TODO better error message
+        throw new Error 'couldnt parse completely'
+      @ast = ast
+
+      @regex = new RegExp astNodeToRegexString @ast
+      @names = astNodeToNames @ast
 
     return
 
@@ -411,6 +419,8 @@
 
   UrlPattern.Compiler = Compiler
   UrlPattern.escapeForRegex = escapeForRegex
+  UrlPattern.astNodeToRegexString = astNodeToRegexString
+  UrlPattern.astNodeToNames = astNodeToNames
   UrlPattern.P = P
   UrlPattern.U = U
 

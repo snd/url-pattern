@@ -15,9 +15,8 @@
     string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
 
 ################################################################################
-# parser combinators
+# generic parser combinators
 
-  # parsers
   P = {}
 
   P.Result = (value, rest) ->
@@ -126,7 +125,9 @@
         return
       return new P.Result(parserResult.value, closeResult.rest)
 
-  # url pattern specific parsers
+################################################################################
+# url-pattern specific parser combinators
+
   U = {}
 
   U.wildcard = P.tag 'wildcard', P.string('*')
@@ -172,6 +173,47 @@
     P.choice [U.wildcard, U.optional, U.named, U.static]
 
   U.pattern = P.many1 P.lazy(-> U.token)
+
+################################################################################
+# functions that further process ASTs returned by parsers
+
+  baseAstNodeToRegexString = (astNode) ->
+    if Array.isArray astNode.value
+      inner = astNode.value.map(baseAstNodeToRegexString).join('')
+      if astNode.tag is 'optional'
+        return '(?:' + inner + ')?'
+      return inner
+
+    if astNode.tag is 'wildcard'
+      return '(.*?)'
+
+    if astNode.tag is 'named'
+      # TODO make this charset configurable again
+      return '([a-zA-Z0-9-_ %]+)'
+
+    if astNode.tag is 'static'
+      return escapeForRegex(astNode.value)
+
+  astNodeToRegexString = (astNode) ->
+    '^' + baseAstNodeToRegexString(astNode) + '$'
+
+  astNodeToNames = (astNode) ->
+    if Array.isArray astNode.value
+      results = []
+      index = -1
+      length = astNode.value.length
+      while ++index < length
+        results = results.concat astNodeToNames astNode.value[index]
+      return results
+
+    if astNode.tag is 'wildcard'
+      return ['_']
+
+    if astNode.tag is 'named'
+      return [astNode.value]
+
+    if astNode.tag is 'static'
+      return []
 
 ################################################################################
 # Compiler

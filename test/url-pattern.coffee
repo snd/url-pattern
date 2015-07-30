@@ -327,6 +327,10 @@ module.exports =
       _: ['school/10', '12/13']
       id: '10'
 
+    pattern = new UrlPattern '/user/:range'
+    test.deepEqual pattern.match('/user/10~20'),
+      range: '10~20'
+
     pattern = new UrlPattern '^admin^*^user^:id^*^tail'
     test.deepEqual pattern.match('^admin^school^10^user^10^12^13^tail'),
       _: ['school^10', '12^13']
@@ -413,7 +417,7 @@ module.exports =
 
   'match full stops in segment values': (test) ->
       compiler = new UrlPattern.Compiler()
-      compiler.segmentValueCharset = 'a-zA-Z0-9-_ %.'
+      compiler.segmentValueCharset = 'a-zA-Z0-9-_~ %.'
       pattern = new UrlPattern '/api/v1/user/:id/', compiler
       test.deepEqual pattern.match('/api/v1/user/test.name/'),
         id: 'test.name'

@@ -25,7 +25,7 @@
   Compiler.prototype.escapeChar = '\\'
   Compiler.prototype.segmentNameStartChar = ':'
   Compiler.prototype.segmentNameCharset = 'a-zA-Z0-9'
-  Compiler.prototype.segmentValueCharset = 'a-zA-Z0-9-_ %'
+  Compiler.prototype.segmentValueCharset = 'a-zA-Z0-9-_~ %'
   Compiler.prototype.optionalSegmentStartChar = '('
   Compiler.prototype.optionalSegmentEndChar = ')'
   Compiler.prototype.wildcardChar = '*'

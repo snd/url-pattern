@@ -3,6 +3,7 @@ UrlPattern = require '../src/url-pattern'
 module.exports =
 
   'UrlPattern.match()': (test) ->
+    # TODO simplify these tests with a helper function
     pattern = new UrlPattern '/foo'
     test.deepEqual pattern.match('/foo'), {}
 

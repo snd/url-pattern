@@ -142,4 +142,20 @@ module.exports =
     test.deepEqual pattern.match('cd'), {}
     test.deepEqual pattern.match('d'), {}
 
+    pattern = new UrlPattern '/user/:range'
+    test.deepEqual pattern.match('/user/10-20'),
+      range: '10-20'
+
+    pattern = new UrlPattern '/user/:range'
+    test.deepEqual pattern.match('/user/10_20'),
+      range: '10_20'
+
+    pattern = new UrlPattern '/user/:range'
+    test.deepEqual pattern.match('/user/10 20'),
+      range: '10 20'
+
+    pattern = new UrlPattern '/user/:range'
+    test.deepEqual pattern.match('/user/10%20'),
+      range: '10%20'
+
     test.done()

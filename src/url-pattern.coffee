@@ -289,8 +289,17 @@
       return
 
     @isRegex = arg instanceof RegExp
+
     unless ('string' is typeof arg) or @isRegex
       throw new TypeError 'argument must be a regex or a string'
+
+    if arg is ''
+      throw new Error 'argument must not be the empty string'
+
+    unless @isRegex
+      withoutWhitespace = arg.replace(/\s+/g, '')
+      unless withoutWhitespace is arg
+        throw new Error 'argument must not contain whitespace'
 
     if @isRegex
       @regex = arg

@@ -307,10 +307,10 @@
       parsed = U.pattern arg
       unless parsed?
         # TODO better error message
-        throw new Error "couldn't parse"
+        throw new Error "couldn't parse pattern"
       if parsed.rest isnt ''
         # TODO better error message
-        throw new Error "couldn't parse completely"
+        throw new Error "could only partially parse pattern"
       @ast = parsed.value
 
       @regex = new RegExp astNodeToRegexString @ast

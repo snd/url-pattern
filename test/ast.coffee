@@ -4,14 +4,6 @@ module.exports =
 
   'astNodeToRegexString and astNodeToNames produce correct results':
 
-    # TODO empty string is no longer a valid pattern
-    # or make a test for the empty string as a valid pattern
-    # 'empty string': (test) ->
-    #   ast = UrlPattern.U.pattern ''
-    #   test.equal UrlPattern.astNodeToRegexString(ast), '^$'
-    #   test.deepEqual UrlPattern.astNodeToNames(ast), []
-    #   test.done()
-
     'just static alphanumeric': (test) ->
       parsed = UrlPattern.U.pattern 'user42'
       test.equal UrlPattern.astNodeToRegexString(parsed.value), '^user42$'
@@ -30,12 +22,11 @@ module.exports =
       test.deepEqual UrlPattern.astNodeToNames(parsed.value), ['a']
       test.done()
 
-#     'just variable': (test) ->
-#       compiler = new Compiler
-#       compiler.compile ':variable'
-#       test.equal compiler.regexString, '^' + Compiler.prototype.segmentValueRegexString() + '$'
-#       test.deepEqual compiler.names, ['variable']
-#       test.done()
+    'just variable': (test) ->
+      parsed = UrlPattern.U.pattern ':variable'
+      test.equal UrlPattern.astNodeToRegexString(parsed.value), '^([a-zA-Z0-9-_~ %]+)$'
+      test.deepEqual UrlPattern.astNodeToNames(parsed.value), ['variable']
+      test.done()
 #
 #     'just wildcard': (test) ->
 #       compiler = new Compiler

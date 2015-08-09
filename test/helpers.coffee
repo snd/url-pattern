@@ -2,6 +2,7 @@
   escapeForRegex
   concatMap
   stringConcatMap
+  regexGroupCount
 } = require '../src/url-pattern'
 
 module.exports =
@@ -35,4 +36,14 @@ module.exports =
     test.equal '1', stringConcatMap [1], (x) -> x
     test.equal '123', stringConcatMap [1, 2, 3], (x) -> x
     test.equal '1a2a3a', stringConcatMap [1, 2, 3], (x) -> x + 'a'
+    test.done()
+
+  'regexGroupCount': (test) ->
+    test.equal 0, regexGroupCount /foo/
+    test.equal 1, regexGroupCount /(foo)/
+    test.equal 2, regexGroupCount /((foo))/
+    test.equal 2, regexGroupCount /(fo(o))/
+    test.equal 2, regexGroupCount /f(o)(o)/
+    test.equal 2, regexGroupCount /f(o)o()/
+    test.equal 5, regexGroupCount /f(o)o()()(())/
     test.done()

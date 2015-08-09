@@ -33,6 +33,9 @@
       result += f(array[i])
     return result
 
+  regexGroupCount = (regex) ->
+    (new RegExp(regex.toString() + '|')).exec('').length - 1
+
 ################################################################################
 # parser combinators
 # subset copied from
@@ -355,6 +358,7 @@
   UrlPattern.escapeForRegex = escapeForRegex
   UrlPattern.concatMap = concatMap
   UrlPattern.stringConcatMap = stringConcatMap
+  UrlPattern.regexGroupCount = regexGroupCount
 
   # parsers
   UrlPattern.P = P

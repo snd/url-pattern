@@ -279,32 +279,29 @@
 ################################################################################
 # UrlPattern
 
-  UrlPattern = (arg) ->
+  UrlPattern = (arg1, arg2) ->
     # self awareness
-    if arg instanceof UrlPattern
-      @isRegex = arg.isRegex
-      @regex = arg.regex
-      @ast = arg.ast
-      @names = arg.names
+    if arg1 instanceof UrlPattern
+      @isRegex = arg1.isRegex
+      @regex = arg1.regex
+      @ast = arg1.ast
+      @names = arg1.names
       return
 
-    @isRegex = arg instanceof RegExp
+    @isRegex = arg1 instanceof RegExp
 
-    unless ('string' is typeof arg) or @isRegex
+    unless ('string' is typeof arg1) or @isRegex
       throw new TypeError 'argument must be a regex or a string'
 
-    if arg is ''
-      throw new Error 'argument must not be the empty string'
-
-    unless @isRegex
-      withoutWhitespace = arg.replace(/\s+/g, '')
-      unless withoutWhitespace is arg
-        throw new Error 'argument must not contain whitespace'
-
     if @isRegex
-      @regex = arg
+      @regex = arg1
     else
-      parsed = U.pattern arg
+      if arg1 is ''
+        throw new Error 'argument must not be the empty string'
+      withoutWhitespace = arg1.replace(/\s+/g, '')
+      unless withoutWhitespace is arg1
+        throw new Error 'argument must not contain whitespace'
+      parsed = U.pattern arg1
       unless parsed?
         # TODO better error message
         throw new Error "couldn't parse pattern"

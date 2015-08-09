@@ -1,8 +1,8 @@
 # copied from
 # https://github.com/snd/pcom/blob/master/test/url-pattern-example.coffee
 
-urlPattern = require '../src/url-pattern'
-U = urlPattern.U
+UrlPattern = require '../src/url-pattern'
+U = UrlPattern.U
 parse = U.pattern
 
 module.exports =

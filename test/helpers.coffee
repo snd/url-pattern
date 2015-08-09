@@ -12,6 +12,16 @@ module.exports =
     test.equal expected, actual
 
     test.equal escapeForRegex('a$98kdjf(kdj)'), 'a\\$98kdjf\\(kdj\\)'
+    test.equal 'a', escapeForRegex 'a'
+    test.equal '!', escapeForRegex '!'
+    test.equal '\\.', escapeForRegex '.'
+    test.equal '\\/', escapeForRegex '/'
+    test.equal '\\-', escapeForRegex '-'
+    test.equal '\\-', escapeForRegex '-'
+    test.equal '\\[', escapeForRegex '['
+    test.equal '\\]', escapeForRegex ']'
+    test.equal '\\(', escapeForRegex '('
+    test.equal '\\)', escapeForRegex ')'
     test.done()
 
   'concatMap': (test) ->

@@ -2,7 +2,7 @@
   "name": "url-pattern",
   "version": "0.9.0",
   "description": "simple pattern matching and segment extraction for urls, domains, filepaths and other strings",
-  "keywords": ["url", "pattern", "matching", "routing", "route", "regex", "match", "segment", "parsing", "parser", "path", "domain", "separator"],
+  "keywords": ["url", "pattern", "matching", "routing", "route", "regex", "match", "segment", "parsing", "parser", "combinator", "custom", "customizable", "path", "domain", "separator"],
   "homepage": "http://github.com/snd/url-pattern",
   "author": {
     "name": "Maximilian Krüger",
@@ -54,6 +54,6 @@
     "compile": "coffee --bare --compile --output lib src",
     "prepublish": "npm run compile",
     "pretest": "npm run compile",
-    "test": "nodeunit test/*.coffee"
+    "test": "nodeunit test"
   }
 }

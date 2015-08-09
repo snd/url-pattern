@@ -1,11 +1,84 @@
-UrlPattern = require '../src/url-pattern'
-Compiler = UrlPattern.Compiler
+# copied from
+# https://github.com/snd/pcom/blob/master/test/url-pattern-example.coffee
 
-parse = UrlPattern.U.pattern
+urlPattern = require '../src/url-pattern'
+U = urlPattern.U
+parse = U.pattern
 
 module.exports =
 
-  'parser correctly parses patterns': (test) ->
+  'wildcard': (test) ->
+      test.deepEqual U.wildcard('*'),
+        value:
+          tag: 'wildcard'
+          value: '*'
+        rest: ''
+      test.deepEqual U.wildcard('*/'),
+        value:
+          tag: 'wildcard'
+          value: '*'
+        rest: '/'
+      test.equal U.wildcard(' *'), null
+      test.equal U.wildcard('()'), null
+      test.equal U.wildcard('foo(100)'), null
+      test.equal U.wildcard('(100foo)'), null
+      test.equal U.wildcard('(foo100)'), null
+      test.equal U.wildcard('(foobar)'), null
+      test.equal U.wildcard('foobar'), null
+      test.equal U.wildcard('_aa'), null
+      test.equal U.wildcard('$foobar'), null
+      test.equal U.wildcard('$'), null
+      test.equal U.wildcard(''), null
+      test.done()
+
+  'named': (test) ->
+      test.deepEqual U.named(':a'),
+        value:
+          tag: 'named'
+          value: 'a'
+        rest: ''
+      test.deepEqual U.named(':ab96c'),
+        value:
+          tag: 'named'
+          value: 'ab96c'
+        rest: ''
+      test.deepEqual U.named(':ab96c.'),
+        value:
+          tag: 'named'
+          value: 'ab96c'
+        rest: '.'
+      test.deepEqual U.named(':96c-:ab'),
+        value:
+          tag: 'named'
+          value: '96c'
+        rest: '-:ab'
+      test.equal U.named(':'), null
+      test.equal U.named(''), null
+      test.equal U.named('a'), null
+      test.equal U.named('abc'), null
+      test.done()
+
+  'static': (test) ->
+      test.deepEqual U.static('a'),
+        value:
+          tag: 'static'
+          value: 'a'
+        rest: ''
+      test.deepEqual U.static('abc:d'),
+        value:
+          tag: 'static'
+          value: 'abc'
+        rest: ':d'
+      test.equal U.static(':ab96c'), null
+      test.equal U.static(':'), null
+      test.equal U.static('('), null
+      test.equal U.static(')'), null
+      test.equal U.static('*'), null
+      test.equal U.static(''), null
+      test.done()
+
+
+  'fixtures': (test) ->
     test.equal parse(''), null
     test.equal parse('('), null
     test.equal parse(')'), null

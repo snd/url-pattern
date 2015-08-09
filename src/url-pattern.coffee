@@ -19,18 +19,18 @@
 
   concatMap = (array, f) ->
     results = []
-    index = -1
+    i = -1
     length = array.length
-    while ++index < length
-      results = results.concat f(array[index])
+    while ++i < length
+      results = results.concat f(array[i])
     return results
 
   stringConcatMap = (array, f) ->
     result = ''
-    index = -1
+    i = -1
     length = array.length
-    while ++index < length
-      result += f(array[index])
+    while ++i < length
+      result += f(array[i])
     return result
 
 ################################################################################
@@ -256,10 +256,10 @@
   astNodeToNames = (astNode) ->
     if Array.isArray astNode
       results = []
-      index = -1
+      i = -1
       length = astNode.length
-      while ++index < length
-        results = results.concat astNodeToNames astNode[index]
+      while ++i < length
+        results = results.concat astNodeToNames astNode[i]
       return results
 
     if astNode.tag is 'wildcard'
@@ -319,11 +319,11 @@
       return captured
 
     bound = {}
-    index = -1
+    i = -1
     length = captured.length
-    while ++index < length
-      value = captured[index]
-      name = @names[index]
+    while ++i < length
+      value = captured[i]
+      name = @names[i]
       # nothing captured for this binding
       unless value?
         continue

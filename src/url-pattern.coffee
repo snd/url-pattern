@@ -35,7 +35,7 @@
 
 ################################################################################
 # parser combinators
-# selectively copied from
+# subset copied from
 # https://github.com/snd/pcom/blob/master/src/pcom.coffee
 # (where they are tested !)
 # to keep this at zero dependencies and small filesize

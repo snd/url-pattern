@@ -33,6 +33,7 @@
       result += f(array[i])
     return result
 
+  # source: http://stackoverflow.com/a/16047223
   regexGroupCount = (regex) ->
     (new RegExp(regex.toString() + '|')).exec('').length - 1
 

@@ -185,54 +185,65 @@
 # copied from
 # https://github.com/snd/pcom/blob/master/src/url-pattern-example.coffee
 
-  U = {}
+  newParser = (options) ->
+    U = {}
 
-  U.wildcard = P.tag 'wildcard', P.string('*')
+    U.wildcard = P.tag 'wildcard', P.string(options.wildcardChar)
 
-  U.name = P.regex '^[a-zA-Z0-9]+'
+    U.name = P.regex '^[a-zA-Z0-9]+'
 
-  U.optional = P.tag(
-    'optional'
-    P.pick(1,
-      P.string('(')
-      P.lazy(-> U.pattern)
-      P.string(')')
-    )
-  )
-
-  U.named = P.tag(
-    'named',
-    P.pick(1,
-      P.string(':')
-      P.lazy(-> U.name)
-    )
-  )
-
-  U.escapedChar = P.pick(1,
-    P.string('\\')
-    P.anyChar
-  )
-
-  U.static = P.tag(
-    'static'
-    P.concatMany1Till(
-      P.firstChoice(
-        P.lazy(-> U.escapedChar)
-        P.anyChar
+    U.optional = P.tag(
+      'optional'
+      P.pick(1,
+        P.string(options.optionalSegmentStartChar)
+        P.lazy(-> U.pattern)
+        P.string(options.optionalSegmentEndChar)
       )
-      P.charset('\\*\\(\\):')
     )
+
+    U.named = P.tag(
+      'named',
+      P.pick(1,
+        P.string(options.segmentNameStartChar)
+        P.lazy(-> U.name)
+      )
+    )
+
+    U.escapedChar = P.pick(1,
+      P.string(options.escapeChar)
+      P.anyChar
+    )
+
+    U.static = P.tag(
+      'static'
+      P.concatMany1Till(
+        P.firstChoice(
+          P.lazy(-> U.escapedChar)
+          P.anyChar
+        )
+        P.charset('\\*\\(\\):')
+      )
+    )
+
+    U.token = P.lazy ->
+      P.firstChoice(
+        U.wildcard
+        U.optional
+        U.named
+        U.static
+      )
+
+    U.pattern = P.many1 P.lazy(-> U.token)
+
+    return U
+
+  defaultParser = newParser(
+    escapeChar: '\\'
+    segmentNameStartChar: ':'
+    optionalSegmentStartChar: '('
+    optionalSegmentEndChar: ')'
+    wildcardChar: '*'
   )
-
-  U.token = P.lazy ->
-    P.firstChoice(
-      U.wildcard
-      U.optional
-      U.named
-      U.static
-    )
-
-  U.pattern = P.many1 P.lazy(-> U.token)
 
 ################################################################################
 # functions that further process ASTs returned as `.value` by parsers
@@ -297,25 +308,39 @@
     unless ('string' is typeof arg1) or @isRegex
       throw new TypeError 'argument must be a regex or a string'
 
+    # regex
     if @isRegex
       @regex = arg1
-    else
-      if arg1 is ''
-        throw new Error 'argument must not be the empty string'
-      withoutWhitespace = arg1.replace(/\s+/g, '')
-      unless withoutWhitespace is arg1
-        throw new Error 'argument must not contain whitespace'
-      parsed = U.pattern arg1
-      unless parsed?
-        # TODO better error message
-        throw new Error "couldn't parse pattern"
-      if parsed.rest isnt ''
-        # TODO better error message
-        throw new Error "could only partially parse pattern"
-      @ast = parsed.value
+      if arg2?
+        unless Array.isArray arg2
+          throw new Error 'if first argument is a regex the second argument may be an array of group names but you provided something else'
+        groupCount = regexGroupCount @regex
+        unless arg2.length is groupCount
+          throw new Error "regex contains #{groupCount} groups but array of group names contains #{arg2.count}"
+        @names = arg2
+      return
 
-      @regex = new RegExp astNodeToRegexString @ast
-      @names = astNodeToNames @ast
+    # string pattern
+
+    if arg1 is ''
+      throw new Error 'argument must not be the empty string'
+    withoutWhitespace = arg1.replace(/\s+/g, '')
+    unless withoutWhitespace is arg1
+      throw new Error 'argument must not contain whitespace'
+
+    # if arg2?
+      # TODO handle options
+    parsed = defaultParser.pattern arg1
+    unless parsed?
+      # TODO better error message
+      throw new Error "couldn't parse pattern"
+    if parsed.rest isnt ''
+      # TODO better error message
+      throw new Error "could only partially parse pattern"
+    @ast = parsed.value
+
+    @regex = new RegExp astNodeToRegexString @ast
+    @names = astNodeToNames @ast
 
     return
 
@@ -331,6 +356,7 @@
     bound = {}
     i = -1
     length = captured.length
+    # TODO put this into a separate function
     while ++i < length
       value = captured[i]
       name = @names[i]
@@ -363,7 +389,8 @@
 
   # parsers
   UrlPattern.P = P
-  UrlPattern.U = U
+  UrlPattern.newParser = newParser
+  UrlPattern.defaultParser = defaultParser
 
   # ast
   UrlPattern.astNodeToRegexString = astNodeToRegexString

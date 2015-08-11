@@ -335,7 +335,7 @@
           throw new Error 'if first argument is a regex the second argument may be an array of group names but you provided something else'
         groupCount = regexGroupCount @regex
         unless arg2.length is groupCount
-          throw new Error "regex contains #{groupCount} groups but array of group names contains #{arg2.count}"
+          throw new Error "regex contains #{groupCount} groups but array of group names contains #{arg2.length}"
         @names = arg2
       return
 

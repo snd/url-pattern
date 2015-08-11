@@ -37,26 +37,24 @@
   regexGroupCount = (regex) ->
     (new RegExp(regex.toString() + '|')).exec('').length - 1
 
-  groupsAndNamesToObject = (groups, names) ->
-    result = {}
+  keysAndValuesToObject = (keys, values) ->
+    object = {}
     i = -1
-    length = groups.length
-    # TODO put this into a separate function
+    length = keys.length
     while ++i < length
-      value = groups[i]
-      name = names[i]
-      # nothing captured for this binding
+      key = keys[i]
+      value = values[i]
       unless value?
         continue
-      # already bound
-      if result[name]?
-        # capture multiple bindings for same name in an array
-        unless Array.isArray result[name]
-          result[name] = [result[name]]
-        result[name].push value
+      # key already encountered
+      if object[key]?
+        # capture multiple values for same key in an array
+        unless Array.isArray object[key]
+          object[key] = [object[key]]
+        object[key].push value
       else
-        result[name] = value
-    return result
+        object[key] = value
+    return object
 
 ################################################################################
 # parser combinators
@@ -372,7 +370,7 @@
 
     groups = match.slice(1)
     if @names
-      groupsAndNamesToObject groups, @names
+      keysAndValuesToObject @names, groups
     else
       groups
 
@@ -390,7 +388,7 @@
   UrlPattern.concatMap = concatMap
   UrlPattern.stringConcatMap = stringConcatMap
   UrlPattern.regexGroupCount = regexGroupCount
-  UrlPattern.groupsAndNamesToObject = groupsAndNamesToObject
+  UrlPattern.keysAndValuesToObject = keysAndValuesToObject
 
   # parsers
   UrlPattern.P = P

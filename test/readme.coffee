@@ -53,3 +53,10 @@ module.exports =
     test.deepEqual pattern.match('/api/users'), ['users']
     test.equal pattern.match('/apiii/users'), null
     test.done()
+
+  'regex names': (test) ->
+    pattern = new UrlPattern /\/api\/(.*)/, ['suffix']
+    test.deepEqual pattern.match('/api/users'),
+      suffix: 'users'
+    test.equal pattern.match('/apiii/users'), null
+    test.done()

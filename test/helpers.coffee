@@ -3,6 +3,7 @@
   concatMap
   stringConcatMap
   regexGroupCount
+  keysAndValuesToObject
 } = require '../src/url-pattern'
 
 module.exports =
@@ -46,4 +47,93 @@ module.exports =
     test.equal 2, regexGroupCount /f(o)(o)/
     test.equal 2, regexGroupCount /f(o)o()/
     test.equal 5, regexGroupCount /f(o)o()()(())/
+    test.done()
+
+  'keysAndValuesToObject': (test) ->
+    test.deepEqual(
+      keysAndValuesToObject(
+        []
+        []
+      )
+      {}
+    )
+    test.deepEqual(
+      keysAndValuesToObject(
+        ['one']
+        [1]
+      )
+      {
+        one: 1
+      }
+    )
+    test.deepEqual(
+      keysAndValuesToObject(
+        ['one', 'two']
+        [1]
+      )
+      {
+        one: 1
+      }
+    )
+    test.deepEqual(
+      keysAndValuesToObject(
+        ['one', 'two', 'two']
+        [1, 2, 3]
+      )
+      {
+        one: 1
+        two: [2, 3]
+      }
+    )
+    test.deepEqual(
+      keysAndValuesToObject(
+        ['one', 'two', 'two', 'two']
+        [1, 2, 3, null]
+      )
+      {
+        one: 1
+        two: [2, 3]
+      }
+    )
+    test.deepEqual(
+      keysAndValuesToObject(
+        ['one', 'two', 'two', 'two']
+        [1, 2, 3, 4]
+      )
+      {
+        one: 1
+        two: [2, 3, 4]
+      }
+    )
+    test.deepEqual(
+      keysAndValuesToObject(
+        ['one', 'two', 'two', 'two', 'three']
+        [1, 2, 3, 4, undefined]
+      )
+      {
+        one: 1
+        two: [2, 3, 4]
+      }
+    )
+    test.deepEqual(
+      keysAndValuesToObject(
+        ['one', 'two', 'two', 'two', 'three']
+        [1, 2, 3, 4, 5]
+      )
+      {
+        one: 1
+        two: [2, 3, 4]
+        three: 5
+      }
+    )
+    test.deepEqual(
+      keysAndValuesToObject(
+        ['one', 'two', 'two', 'two', 'three']
+        [null, 2, 3, 4, 5]
+      )
+      {
+        two: [2, 3, 4]
+        three: 5
+      }
+    )
     test.done()

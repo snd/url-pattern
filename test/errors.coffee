@@ -87,3 +87,19 @@ module.exports =
       # TODO unclosed parentheses at 19
       test.equal e.message, "couldn't parse pattern"
     test.done()
+
+  'regex names': (test) ->
+    test.expect 3
+    try
+      new UrlPattern /x/, 5
+    catch e
+      test.equal e.message, 'if first argument is a regex the second argument may be an array of group names but you provided something else'
+    try
+      new UrlPattern /(((foo)bar(boo))far)/, []
+    catch e
+      test.equal e.message, "regex contains 4 groups but array of group names contains 0"
+    try
+      new UrlPattern /(((foo)bar(boo))far)/, ['a', 'b']
+    catch e
+      test.equal e.message, "regex contains 4 groups but array of group names contains 2"
+    test.done()

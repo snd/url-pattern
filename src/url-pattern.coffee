@@ -37,6 +37,27 @@
   regexGroupCount = (regex) ->
     (new RegExp(regex.toString() + '|')).exec('').length - 1
 
+  groupsAndNamesToObject = (groups, names) ->
+    result = {}
+    i = -1
+    length = groups.length
+    # TODO put this into a separate function
+    while ++i < length
+      value = groups[i]
+      name = names[i]
+      # nothing captured for this binding
+      unless value?
+        continue
+      # already bound
+      if result[name]?
+        # capture multiple bindings for same name in an array
+        unless Array.isArray result[name]
+          result[name] = [result[name]]
+        result[name].push value
+      else
+        result[name] = value
+    return result
+
 ################################################################################
 # parser combinators
 # subset copied from
@@ -349,29 +370,12 @@
     unless match?
       return null
 
-    captured = match.slice(1)
-    if @isRegex
-      return captured
+    groups = match.slice(1)
+    if @names
+      groupsAndNamesToObject groups, @names
+    else
+      groups
 
-    bound = {}
-    i = -1
-    length = captured.length
-    # TODO put this into a separate function
-    while ++i < length
-      value = captured[i]
-      name = @names[i]
-      # nothing captured for this binding
-      unless value?
-        continue
-      # already bound
-      if bound[name]?
-        # capture multiple bindings for same name in an array
-        unless Array.isArray bound[name]
-          bound[name] = [bound[name]]
-        bound[name].push value
-      else
-        bound[name] = value
-    return bound
 
   UrlPattern.prototype.stringify = (params) ->
     # TODO only works for non-regex patterns
@@ -386,6 +390,7 @@
   UrlPattern.concatMap = concatMap
   UrlPattern.stringConcatMap = stringConcatMap
   UrlPattern.regexGroupCount = regexGroupCount
+  UrlPattern.groupsAndNamesToObject = groupsAndNamesToObject
 
   # parsers
   UrlPattern.P = P

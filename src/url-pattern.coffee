@@ -295,17 +295,12 @@
       return stringConcatMap astNode, (node) ->
         baseAstNodeToRegexString(node, segmentValueCharset)
 
-    if astNode.tag is 'wildcard'
-      return '(.*?)'
-
-    if astNode.tag is 'named'
-      return "([#{segmentValueCharset}]+)"
-
-    if astNode.tag is 'static'
-      return escapeForRegex(astNode.value)
-
-    if astNode.tag is 'optional'
-      return '(?:' + baseAstNodeToRegexString(astNode.value, segmentValueCharset) + ')?'
+    switch astNode.tag
+      when 'wildcard' then '(.*?)'
+      when 'named' then "([#{segmentValueCharset}]+)"
+      when 'static' then escapeForRegex(astNode.value)
+      when 'optional'
+        '(?:' + baseAstNodeToRegexString(astNode.value, segmentValueCharset) + ')?'
 
   astNodeToRegexString = (astNode, segmentValueCharset = defaultOptions.segmentValueCharset) ->
     '^' + baseAstNodeToRegexString(astNode, segmentValueCharset) + '$'

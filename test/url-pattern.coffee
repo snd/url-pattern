@@ -2,45 +2,72 @@ UrlPattern = require '../src/url-pattern'
 
 module.exports =
 
-#     'modifying the compiler': (test) ->
-#       compiler = new UrlPattern.Compiler()
-#       compiler.escapeChar = '!'
-#       compiler.segmentNameStartChar = '$'
-#       compiler.segmentNameCharset = 'a-zA-Z0-9_-'
-#       compiler.segmentValueCharset = 'a-zA-Z0-9'
-#       compiler.optionalSegmentStartChar = '['
-#       compiler.optionalSegmentEndChar = ']'
-#       compiler.wildcardChar = '?'
-#
-#       pattern = new UrlPattern(
-#         '[http[s]!://][$sub_domain.]$domain.$toplevel-domain[/?]'
-#         compiler
-#       )
-#
-#       test.deepEqual pattern.match('google.de'),
-#         domain: 'google'
-#         'toplevel-domain': 'de'
-#       test.deepEqual pattern.match('http://mail.google.com/mail'),
-#         sub_domain: 'mail'
-#         domain: 'google'
-#         'toplevel-domain': 'com'
-#         _: 'mail'
-#       test.equal pattern.match('http://mail.this-should-not-match.com/mail'), null
-#       test.equal pattern.match('google'), null
-#       test.deepEqual pattern.match('www.google.com'),
-#         sub_domain: 'www'
-#         domain: 'google'
-#         'toplevel-domain': 'com'
-#       test.deepEqual pattern.match('https://www.google.com'),
-#         sub_domain: 'www'
-#         domain: 'google'
-#         'toplevel-domain': 'com'
-#       test.equal pattern.match('httpp://mail.google.com/mail'), null
-#       test.deepEqual pattern.match('google.de/search'),
-#         domain: 'google'
-#         'toplevel-domain': 'de'
-#         _: 'search'
-#       test.done()
+    'default': (test) ->
+      pattern = new UrlPattern '(http(s)\\://)(:sub.):domain.:tld(/*)'
+
+      test.deepEqual pattern.match('google.de'),
+        domain: 'google'
+        tld: 'de'
+      test.deepEqual pattern.match('http://mail.google.com/mail'),
+        sub: 'mail'
+        domain: 'google'
+        tld: 'com'
+        _: 'mail'
+      test.equal pattern.match('google'), null
+      test.deepEqual pattern.match('www.google.com'),
+        sub: 'www'
+        domain: 'google'
+        tld: 'com'
+      test.deepEqual pattern.match('https://www.google.com'),
+        sub: 'www'
+        domain: 'google'
+        tld: 'com'
+      test.equal pattern.match('httpp://mail.google.com/mail'), null
+      test.deepEqual pattern.match('google.de/search'),
+        domain: 'google'
+        tld: 'de'
+        _: 'search'
+      test.done()
+
+    'passing in options': (test) ->
+      options =
+        escapeChar: '!'
+        segmentNameStartChar: '$'
+        segmentNameCharset: 'a-zA-Z0-9_-'
+        segmentValueCharset: 'a-zA-Z0-9'
+        optionalSegmentStartChar: '['
+        optionalSegmentEndChar: ']'
+        wildcardChar: '?'
+
+      pattern = new UrlPattern(
+        '[http[s]!://][$sub_domain.]$domain.$toplevel-domain[/?]'
+        options
+      )
+
+      test.deepEqual pattern.match('google.de'),
+        domain: 'google'
+        'toplevel-domain': 'de'
+      test.deepEqual pattern.match('http://mail.google.com/mail'),
+        sub_domain: 'mail'
+        domain: 'google'
+        'toplevel-domain': 'com'
+        _: 'mail'
+      test.equal pattern.match('http://mail.this-should-not-match.com/mail'), null
+      test.equal pattern.match('google'), null
+      test.deepEqual pattern.match('www.google.com'),
+        sub_domain: 'www'
+        domain: 'google'
+        'toplevel-domain': 'com'
+      test.deepEqual pattern.match('https://www.google.com'),
+        sub_domain: 'www'
+        domain: 'google'
+        'toplevel-domain': 'com'
+      test.equal pattern.match('httpp://mail.google.com/mail'), null
+      test.deepEqual pattern.match('google.de/search'),
+        domain: 'google'
+        'toplevel-domain': 'de'
+        _: 'search'
+      test.done()
 
   'named segment can have a static prefix': (test) ->
     pattern = new UrlPattern '/vvv:version/*'
@@ -59,13 +86,13 @@ module.exports =
         taskId: '52'
       test.done()
 
-  # 'match full stops in segment values': (test) ->
-  #     compiler = new UrlPattern.Compiler()
-  #     compiler.segmentValueCharset = 'a-zA-Z0-9-_ %.'
-  #     pattern = new UrlPattern '/api/v1/user/:id/', compiler
-  #     test.deepEqual pattern.match('/api/v1/user/test.name/'),
-  #       id: 'test.name'
-  #     test.done()
+  'match full stops in segment values': (test) ->
+      options =
+        segmentValueCharset: 'a-zA-Z0-9-_ %.'
+      pattern = new UrlPattern '/api/v1/user/:id/', options
+      test.deepEqual pattern.match('/api/v1/user/test.name/'),
+        id: 'test.name'
+      test.done()
 
   'regex names': (test) ->
     pattern = new UrlPattern /^\/api\/([a-zA-Z0-9-_~ %]+)(?:\/(\d+))?$/, ['resource', 'id']

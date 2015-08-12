@@ -1,6 +1,6 @@
 UrlPattern = require '../src/url-pattern'
 
-parse = UrlPattern.defaultParser.pattern
+parse = UrlPattern.newParser(UrlPattern.defaultOptions).pattern
 
 module.exports =
 

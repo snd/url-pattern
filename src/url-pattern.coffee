@@ -309,17 +309,11 @@
     if Array.isArray astNode
       return concatMap astNode, astNodeToNames
 
-    if astNode.tag is 'wildcard'
-      return ['_']
-
-    if astNode.tag is 'named'
-      return [astNode.value]
-
-    if astNode.tag is 'static'
-      return []
-
-    if astNode.tag is 'optional'
-      return astNodeToNames(astNode.value)
+    switch astNode.tag
+      when 'wildcard' then ['_']
+      when 'named' then [astNode.value]
+      when 'static' then []
+      when 'optional' then astNodeToNames(astNode.value)
 
   stringify = (astNode, params) ->
 

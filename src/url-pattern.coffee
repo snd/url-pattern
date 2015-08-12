@@ -223,7 +223,7 @@
 
     U.wildcard = P.tag 'wildcard', P.string(options.wildcardChar)
 
-    U.name = P.regex '^[a-zA-Z0-9]+'
+    U.name = P.regex "^[#{options.segmentNameCharset}]+"
 
     U.optional = P.tag(
       'optional'
@@ -254,61 +254,65 @@
           P.lazy(-> U.escapedChar)
           P.anyChar
         )
-        P.charset('\\*\\(\\):')
+        P.firstChoice(
+          P.string(options.segmentNameStartChar)
+          P.string(options.optionalSegmentStartChar)
+          P.string(options.optionalSegmentEndChar)
+          U.wildcard
+        )
       )
     )
 
     U.token = P.lazy ->
       P.firstChoice(
-        U.wildcard
-        U.optional
-        U.named
-        U.static
+        P.log 'wildcard', U.wildcard
+        P.log 'optional', U.optional
+        P.log 'named', U.named
+        P.log 'static', U.static
       )
 
     U.pattern = P.many1 P.lazy(-> U.token)
 
     return U
 
-  defaultParser = newParser(
+################################################################################
+# options
+
+  defaultOptions =
     escapeChar: '\\'
     segmentNameStartChar: ':'
+    segmentValueCharset: 'a-zA-Z0-9-_~ %'
+    segmentNameCharset: 'a-zA-Z0-9'
     optionalSegmentStartChar: '('
     optionalSegmentEndChar: ')'
     wildcardChar: '*'
-  )
 
 ################################################################################
 # functions that further process ASTs returned as `.value` by parsers
 
-  baseAstNodeToRegexString = (astNode) ->
+  baseAstNodeToRegexString = (astNode, segmentValueCharset) ->
     if Array.isArray astNode
-      return astNode.map(baseAstNodeToRegexString).join('')
+      return stringConcatMap astNode, (node) ->
+        baseAstNodeToRegexString(node, segmentValueCharset)
 
     if astNode.tag is 'wildcard'
       return '(.*?)'
 
     if astNode.tag is 'named'
-      # TODO make this charset configurable again
-      return '([a-zA-Z0-9-_~ %]+)'
+      return "([#{segmentValueCharset}]+)"
 
     if astNode.tag is 'static'
       return escapeForRegex(astNode.value)
 
     if astNode.tag is 'optional'
-      return '(?:' + baseAstNodeToRegexString(astNode.value) + ')?'
+      return '(?:' + baseAstNodeToRegexString(astNode.value, segmentValueCharset) + ')?'
 
-  astNodeToRegexString = (astNode) ->
-    '^' + baseAstNodeToRegexString(astNode) + '$'
+  astNodeToRegexString = (astNode, segmentValueCharset = defaultOptions.segmentValueCharset) ->
+    '^' + baseAstNodeToRegexString(astNode, segmentValueCharset) + '$'
 
   astNodeToNames = (astNode) ->
     if Array.isArray astNode
-      results = []
-      i = -1
-      length = astNode.length
-      while ++i < length
-        results = results.concat astNodeToNames astNode[i]
-      return results
+      return concatMap astNode, astNodeToNames
 
     if astNode.tag is 'wildcard'
       return ['_']
@@ -342,6 +346,7 @@
       throw new TypeError 'argument must be a regex or a string'
 
     # regex
+
     if @isRegex
       @regex = arg1
       if arg2?
@@ -361,9 +366,17 @@
     unless withoutWhitespace is arg1
       throw new Error 'argument must not contain whitespace'
 
-    # if arg2?
-      # TODO handle options
-    parsed = defaultParser.pattern arg1
+    options =
+      escapeChar: arg2?.escapeChar or defaultOptions.escapeChar
+      segmentNameStartChar: arg2?.segmentNameStartChar or defaultOptions.segmentNameStartChar
+      segmentNameCharset: arg2?.segmentNameCharset or defaultOptions.segmentNameCharset
+      segmentValueCharset: arg2?.segmentValueCharset or defaultOptions.segmentValueCharset
+      optionalSegmentStartChar: arg2?.optionalSegmentStartChar or defaultOptions.optionalSegmentStartChar
+      optionalSegmentEndChar: arg2?.optionalSegmentEndChar or defaultOptions.optionalSegmentEndChar
+      wildcardChar: arg2?.wildcardChar or defaultOptions.wildcardChar
+
+    parser = newParser options
+    parsed = parser.pattern arg1
     unless parsed?
       # TODO better error message
       throw new Error "couldn't parse pattern"
@@ -372,7 +385,7 @@
       throw new Error "could only partially parse pattern"
     @ast = parsed.value
 
-    @regex = new RegExp astNodeToRegexString @ast
+    @regex = new RegExp astNodeToRegexString @ast, options.segmentValueCharset
     @names = astNodeToNames @ast
 
     return
@@ -387,7 +400,6 @@
       keysAndValuesToObject @names, groups
     else
       groups
-
 
   UrlPattern.prototype.stringify = (params) ->
     # TODO only works for non-regex patterns
@@ -407,7 +419,7 @@
   # parsers
   UrlPattern.P = P
   UrlPattern.newParser = newParser
-  UrlPattern.defaultParser = defaultParser
+  UrlPattern.defaultOptions = defaultOptions
 
   # ast
   UrlPattern.astNodeToRegexString = astNodeToRegexString

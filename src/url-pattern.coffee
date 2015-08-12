@@ -397,7 +397,7 @@
       groups
 
   UrlPattern.prototype.stringify = (params) ->
-    # TODO only works for non-regex patterns
+    # TODO fail for non-regex patterns
     # TODO check that params is an object
     stringify @ast, params
 

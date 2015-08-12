@@ -265,10 +265,10 @@
 
     U.token = P.lazy ->
       P.firstChoice(
-        P.log 'wildcard', U.wildcard
-        P.log 'optional', U.optional
-        P.log 'named', U.named
-        P.log 'static', U.static
+        U.wildcard
+        U.optional
+        U.named
+        U.static
       )
 
     U.pattern = P.many1 P.lazy(-> U.token)

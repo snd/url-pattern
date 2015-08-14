@@ -315,7 +315,55 @@
       when 'static' then []
       when 'optional' then astNodeToNames(astNode.value)
 
-  stringify = (astNode, params) ->
+  getParam = (params, key, nextIndexes, sideEffects = false) ->
+    value = params[key]
+    unless value
+      return
+    index = nextIndexes[key] or 0
+    maxIndex = if Array.isArray value then value.length - 1 else 0
+    if index > maxIndex
+      if sideEffects
+        throw new Error "too few values provided for key `#{key}`"
+      else
+        return
+
+    result = if Array.isArray value then value[index] else value
+
+    if sideEffects
+      nextIndexes[key] = index + 1
+
+    return result
+
+  astNodeContainsSegmentsForProvidedParams = (astNode, params, nextIndexes) ->
+    if Array.isArray astNode
+      i = -1
+      length = astNode.length
+      while ++i < length
+        if astNodeContainsSegmentsForProvidedParams astNode[i], params, nextIndexes
+          return true
+      return false
+
+    switch astNode.tag
+      when 'wildcard' then getParam(params, '_', nextIndexes, false)?
+      when 'named' then getParam(params, astNode.value, nextIndexes, false)?
+      when 'static' then false
+      when 'optional'
+        astNodeContainsSegmentsForProvidedParams astNode.value, params, nextIndexes
+
+  stringify = (astNode, params, nextIndexes) ->
+    if Array.isArray astNode
+      return stringConcatMap astNode, (node) ->
+        stringify node, params, nextIndexes
+
+    switch astNode.tag
+      when 'wildcard' then getParam params, '_', nextIndexes, true
+      when 'named' then getParam params, astNode.value, nextIndexes, true
+      when 'static' then astNode.value
+      when 'optional'
+        if astNodeContainsSegmentsForProvidedParams astNode.value, params, nextIndexes
+          stringify astNode.value, params, nextIndexes
+        else
+          ''
 
 ################################################################################
 # UrlPattern
@@ -390,10 +438,10 @@
     else
       groups
 
-  UrlPattern.prototype.stringify = (params) ->
+  UrlPattern.prototype.stringify = (params = {}) ->
     # TODO fail for non-regex patterns
     # TODO check that params is an object
-    stringify @ast, params
+    stringify @ast, params, {}
 
 ################################################################################
 # exports
@@ -413,6 +461,8 @@
   # ast
   UrlPattern.astNodeToRegexString = astNodeToRegexString
   UrlPattern.astNodeToNames = astNodeToNames
+  UrlPattern.getParam = getParam
+  UrlPattern.astNodeContainsSegmentsForProvidedParams = astNodeContainsSegmentsForProvidedParams
   UrlPattern.stringify = stringify
 
   return UrlPattern

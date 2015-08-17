@@ -4,6 +4,8 @@
   "description": "with url-pattern you can easily create patterns that can match urls, domains, filepaths and other strings, parse them into data and generate them from data",
   "keywords": [
     "url",
+    "string",
+    "matching",
     "pattern",
     "matching",
     "routing",
@@ -23,7 +25,9 @@
     "domain",
     "separator",
     "stringify",
-    "generate"
+    "generate",
+    "text",
+    "processing"
   ],
   "homepage": "http://github.com/snd/url-pattern",
   "author": {

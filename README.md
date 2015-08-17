@@ -5,23 +5,31 @@
 [![NPM Package](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern)
 
-**simple pattern matching and segment extraction for
-urls, domains, filepaths and other strings**
+**with url-pattern you can easily create
+patterns that can match urls, domains, filepaths and other strings,
+parse them into data and generate them from data**
 
-**[the newest version 0.10 introduces breaking changes !](CHANGELOG.md#1.0.0)**
-
+**[the newest version 0.10 introduces breaking changes !](CHANGELOG.md#1.0.0)**  
 [see the changelog](CHANGELOG.md#1.0.0)
+
+> This is a great little library -- thanks!  
+> [michael](https://github.com/snd/url-pattern/pull/7)
 
 <!--
 its like express
 
 but for any kind of string
-
-very fast matching.
 -->
 
-> This is a great little library -- thanks!  
-> [michael](https://github.com/snd/url-pattern/pull/7)
+- `pattern.match(string) -> null | data` checks if string matches pattern and extracts data from string
+- `pattern.stringify(data) -> string` makes a string from a pattern and some data
+- compiles patterns into regexes which makes matching very fast
+- [optional segments, wildcards and escaping](#optional-segments-wildcards-and-escaping)
+- [customizable syntax](#customization)
+- supports Node.js, AMD and browsers
+- bower support
+- [huge test suite](test)
+- under 500 lines of code
 
 ```
 npm install url-pattern
@@ -116,10 +124,10 @@ the `:` is followed by the **name**.
 the **name** must be at least one character in the regex character set `a-zA-Z0-9`.
 
 when matching, a named segment consumes all characters in the regex character set
-`a-zA-Z0-9-_ %`.
+`a-zA-Z0-9-_~ %`.
 this means a named segment match stops at `/`, `.`, ... but not at `_`, `-`, ` ` and `%`.
 
-[click here to see how you can change these character sets.](#modifying-the-compiler)
+[click here to see how you can change these character sets.](#customization)
 
 if a named segment **name** occurs more than once in the pattern string the multiple results
 are stored in an array on the returned object:

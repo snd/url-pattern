@@ -60,12 +60,13 @@ named segments now also match `-`, `_`, ` ` and `%`.
 
 added [bower.json](bower.json) and registered with bower as `url-pattern`.
 
-#### 0.10
+#### 1.0.0
 
-named segments are now called keys
+named segments now also match the `~` character.
 
-unnamed wildcards no longer work
+configuring the parser has changed. now use:
 
-`*` must now be followed by at least one alphanumeric character
+```javascript
+```
 
-multiple occurences of the same key are no longer allowed
+added `.stringify`

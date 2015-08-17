@@ -8,15 +8,17 @@
 **simple pattern matching and segment extraction for
 urls, domains, filepaths and other strings**
 
-**[the newest version 0.10 introduces breaking changes !](#0-10)**
+**[the newest version 0.10 introduces breaking changes !](CHANGELOG.md#1.0.0)**
 
-[changelog](CHANGELOG.md)
+[see the changelog](CHANGELOG.md#1.0.0)
 
+<!--
 its like express
 
 but for any kind of string
 
 very fast matching.
+-->
 
 > This is a great little library -- thanks!  
 > [michael](https://github.com/snd/url-pattern/pull/7)
@@ -180,62 +182,93 @@ if the pattern was created from a regex an array of the captured groups is retur
 null
 ```
 
-### modifying the compiler
+### stringifying patterns
+
+optional segments are only included in the output if they contain params and
+those params are provided.
+
+```javascript
+(i-get-ignored)
+```
+
+an error is thrown if an optional segment contains multiple
+params and only some of them are provided:
+
+```javascript
+```
+
+examples
+
+```javascript
+```
+
+
+### customization
 
 finally we can completely change pattern-parsing and regex-compilation to suit our needs:
 
-let's make a custom compiler:
-
 ```javascript
-> var compiler = new UrlPattern.Compiler();
+> var options = {};
 ```
 
 let's change the char used for escaping (default `\\`):
 
 ```javascript
-> compiler.escapeChar = '!';
+> options.escapeChar = '!';
 ```
 
 let's change the char used to start a named segment (default `:`):
 
 ```javascript
-> compiler.segmentNameStartChar = '$';
+> options.segmentNameStartChar = '$';
 ```
 
 let's change the set of chars allowed in named segment names (default `a-zA-Z0-9`)
 to also include `_` and `-`:
 
 ```javascript
-> compiler.segmentNameCharset = 'a-zA-Z0-9_-';
+> options.segmentNameCharset = 'a-zA-Z0-9_-';
 ```
 
 let's change the set of chars allowed in named segment values
 (default `a-zA-Z0-9_- %`) to not allow non-alphanumeric chars:
 
 ```javascript
-> compiler.segmentValueCharset = 'a-zA-Z0-9';
+> options.segmentValueCharset = 'a-zA-Z0-9';
 ```
 
 let's change the chars used to surround an optional segment (default `(` and `)`):
 
 ```javascript
-> compiler.optionalSegmentStartChar = '[';
-> compiler.optionalSegmentEndChar = ']';
+> options.optionalSegmentStartChar = '[';
+> options.optionalSegmentEndChar = ']';
 ```
 
 let's change the char used to denote a wildcard (default `*`):
 
 ```javascript
-> compiler.wildcardChar = '?';
+> options.wildcardChar = '?';
 ```
 
-make url-pattern use our compiler by passing it in as the second argument to the constructor:
+pass options as the second argument to the constructor:
 
 ```javascript
 > var pattern = new UrlPattern(
   '[http[s]!://][$sub_domain.]$domain.$toplevel-domain[/?]',
-  compiler
+  options
 );
+```
+
+then match:
+
+```javascript
+> pattern.match('http://mail.google.com/mail');
+{
+  sub_domain: 'mail',
+  domain: 'google',
+  'toplevel-domain': 'com',
+  _: 'mail'
+}
 ```
 
 ### contribution

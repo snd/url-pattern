@@ -3,21 +3,13 @@ UrlPattern = require '../src/url-pattern'
 module.exports =
 
   'stringify': (test) ->
-    # TODO simplify these tests with a helper function
     pattern = new UrlPattern '/foo'
     test.equal '/foo', pattern.stringify()
-
-    # TODO regex should fail
-#     pattern = new UrlPattern /foo/
-#     test.deepEqual pattern.match('foo'), []
-
 
     pattern = new UrlPattern '/user/:userId/task/:taskId'
     test.equal '/user/10/task/52', pattern.stringify
       userId: '10'
       taskId: '52'
-
-    # TODO thoroughly test the optional groups
 
     pattern = new UrlPattern '.user.:userId.task.:taskId'
     test.equal '.user.10.task.52', pattern.stringify

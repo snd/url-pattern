@@ -53,3 +53,43 @@ module.exports =
     test.deepEqual pattern.match('/api/users'), ['users']
     test.equal pattern.match('/apiii/users'), null
     test.done()
+
+  'customization': (test) ->
+    options =
+      escapeChar: '!'
+      segmentNameStartChar: '$'
+      segmentNameCharset: 'a-zA-Z0-9_-'
+      segmentValueCharset: 'a-zA-Z0-9'
+      optionalSegmentStartChar: '['
+      optionalSegmentEndChar: ']'
+      wildcardChar: '?'
+
+    pattern = new UrlPattern(
+      '[http[s]!://][$sub_domain.]$domain.$toplevel-domain[/?]'
+      options
+    )
+
+    test.deepEqual pattern.match('google.de'),
+      domain: 'google'
+      'toplevel-domain': 'de'
+    test.deepEqual pattern.match('http://mail.google.com/mail'),
+      sub_domain: 'mail'
+      domain: 'google'
+      'toplevel-domain': 'com'
+      _: 'mail'
+    test.equal pattern.match('http://mail.this-should-not-match.com/mail'), null
+    test.equal pattern.match('google'), null
+    test.deepEqual pattern.match('www.google.com'),
+      sub_domain: 'www'
+      domain: 'google'
+      'toplevel-domain': 'com'
+    test.deepEqual pattern.match('https://www.google.com'),
+      sub_domain: 'www'
+      domain: 'google'
+      'toplevel-domain': 'com'
+    test.equal pattern.match('httpp://mail.google.com/mail'), null
+    test.deepEqual pattern.match('google.de/search'),
+      domain: 'google'
+      'toplevel-domain': 'de'
+      _: 'search'
+    test.done()

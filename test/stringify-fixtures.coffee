@@ -94,12 +94,72 @@ module.exports =
     pattern = new UrlPattern '((((a)b)c)d)'
     test.equal '', pattern.stringify()
 
+    pattern = new UrlPattern '(:a-)1-:b(-2-:c-3-:d(-4-*-:a))'
+    test.equal '1-B', pattern.stringify
+      b: 'B'
+    test.equal 'A-1-B', pattern.stringify
+      a: 'A'
+      b: 'B'
+    test.equal 'A-1-B', pattern.stringify
+      a: 'A'
+      b: 'B'
+    test.equal 'A-1-B-2-C-3-D', pattern.stringify
+      a: 'A'
+      b: 'B'
+      c: 'C'
+      d: 'D'
+    test.equal 'A-1-B-2-C-3-D-4-E-F', pattern.stringify
+      a: ['A', 'F']
+      b: 'B'
+      c: 'C'
+      d: 'D'
+      _: 'E'
+
     pattern = new UrlPattern '/user/:range'
     test.equal '/user/10-20', pattern.stringify
       range: '10-20'
 
-# TODO throws where non-optional key is not provided
-# TODO throws where group is only partially provided
-# TODO optional inside optional
+    test.done()
+
+  'stringify errors': (test) ->
+    test.expect 5
+
+    pattern = new UrlPattern '(:a-)1-:b(-2-:c-3-:d(-4-*-:a))'
+
+    try
+      pattern.stringify()
+    catch e
+      test.equal e.message, "no values provided for key `b`"
+    try
+      pattern.stringify
+        a: 'A'
+        b: 'B'
+        c: 'C'
+    catch e
+      test.equal e.message, "no values provided for key `d`"
+    try
+      pattern.stringify
+        a: 'A'
+        b: 'B'
+        d: 'D'
+    catch e
+      test.equal e.message, "no values provided for key `c`"
+    try
+      pattern.stringify
+        a: 'A'
+        b: 'B'
+        c: 'C'
+        d: 'D'
+        _: 'E'
+    catch e
+      test.equal e.message, "too few values provided for key `a`"
+    try
+      pattern.stringify
+        a: ['A', 'F']
+        b: 'B'
+        c: 'C'
+        d: 'D'
+    catch e
+      test.equal e.message, "no values provided for key `_`"
 
     test.done()

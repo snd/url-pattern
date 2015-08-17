@@ -122,10 +122,6 @@ module.exports =
 
       'side effects': (test) ->
         next = {}
-        test.equal null, getParam {}, 'one', next, true
-        test.deepEqual next, {}
-
-        next = {}
         test.equal 1, getParam {one: 1}, 'one', next, true
         test.deepEqual next, {one: 1}
 
@@ -158,7 +154,14 @@ module.exports =
         test.done()
 
       'side effects errors': (test) ->
-        test.expect 2 * 5
+        test.expect 2 * 6
+
+        next = {}
+        try
+          getParam {}, 'one', next, true
+        catch e
+          test.equal e.message, "no values provided for key `one`"
+        test.deepEqual next, {}
 
         next = {one: 1}
         try

@@ -321,8 +321,11 @@
 
   getParam = (params, key, nextIndexes, sideEffects = false) ->
     value = params[key]
-    unless value
-      return
+    unless value?
+      if sideEffects
+        throw new Error "no values provided for key `#{key}`"
+      else
+        return
     index = nextIndexes[key] or 0
     maxIndex = if Array.isArray value then value.length - 1 else 0
     if index > maxIndex

@@ -103,3 +103,21 @@ module.exports =
     catch e
       test.equal e.message, "regex contains 4 groups but array of group names contains 2"
     test.done()
+
+  'stringify regex': (test) ->
+    test.expect 1
+    pattern = new UrlPattern /x/
+    try
+      pattern.stringify()
+    catch e
+      test.equal e.message, "can't stringify patterns generated from a regex"
+    test.done()
+
+  'stringify argument': (test) ->
+    test.expect 1
+    pattern = new UrlPattern 'foo'
+    try
+      pattern.stringify(5)
+    catch e
+      test.equal e.message, "argument must be an object or undefined"
+    test.done()

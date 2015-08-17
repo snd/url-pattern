@@ -446,8 +446,10 @@
       groups
 
   UrlPattern.prototype.stringify = (params = {}) ->
-    # TODO fail for non-regex patterns
-    # TODO check that params is an object
+    if @isRegex
+      throw new Error "can't stringify patterns generated from a regex"
+    unless params is Object(params)
+      throw new Error "argument must be an object or undefined"
     stringify @ast, params, {}
 
 ################################################################################

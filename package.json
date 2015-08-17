@@ -1,7 +1,7 @@
 {
   "name": "url-pattern",
   "version": "0.9.0",
-  "description": "with url-pattern you can easily create patterns that can match urls, domains, filepaths and other strings, parse them into data and generate them from data",
+  "description": "with url-pattern you will quickly create patterns that can match urls, domains, filepaths and other strings, parse those strings into data and generate them from data",
   "keywords": [
     "url",
     "string",

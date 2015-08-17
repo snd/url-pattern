@@ -5,9 +5,9 @@
 [![NPM Package](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern)
 
-**with url-pattern you can easily create
+**with url-pattern you will quickly create
 patterns that can match urls, domains, filepaths and other strings,
-parse them into data and generate them from data**
+parse those strings into data and generate them from data**
 
 **[the newest version 0.10 introduces breaking changes !](CHANGELOG.md#1.0.0)**  
 [see the changelog](CHANGELOG.md#1.0.0)
@@ -21,21 +21,22 @@ its like express
 but for any kind of string
 -->
 
-- `pattern.match(string) -> null | data` checks if string matches pattern and extracts data from string
-- `pattern.stringify(data) -> string` makes a string from a pattern and some data
+- [matches strings against patterns and extracts data](#match-pattern-against-string)
+- [generates strings from patterns and data](#stringifying-patterns)
 - compiles patterns into regexes which makes matching very fast
-- [optional segments, wildcards and escaping](#optional-segments-wildcards-and-escaping)
+- [optional segments](#optional-segments-and-escaping)
 - [customizable syntax](#customization)
 - supports Node.js, AMD and browsers
-- bower support
+- `npm install url-pattern`
+- `bower install url-pattern`
 - [huge test suite](test)
 - under 500 lines of code
+- [escaping](#optional-segments-and-escaping)
+- [wildcards](#wildcards)
 
 ```
 npm install url-pattern
 ```
-
-or
 
 ```
 bower install url-pattern
@@ -119,18 +120,17 @@ this makes `.match()` superfast.
 
 `:id` (in the example above) is a named segment:
 
-a named segment starts with `:`.
-the `:` is followed by the **name**.
+a named segment starts with `:` followed by the **name**.  
 the **name** must be at least one character in the regex character set `a-zA-Z0-9`.
 
 when matching, a named segment consumes all characters in the regex character set
 `a-zA-Z0-9-_~ %`.
-this means a named segment match stops at `/`, `.`, ... but not at `_`, `-`, ` ` and `%`.
+this means a named segment match stops at `/`, `.`, ... but not at `_`, `-`, ` `, `%`...
 
 [click here to see how you can change these character sets.](#customization)
 
-if a named segment **name** occurs more than once in the pattern string the multiple results
-are stored in an array on the returned object:
+if a named segment **name** occurs more than once in the pattern string,
+then the multiple results are stored in an array on the returned object:
 
 ```javascript
 > var pattern = new UrlPattern('/api/users/:ids/posts/:ids');
@@ -138,10 +138,9 @@ are stored in an array on the returned object:
 {ids: ['10', '5']}
 ```
 
-### optional segments, wildcards and escaping
+### optional segments and escaping
 
 to make part of a pattern optional just wrap it in `(` and `)`:
-
 
 ```javascript
 > var pattern = new UrlPattern('(http(s)\\://)(:subdomain.):domain.:tld(/*)');
@@ -156,12 +155,14 @@ url-pattern: `(`, `)`, `:`, `*`.
 {domain: 'google', tld: 'de'}
 ```
 
-optional named segments are stored in the corresponding property, if they exist:
+optional named segments are stored in the corresponding property only if they are present in the source string:
 
 ```javascript
 > pattern.match('https://www.google.com');
 {subdomain: 'www', domain: 'google', tld: 'com'}
 ```
+
+### wildcards
 
 `*` in patterns are wildcards and match anything.
 wildcard matches are collected in the `_` property:
@@ -190,7 +191,19 @@ if the pattern was created from a regex an array of the captured groups is retur
 null
 ```
 
+when making a pattern from a regex
+you can pass in an array of keys as the second argument.
+then an object is returned instead of an array:
+
+```javascript
+```
+
+TODO example:
+
 ### stringifying patterns
+
+```javascript
+```
 
 optional segments are only included in the output if they contain params and
 those params are provided.

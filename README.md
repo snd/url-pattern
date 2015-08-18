@@ -30,6 +30,7 @@ great for routing !**
 - [escaping](#optional-segments-wildcards-and-escaping)
 - [wildcards](#optional-segments-wildcards-and-escaping)
 - [customizable pattern syntax](#customizing-the-pattern-syntax)
+- pattern parser implemented using parser combinators from [pcom](https://github.com/snd/pcom)
 
 [check out **passage** if you are looking for simple composable routing that builds on top of url-pattern](https://github.com/snd/passage)
 
@@ -172,6 +173,8 @@ wildcard matches are collected in the `_` property:
 if there is only one wildcard then `_` contains the matching string.
 otherwise `_` contains an array of matching strings.
 
+[look at the tests for additional examples of `.match`](test/match-fixtures.coffee)
+
 ### make pattern from regex
 
 ```javascript
@@ -239,6 +242,7 @@ params and not all of them are provided.
 *one provided value for an optional segment
 makes all values in that optional segment required.*
 
+[look at the tests for additional examples of `.stringify`](test/stringify-fixtures.coffee)
 
 ### customizing the pattern syntax
 

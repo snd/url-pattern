@@ -227,9 +227,9 @@ and/or wildcards and values for those are provided:
 '/api/users/10'
 ```
 
-wildcards (key `_`) and multiple value arrays should work as expected.
+wildcards (key = `_`), deeply nested optional groups and multiple value arrays should stringify as expected.
 
-an error is thrown if a value is not provided.
+an error is thrown if a value that is not in an optional group is not provided.
 
 an error is thrown if an optional segment contains multiple
 params and not all of them are provided.

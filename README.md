@@ -2,13 +2,13 @@
 
 [![NPM Package](https://img.shields.io/npm/v/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
-[![NPM Package](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
+[![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern)
 
-**write string matching patterns easier than regexes.
-effortlessly string match urls, domains, filepaths and other strings.  
-capture named parts of strings and conveniently get them as objects.  
-generate strings from patterns and values.**
+**easier than regex string matching patterns for urls, domains, filepaths and other strings.
+conveniently returns objects with group names mapped to captured values.
+can also generate strings given a pattern and such an object.
+great for routing !**
 
 **[the newest version 0.10 introduces breaking changes !](CHANGELOG.md#0.10)**  
 [see the changelog](CHANGELOG.md#0.10)
@@ -22,12 +22,14 @@ generate strings from patterns and values.**
 - [optional segments](#optional-segments-wildcards-and-escaping)
 - [customizable syntax](#customization)
 - supports Node.js, AMD and browsers
-- `npm install url-pattern`
-- `bower install url-pattern`
-- [well tested](test)
-- less than 500 lines of code
+- [less than 500 lines of simple, readable, maintainable code](src/url-pattern.coffee)
 - [escaping](#optional-segments-wildcards-and-escaping)
 - [wildcards](#optional-segments-wildcards-and-escaping)
+- [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches) [huge test suite](test)
+- [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern) downloads per month
+- [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern) zero dependencies
+- npm package: `npm install url-pattern`
+- bower package: `bower install url-pattern`
 
 ```
 npm install url-pattern

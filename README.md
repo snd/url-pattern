@@ -198,8 +198,7 @@ null
 
 when making a pattern from a regex
 you can pass an array of keys as the second argument.
-then an object mapping those keys to the values captured by the capturing groups
-present in the regex is returned:
+returns objects on match with each key mapped to a captured value:
 
 ```javascript
 > var pattern = new UrlPattern(

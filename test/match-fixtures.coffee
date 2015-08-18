@@ -157,4 +157,11 @@ module.exports =
     test.deepEqual pattern.match('/user/10%20'),
       range: '10%20'
 
+    pattern = new UrlPattern '/vvv:version/*'
+    test.equal null, pattern.match('/vvv/resource')
+    test.deepEqual pattern.match('/vvv1/resource'),
+      _: 'resource'
+      version: '1'
+    test.equal null, pattern.match('/vvv1.1/resource'),
+
     test.done()

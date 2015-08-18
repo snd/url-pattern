@@ -5,9 +5,9 @@
 [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern)
 
-**easier than regex string matching patterns for urls, domains, filepaths and other strings.
-conveniently returns objects with group names mapped to captured values.
-can also generate strings given a pattern and such an object.
+**easier than regex string matching patterns for urls, domains, filepaths and other strings.  
+conveniently returns objects with group names mapped to captured values.  
+can also generate strings given a pattern and such an object.  
 great for routing !**
 
 **[the newest version 0.10 introduces breaking changes !](CHANGELOG.md#0.10)**  

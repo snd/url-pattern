@@ -193,8 +193,6 @@
 
     U.wildcard = P.tag 'wildcard', P.string(options.wildcardChar)
 
-    U.name = P.regex new RegExp "^[#{options.segmentNameCharset}]+"
-
     U.optional = P.tag(
       'optional'
       P.pick(1,
@@ -203,6 +201,8 @@
         P.string(options.optionalSegmentEndChar)
       )
     )
+
+    U.name = P.regex new RegExp "^[#{options.segmentNameCharset}]+"
 
     U.named = P.tag(
       'named',
@@ -258,7 +258,7 @@
     wildcardChar: '*'
 
 ################################################################################
-# functions that further process ASTs returned as `.value` by parsers
+# functions that further process ASTs returned as `.value` in parser results
 
   baseAstNodeToRegexString = (astNode, segmentValueCharset) ->
     if Array.isArray astNode

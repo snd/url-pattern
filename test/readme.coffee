@@ -65,6 +65,15 @@ module.exports =
     test.equal pattern.match('/api/users/foo'), null
     test.done()
 
+  'stringify': (test) ->
+    pattern = new UrlPattern('/api/users/:id')
+    test.equal '/api/users/10', pattern.stringify(id: 10)
+
+    pattern = new UrlPattern('/api/users(/:id)')
+    test.equal '/api/users', pattern.stringify()
+    test.equal '/api/users/10', pattern.stringify(id: 10)
+
+    test.done()
 
   'customization': (test) ->
     options =

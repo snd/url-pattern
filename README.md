@@ -5,27 +5,16 @@
 [![NPM Package](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern)
 
-**string matching patterns.  
-easier than regexes.  
-effortlessly match urls, domains, filepaths and other strings.  
-extract values from strings.  
+**write string matching patterns easier than regexes.
+effortlessly string match urls, domains, filepaths and other strings.  
+capture named parts of strings and conveniently get them as objects.  
 generate strings from patterns and values.**
 
-<!--
-easier than regexes
--->
-
-**[the newest version 0.10 introduces breaking changes !](CHANGELOG.md#1.0.0)**  
-[see the changelog](CHANGELOG.md#1.0.0)
+**[the newest version 0.10 introduces breaking changes !](CHANGELOG.md#0.10)**  
+[see the changelog](CHANGELOG.md#0.10)
 
 > This is a great little library -- thanks!  
 > [michael](https://github.com/snd/url-pattern/pull/7)
-
-<!--
-its like express
-
-but for any kind of string
--->
 
 - [match strings against patterns and extract values](#match-pattern-against-string)
 - [generate strings from patterns and values](#stringifying-patterns)
@@ -35,8 +24,8 @@ but for any kind of string
 - supports Node.js, AMD and browsers
 - `npm install url-pattern`
 - `bower install url-pattern`
-- [huge test suite](test)
-- under 500 lines of code
+- [well tested](test)
+- less than 500 lines of code
 - [escaping](#optional-segments-wildcards-and-escaping)
 - [wildcards](#optional-segments-wildcards-and-escaping)
 
@@ -219,25 +208,33 @@ null
 ### stringifying patterns
 
 ```javascript
+> var pattern = new UrlPattern('/api/users/:id');
+
+> pattern.stringify({id: 10})
+'/api/users/10'
 ```
 
-optional segments are only included in the output if they contain params and
-those params are provided.
+optional segments are only included in the output if they contain named segments
+and/or wildcards and values for those are provided:
 
 ```javascript
-(i-get-ignored)
+> var pattern = new UrlPattern('/api/users(/:id)');
+
+> pattern.stringify()
+'/api/users'
+
+> pattern.stringify({id: 10})
+'/api/users/10'
 ```
+
+wildcards (key `_`) and multiple value arrays should work as expected.
+
+an error is thrown if a value is not provided.
 
 an error is thrown if an optional segment contains multiple
-params and only some of them are provided:
-
-```javascript
-```
-
-examples
-
-```javascript
-```
+params and not all of them are provided.
+*one provided value for an optional segment
+makes all values in that optional segment required.*
 
 
 ### customization

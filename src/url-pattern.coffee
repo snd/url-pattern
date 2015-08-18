@@ -84,8 +84,8 @@
       return new P.Result tagged, result.rest
 
   P.regex = (regex) ->
-    unless regex instanceof RegExp
-      throw new Error 'argument must be instanceof RegExp'
+    # unless regex instanceof RegExp
+    #   throw new Error 'argument must be instanceof RegExp'
     (input) ->
       matches = regex.exec input
       unless matches?
@@ -101,8 +101,8 @@
       rest = input
       while ++i < length
         parser = parsers[i]
-        unless 'function' is typeof parser
-          throw new Error "parser passed at index `#{i}` into `sequence` is not of type `function` but of type `#{typeof parser}`"
+        # unless 'function' is typeof parser
+        #   throw new Error "parser passed at index `#{i}` into `sequence` is not of type `function` but of type `#{typeof parser}`"
         result = parser rest
         unless result?
           return
@@ -116,22 +116,22 @@
       unless result?
         return
       array = result.value
-      unless Array.isArray indexes
-        result.value = array[indexes]
-      else
-        result.value = []
-        indexes.forEach (i) ->
-          result.value.push array[i]
+      result.value = array[indexes]
+      # unless Array.isArray indexes
+      #   result.value = array[indexes]
+      # else
+      #   result.value = []
+      #   indexes.forEach (i) ->
+      #     result.value.push array[i]
       return result
 
   P.string = (string) ->
     length = string.length
-    if length is 0
-      throw new Error '`string` must not be blank'
-    else
-      (input) ->
-        if input.slice(0, length) is string
-          return new P.Result string, input.slice(length)
+    # if length is 0
+    #   throw new Error '`string` must not be blank'
+    (input) ->
+      if input.slice(0, length) is string
+        return new P.Result string, input.slice(length)
 
   P.lazy = (fn) ->
     cached = null
@@ -176,8 +176,8 @@
       length = parsers.length
       while ++i < length
         parser = parsers[i]
-        unless 'function' is typeof parser
-          throw new Error "parser passed at index `#{i}` into `firstChoice` is not of type `function` but of type `#{typeof parser}`"
+        # unless 'function' is typeof parser
+        #   throw new Error "parser passed at index `#{i}` into `firstChoice` is not of type `function` but of type `#{typeof parser}`"
         result = parser input
         if result?
           return result

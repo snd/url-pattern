@@ -19,7 +19,7 @@ great for routing !**
 - [match patterns against strings and extract values](#match-pattern-against-string)
 - [generate strings from patterns and values](#stringifying-patterns)
 - very fast matching as each pattern is compiled into a regex exactly once
-- supports Node.js, AMD and browsers
+- supports Node.js, [AMD](http://requirejs.org/docs/whyamd.html) and browsers
 - [implemented in less than 500 lines of simple, readable, maintainable code](src/url-pattern.coffee)
 - [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches) [huge test suite](test)
 - [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern) downloads per month
@@ -30,7 +30,7 @@ great for routing !**
 - [escaping](#optional-segments-wildcards-and-escaping)
 - [wildcards](#optional-segments-wildcards-and-escaping)
 - [customizable pattern syntax](#customizing-the-pattern-syntax)
-- pattern parser implemented using parser combinators from [pcom](https://github.com/snd/pcom)
+- pattern parser implemented using elegant, modular, highly testable [parser combinators](https://en.wikipedia.org/wiki/Parser_combinator) from [pcom](https://github.com/snd/pcom)
 
 [check out **passage** if you are looking for simple composable routing that builds on top of url-pattern](https://github.com/snd/passage)
 
@@ -125,7 +125,7 @@ when matching, a named segment consumes all characters in the regex character se
 `a-zA-Z0-9-_~ %`.
 a named segment match stops at `/`, `.`, ... but not at `_`, `-`, ` `, `%`...
 
-[you can change these character sets. click here to see how.](#customization)
+[you can change these character sets. click here to see how.](#customizing-the-pattern-syntax)
 
 if a named segment **name** occurs more than once in the pattern string,
 then the multiple results are stored in an array on the returned object:

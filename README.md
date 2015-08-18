@@ -5,9 +5,11 @@
 [![NPM Package](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern)
 
-**with url-pattern you will quickly create
-patterns that can match urls, domains, filepaths and other strings,
-parse those strings into data and generate them from data**
+**string matching patterns.  
+easier than regexes.  
+effortlessly match urls, domains, filepaths and other strings.  
+extract values from strings.  
+generate strings from patterns and values.**
 
 <!--
 easier than regexes
@@ -25,18 +27,18 @@ its like express
 but for any kind of string
 -->
 
-- [matches strings against patterns and extracts data](#match-pattern-against-string)
-- [generates strings from patterns and data](#stringifying-patterns)
+- [match strings against patterns and extract values](#match-pattern-against-string)
+- [generate strings from patterns and values](#stringifying-patterns)
 - compiles patterns into regexes which makes matching very fast
-- [optional segments](#optional-segments-and-escaping)
+- [optional segments](#optional-segments-wildcards-and-escaping)
 - [customizable syntax](#customization)
 - supports Node.js, AMD and browsers
 - `npm install url-pattern`
 - `bower install url-pattern`
 - [huge test suite](test)
 - under 500 lines of code
-- [escaping](#optional-segments-and-escaping)
-- [wildcards](#wildcards)
+- [escaping](#optional-segments-wildcards-and-escaping)
+- [wildcards](#optional-segments-wildcards-and-escaping)
 
 ```
 npm install url-pattern
@@ -97,8 +99,8 @@ if [AMD](http://requirejs.org/docs/whyamd.html) is not available it sets the glo
 > var pattern = new UrlPattern('/api/users/:id');
 ```
 
-a `pattern` is immutable after construction
-in the sense that it has no method which changes its state.
+a `pattern` is immutable after construction.  
+none of its methods changes its state.  
 that makes it easier to reason about.
 
 ### match pattern against string
@@ -117,8 +119,7 @@ or `null` if there was no match:
 null
 ```
 
-pattern strings are compiled into regexes at construction.
-this makes `.match()` superfast.
+patterns are compiled into regexes which makes `.match()` superfast.
 
 ### named segments
 
@@ -129,9 +130,9 @@ the **name** must be at least one character in the regex character set `a-zA-Z0-
 
 when matching, a named segment consumes all characters in the regex character set
 `a-zA-Z0-9-_~ %`.
-this means a named segment match stops at `/`, `.`, ... but not at `_`, `-`, ` `, `%`...
+a named segment match stops at `/`, `.`, ... but not at `_`, `-`, ` `, `%`...
 
-[click here to see how you can change these character sets.](#customization)
+[you can change these character sets. click here to see how.](#customization)
 
 if a named segment **name** occurs more than once in the pattern string,
 then the multiple results are stored in an array on the returned object:
@@ -142,31 +143,31 @@ then the multiple results are stored in an array on the returned object:
 {ids: ['10', '5']}
 ```
 
-### optional segments and escaping
+### optional segments, wildcards and escaping
 
 to make part of a pattern optional just wrap it in `(` and `)`:
 
 ```javascript
-> var pattern = new UrlPattern('(http(s)\\://)(:subdomain.):domain.:tld(/*)');
+> var pattern = new UrlPattern(
+  '(http(s)\\://)(:subdomain.):domain.:tld(/*)'
+);
 ```
 
 note that `\\` escapes the `:` in `http(s)\\://`.
-you can use `\\` to escape any character that has special meaning within
-url-pattern: `(`, `)`, `:`, `*`.
+you can use `\\` to escape `(`, `)`, `:` and `*` which have special meaning within
+url-pattern.
+
+optional named segments are stored in the corresponding property only if they are present in the source string:
 
 ```javascript
 > pattern.match('google.de');
 {domain: 'google', tld: 'de'}
 ```
 
-optional named segments are stored in the corresponding property only if they are present in the source string:
-
 ```javascript
 > pattern.match('https://www.google.com');
 {subdomain: 'www', domain: 'google', tld: 'com'}
 ```
-
-### wildcards
 
 `*` in patterns are wildcards and match anything.
 wildcard matches are collected in the `_` property:
@@ -176,13 +177,13 @@ wildcard matches are collected in the `_` property:
 {subdomain: 'mail', domain: 'google', tld: 'com', _: 'mail'}
 ```
 
-if there is only one wildcard `_` contains the matching string.
+if there is only one wildcard then `_` contains the matching string.
 otherwise `_` contains an array of matching strings.
 
 ### make pattern from regex
 
 ```javascript
-> var pattern = new UrlPattern(/\/api\/(.*)/);
+> var pattern = new UrlPattern(/^\/api\/(.*)$/);
 ```
 
 if the pattern was created from a regex an array of the captured groups is returned on a match:
@@ -196,13 +197,27 @@ null
 ```
 
 when making a pattern from a regex
-you can pass in an array of keys as the second argument.
+you can pass in an array of keys as the second argument
+to name the capturing groups present in the regex
 then an object is returned instead of an array:
 
 ```javascript
-```
+> var pattern = new UrlPattern(/^\/api\/([^\/]+)(?:\/(\d+))?$/, ['resource', 'id']);
 
-TODO example:
+> pattern.match('/api/users');
+{
+  resource: 'users'
+}
+
+> pattern.match('/api/users/5');
+{
+  resource: 'users'
+  id: '5'
+}
+
+> pattern.match('/api/users/foo');
+null
+```
 
 ### stringifying patterns
 

@@ -60,13 +60,24 @@ named segments now also match `-`, `_`, ` ` and `%`.
 
 added [bower.json](bower.json) and registered with bower as `url-pattern`.
 
-#### 1.0.0
+#### 0.10
 
-named segments now also match the `~` character.
+[issue 15](https://github.com/snd/url-pattern/issues/15):  
+named segments now also match the `~` character.  
+**this will break your code if you relied on the fact that named segments
+stop matching at `~` !**
 
-configuring the parser has changed. now use:
+the way the parser is customized has changed.  
+**this will break your code if you customized the parser !**
+[read me](https://github.com/snd/url-pattern#customizing-the-pattern-syntax)  
+updating your code is very easy.
 
-```javascript
-```
+[issue 14](https://github.com/snd/url-pattern/issues/14)  
+[read me](https://github.com/snd/url-pattern#make-pattern-from-regex)  
+non breaking
 
-added `.stringify`
+[issue 11](https://github.com/snd/url-pattern/issues/11)
+[read me](https://github.com/snd/url-pattern#stringifying-patterns)  
+non breaking
+
+error messages on invalid patterns have changed.

@@ -20,7 +20,7 @@ great for routing !**
 - [generate strings from patterns and values](#stringifying-patterns)
 - very fast matching as each pattern is compiled into a regex exactly once
 - supports Node.js, AMD and browsers
-- [less than 500 lines of simple, readable, maintainable code](src/url-pattern.coffee)
+- [implemented in less than 500 lines of simple, readable, maintainable code](src/url-pattern.coffee)
 - [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches) [huge test suite](test)
 - [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern) downloads per month
 - [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern) zero dependencies
@@ -29,7 +29,7 @@ great for routing !**
 - [optional segments](#optional-segments-wildcards-and-escaping)
 - [escaping](#optional-segments-wildcards-and-escaping)
 - [wildcards](#optional-segments-wildcards-and-escaping)
-- [customizable syntax](#customization)
+- [customizable pattern syntax](#customizing-the-pattern-syntax)
 
 [check out **passage** if you are looking for simple composable routing that builds on top of url-pattern](https://github.com/snd/passage)
 
@@ -240,7 +240,7 @@ params and not all of them are provided.
 makes all values in that optional segment required.*
 
 
-### customization
+### customizing the pattern syntax
 
 finally we can completely change pattern-parsing and regex-compilation to suit our needs:
 

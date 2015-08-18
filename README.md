@@ -16,20 +16,22 @@ great for routing !**
 > This is a great little library -- thanks!  
 > [michael](https://github.com/snd/url-pattern/pull/7)
 
-- [match strings against patterns and extract values](#match-pattern-against-string)
+- [match patterns against strings and extract values](#match-pattern-against-string)
 - [generate strings from patterns and values](#stringifying-patterns)
-- compiles patterns into regexes which makes matching very fast
-- [optional segments](#optional-segments-wildcards-and-escaping)
-- [customizable syntax](#customization)
+- very fast matching as each pattern is compiled into a regex exactly once
 - supports Node.js, AMD and browsers
 - [less than 500 lines of simple, readable, maintainable code](src/url-pattern.coffee)
-- [escaping](#optional-segments-wildcards-and-escaping)
-- [wildcards](#optional-segments-wildcards-and-escaping)
 - [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches) [huge test suite](test)
 - [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern) downloads per month
 - [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern) zero dependencies
 - npm package: `npm install url-pattern`
 - bower package: `bower install url-pattern`
+- [optional segments](#optional-segments-wildcards-and-escaping)
+- [escaping](#optional-segments-wildcards-and-escaping)
+- [wildcards](#optional-segments-wildcards-and-escaping)
+- [customizable syntax](#customization)
+
+[check out **passage** if you are looking for simple composable routing that builds on top of url-pattern](https://github.com/snd/passage)
 
 ```
 npm install url-pattern
@@ -42,6 +44,10 @@ bower install url-pattern
 ``` javascript
 > var UrlPattern = require('url-pattern');
 ```
+
+[lib/url-pattern.js](lib/url-pattern.js) supports [AMD](http://requirejs.org/docs/whyamd.html).  
+if [AMD](http://requirejs.org/docs/whyamd.html) is not available it sets the global variable `UrlPattern`.
+
 ``` javascript
 > var pattern = new UrlPattern('/api/users/:id');
 
@@ -78,11 +84,6 @@ null
 > pattern.match('google');
 null
 ```
-
-[lib/url-pattern.js](lib/url-pattern.js) supports [AMD](http://requirejs.org/docs/whyamd.html).  
-if [AMD](http://requirejs.org/docs/whyamd.html) is not available it sets the global variable `UrlPattern`.
-
-[check out **passage** if you are looking for simple composable routing that builds on top of url-pattern](https://github.com/snd/passage)
 
 ### make pattern from string
 

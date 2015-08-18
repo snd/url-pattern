@@ -9,6 +9,10 @@
 patterns that can match urls, domains, filepaths and other strings,
 parse those strings into data and generate them from data**
 
+<!--
+easier than regexes
+-->
+
 **[the newest version 0.10 introduces breaking changes !](CHANGELOG.md#1.0.0)**  
 [see the changelog](CHANGELOG.md#1.0.0)
 

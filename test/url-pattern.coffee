@@ -54,7 +54,7 @@ module.exports =
         id: 'test.name'
       test.done()
 
-  'regex names': (test) ->
+  'regex group names': (test) ->
     pattern = new UrlPattern /^\/api\/([a-zA-Z0-9-_~ %]+)(?:\/(\d+))?$/, ['resource', 'id']
     test.deepEqual pattern.match('/api/users'),
       resource: 'users'

@@ -49,10 +49,22 @@ module.exports =
     test.done()
 
   'regex': (test) ->
-    pattern = new UrlPattern(/\/api\/(.*)/)
+    pattern = new UrlPattern(/^\/api\/(.*)$/)
     test.deepEqual pattern.match('/api/users'), ['users']
     test.equal pattern.match('/apiii/users'), null
     test.done()
+
+  'regex group names': (test) ->
+    pattern = new UrlPattern(/^\/api\/([^\/]+)(?:\/(\d+))?$/, ['resource', 'id'])
+    test.deepEqual pattern.match('/api/users'),
+      resource: 'users'
+    test.equal pattern.match('/api/users/'), null
+    test.deepEqual pattern.match('/api/users/5'),
+      resource: 'users'
+      id: '5'
+    test.equal pattern.match('/api/users/foo'), null
+    test.done()
+
 
   'customization': (test) ->
     options =

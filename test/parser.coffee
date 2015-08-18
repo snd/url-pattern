@@ -1,7 +1,7 @@
 # copied from
 # https://github.com/snd/pcom/blob/master/test/url-pattern-example.coffee
 
-UrlPattern = require '../src/url-pattern'
+UrlPattern = require '../lib/url-pattern'
 U = UrlPattern.newParser(UrlPattern.defaultOptions)
 parse = U.pattern
 

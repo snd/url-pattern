@@ -77,13 +77,14 @@
   },
   "devDependencies": {
     "nodeunit": "0.9.1",
-    "coffee-script": "1.9.3"
+    "coffee-script": "1.9.3",
+    "istanbul": "0.3.18"
   },
   "main": "lib/url-pattern",
   "scripts": {
     "compile": "coffee --bare --compile --output lib src",
     "prepublish": "npm run compile",
     "pretest": "npm run compile",
-    "test": "nodeunit test"
+    "test": "istanbul cover nodeunit test"
   }
 }

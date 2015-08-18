@@ -2,6 +2,7 @@
 
 [![NPM Package](https://img.shields.io/npm/v/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
+[![coverage-97%](http://img.shields.io/badge/coverage-97%-brightgreen.svg?style=flat)](https://github.com/snd/url-pattern/coverage/lcov-report/lib/url-pattern.js.html)
 [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern)
 

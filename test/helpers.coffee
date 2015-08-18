@@ -4,7 +4,7 @@
   stringConcatMap
   regexGroupCount
   keysAndValuesToObject
-} = require '../src/url-pattern'
+} = require '../lib/url-pattern'
 
 module.exports =
 

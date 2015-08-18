@@ -1,4 +1,4 @@
-UrlPattern = require '../src/url-pattern'
+UrlPattern = require '../lib/url-pattern'
 
 module.exports =
 

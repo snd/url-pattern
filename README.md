@@ -10,8 +10,8 @@ can capture named parts of strings and conveniently returns them as objects.
 can do the reverse and generate strings given a pattern and such an object.  
 great for routing !**
 
-**[the newest version 0.10 introduces breaking changes !](CHANGELOG.md#0.10)**  
-[see the changelog](CHANGELOG.md#0.10)
+**[the newest version 0.10 introduces breaking changes !](CHANGELOG.md#010)**  
+[see the changelog](CHANGELOG.md#010)
 
 > This is a great little library -- thanks!  
 > [michael](https://github.com/snd/url-pattern/pull/7)

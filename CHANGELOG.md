@@ -68,16 +68,16 @@ named segments now also match the `~` character.
 stop matching at `~` !**
 
 the way the parser is customized has changed.  
-**this will break your code if you customized the parser !**
+**this will break your code if you customized the parser !**  
 [read me](https://github.com/snd/url-pattern#customizing-the-pattern-syntax)  
 updating your code is very easy.
 
-[issue 14](https://github.com/snd/url-pattern/issues/14)  
+[issue 14](https://github.com/snd/url-pattern/issues/14):  
 [read me](https://github.com/snd/url-pattern#make-pattern-from-regex)  
 non breaking
 
-[issue 11](https://github.com/snd/url-pattern/issues/11)
+[issue 11](https://github.com/snd/url-pattern/issues/11):  
 [read me](https://github.com/snd/url-pattern#stringifying-patterns)  
 non breaking
 
-error messages on invalid patterns have changed.
+messages on errors thrown when invalid patterns are passed in have changed slightly.

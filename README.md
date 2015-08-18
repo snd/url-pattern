@@ -197,23 +197,21 @@ null
 ```
 
 when making a pattern from a regex
-you can pass in an array of keys as the second argument
-to name the capturing groups present in the regex
-then an object is returned instead of an array:
+you can pass an array of keys as the second argument.
+then an object mapping those keys to the values captured by the capturing groups
+present in the regex is returned:
 
 ```javascript
-> var pattern = new UrlPattern(/^\/api\/([^\/]+)(?:\/(\d+))?$/, ['resource', 'id']);
+> var pattern = new UrlPattern(
+  /^\/api\/([^\/]+)(?:\/(\d+))?$/,
+  ['resource', 'id']
+);
 
 > pattern.match('/api/users');
-{
-  resource: 'users'
-}
+{resource: 'users'}
 
 > pattern.match('/api/users/5');
-{
-  resource: 'users'
-  id: '5'
-}
+{resource: 'users', id: '5'}
 
 > pattern.match('/api/users/foo');
 null
@@ -313,7 +311,8 @@ then match:
 
 ### contribution
 
-**TLDR: bugfixes, issues and discussion are always welcome.
+**TLDR:  
+bugfixes, issues and discussion are always welcome.  
 kindly ask before implementing new features.**
 
 i will happily merge pull requests that fix bugs with reasonable code.
@@ -322,7 +321,7 @@ i will only merge pull requests that modify/add functionality
 if the changes align with my goals for this package,
 are well written, documented and tested.
 
-**communicate!** write an issue to start a discussion
-before writing code that may or may not get merged.
+**communicate !**  
+write an issue to start a discussion before writing code that may or may not get merged.
 
 ## [license: MIT](LICENSE)

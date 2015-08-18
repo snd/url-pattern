@@ -5,7 +5,7 @@
   # CommonJS
   else if exports?
     module.exports = factory()
-  # no module system
+  # browser globals
   else
     root.UrlPattern = factory()
 )(this, ->
@@ -78,13 +78,14 @@
   P.tag = (tag, parser) ->
     (input) ->
       result = parser input
-      unless result
+      unless result?
         return
       tagged = new P.Tagged tag, result.value
       return new P.Result tagged, result.rest
 
-  P.regex = (arg) ->
-    regex = if 'string' is typeof arg then new RegExp '^' + arg else arg
+  P.regex = (regex) ->
+    unless regex instanceof RegExp
+      throw new Error 'argument must be instanceof RegExp'
     (input) ->
       matches = regex.exec input
       unless matches?
@@ -127,19 +128,10 @@
     length = string.length
     if length is 0
       throw new Error '`string` must not be blank'
-    else if length is 1
-      (input) ->
-        if input.charAt(0) is string
-          return new P.Result string, input.slice(1)
     else
       (input) ->
         if input.slice(0, length) is string
           return new P.Result string, input.slice(length)
-
-  P.anyChar = (input) ->
-    if input is ''
-      return
-    return new P.Result input.charAt(0), input.slice(1)
 
   P.lazy = (fn) ->
     cached = null
@@ -147,14 +139,6 @@
       unless cached?
         cached = fn()
       return cached input
-
-  P.charset = (charset) ->
-    regex = new RegExp '^['  + charset + ']$'
-    (input) ->
-      char = input.charAt(0)
-      unless regex.test char
-        return
-      return new P.Result char, input.slice(1)
 
   P.baseMany = (parser, end, stringResult, atLeastOneResultRequired, input) ->
     rest = input
@@ -178,6 +162,10 @@
 
     return new P.Result results, rest
 
+  P.many1 = (parser) ->
+    (input) ->
+      P.baseMany parser, null, false, true, input
+
   P.concatMany1Till = (parser, end) ->
     (input) ->
       P.baseMany parser, end, true, true, input
@@ -195,24 +183,6 @@
           return result
       return
 
-  P.many1 = (parser) ->
-    (input) ->
-      P.baseMany parser, null, false, true, input
-
-  # for debugging
-  P.log = (id, parser) ->
-    (input) ->
-      output = parser input
-      msg =
-        id: id
-        input: input
-      if output?
-        msg.consumed = input.slice(0, input.length - output.rest.length)
-        msg.rest = output?.rest
-        msg.value = output?.value
-        console.log msg
-      return output
-
 ################################################################################
 # url pattern parser
 # copied from
@@ -223,7 +193,7 @@
 
     U.wildcard = P.tag 'wildcard', P.string(options.wildcardChar)
 
-    U.name = P.regex "^[#{options.segmentNameCharset}]+"
+    U.name = P.regex new RegExp "^[#{options.segmentNameCharset}]+"
 
     U.optional = P.tag(
       'optional'
@@ -244,7 +214,7 @@
 
     U.escapedChar = P.pick(1,
       P.string(options.escapeChar)
-      P.anyChar
+      P.regex(/^./)
     )
 
     U.static = P.tag(
@@ -252,7 +222,7 @@
       P.concatMany1Till(
         P.firstChoice(
           P.lazy(-> U.escapedChar)
-          P.anyChar
+          P.regex(/^./)
         )
         P.firstChoice(
           P.string(options.segmentNameStartChar)
@@ -265,10 +235,6 @@
 
     U.token = P.lazy ->
       P.firstChoice(
-        # P.log 'wildcard', U.wildcard
-        # P.log 'optional', U.optional
-        # P.log 'named', U.named
-        # P.log 'static', U.static
         U.wildcard
         U.optional
         U.named

@@ -88,6 +88,6 @@
     "compile": "coffee --bare --compile --output lib src",
     "prepublish": "npm run compile",
     "pretest": "npm run compile",
-    "test": "istanbul cover -x test coffeetape test/misc.coffee test/stringify-fixtures.coffee test/match-fixtures.coffee"
+    "test": "istanbul cover -x test coffeetape test/misc.coffee test/stringify-fixtures.coffee test/match-fixtures.coffee test/helpers.coffee test/ast.coffee test/errors.coffee"
   }
 }

@@ -1,0 +1,1353 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for lib/url-pattern.js</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../prettify.css">
+    <link rel="stylesheet" href="../base.css">
+    <style type='text/css'>
+        div.coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class="header high">
+    <h1>Code coverage report for <span class="entity">lib/url-pattern.js</span></h1>
+    <h2>
+        Statements: <span class="metric">99.32% <small>(293 / 295)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Branches: <span class="metric">96.15% <small>(150 / 156)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">100% <small>(45 / 45)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">99.32% <small>(293 / 295)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
+    </h2>
+    <div class="path"><a href="../index.html">All files</a> &#187; <a href="index.html">lib/</a> &#187; url-pattern.js</div>
+</div>
+<div class="body">
+<pre><table class="coverage">
+<tr><td class="line-count">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">157</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">110</span>
+<span class="cline-any cline-yes">110</span>
+<span class="cline-any cline-yes">110</span>
+<span class="cline-any cline-yes">110</span>
+<span class="cline-any cline-yes">110</span>
+<span class="cline-any cline-yes">289</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">110</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">169</span>
+<span class="cline-any cline-yes">169</span>
+<span class="cline-any cline-yes">169</span>
+<span class="cline-any cline-yes">169</span>
+<span class="cline-any cline-yes">169</span>
+<span class="cline-any cline-yes">477</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">158</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">11</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">68</span>
+<span class="cline-any cline-yes">68</span>
+<span class="cline-any cline-yes">68</span>
+<span class="cline-any cline-yes">68</span>
+<span class="cline-any cline-yes">68</span>
+<span class="cline-any cline-yes">135</span>
+<span class="cline-any cline-yes">135</span>
+<span class="cline-any cline-yes">135</span>
+<span class="cline-any cline-yes">19</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">116</span>
+<span class="cline-any cline-yes">16</span>
+<span class="cline-any cline-yes">12</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">100</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">68</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">2595</span>
+<span class="cline-any cline-yes">2595</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">495</span>
+<span class="cline-any cline-yes">495</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">284</span>
+<span class="cline-any cline-yes">3199</span>
+<span class="cline-any cline-yes">3199</span>
+<span class="cline-any cline-yes">3199</span>
+<span class="cline-any cline-yes">2704</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">495</span>
+<span class="cline-any cline-yes">495</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">213</span>
+<span class="cline-any cline-yes">1102</span>
+<span class="cline-any cline-yes">1102</span>
+<span class="cline-any cline-yes">1102</span>
+<span class="cline-any cline-yes">151</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">951</span>
+<span class="cline-any cline-yes">951</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">2087</span>
+<span class="cline-any cline-yes">2087</span>
+<span class="cline-any cline-yes">2087</span>
+<span class="cline-any cline-yes">2087</span>
+<span class="cline-any cline-yes">2087</span>
+<span class="cline-any cline-yes">2087</span>
+<span class="cline-any cline-yes">2087</span>
+<span class="cline-any cline-yes">2087</span>
+<span class="cline-any cline-yes">2087</span>
+<span class="cline-any cline-yes">2335</span>
+<span class="cline-any cline-yes">2335</span>
+<span class="cline-any cline-yes">2335</span>
+<span class="cline-any cline-yes">1919</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">416</span>
+<span class="cline-any cline-yes">416</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">168</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">213</span>
+<span class="cline-any cline-yes">213</span>
+<span class="cline-any cline-yes">213</span>
+<span class="cline-any cline-yes">2087</span>
+<span class="cline-any cline-yes">2087</span>
+<span class="cline-any cline-yes">2087</span>
+<span class="cline-any cline-yes">1919</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">168</span>
+<span class="cline-any cline-yes">168</span>
+<span class="cline-any cline-yes">168</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">568</span>
+<span class="cline-any cline-yes">568</span>
+<span class="cline-any cline-yes">568</span>
+<span class="cline-any cline-yes">7452</span>
+<span class="cline-any cline-yes">581</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">355</span>
+<span class="cline-any cline-yes">355</span>
+<span class="cline-any cline-yes">355</span>
+<span class="cline-any cline-yes">2437</span>
+<span class="cline-any cline-yes">278</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2437</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">612</span>
+<span class="cline-any cline-yes">612</span>
+<span class="cline-any cline-yes">612</span>
+<span class="cline-any cline-yes">612</span>
+<span class="cline-any cline-yes">1904</span>
+<span class="cline-any cline-yes">1272</span>
+<span class="cline-any cline-yes">1272</span>
+<span class="cline-any cline-yes">276</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1628</span>
+<span class="cline-any cline-yes">1628</span>
+<span class="cline-any cline-yes">336</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1292</span>
+<span class="cline-any cline-yes">851</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">441</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1292</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">612</span>
+<span class="cline-any cline-yes">212</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">400</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">71</span>
+<span class="cline-any cline-yes">191</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">71</span>
+<span class="cline-any cline-yes">421</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">213</span>
+<span class="cline-any cline-yes">213</span>
+<span class="cline-any cline-yes">213</span>
+<span class="cline-any cline-yes">2900</span>
+<span class="cline-any cline-yes">2900</span>
+<span class="cline-any cline-yes">2900</span>
+<span class="cline-any cline-yes">2900</span>
+<span class="cline-any cline-yes">8769</span>
+<span class="cline-any cline-yes">8769</span>
+<span class="cline-any cline-yes">8769</span>
+<span class="cline-any cline-yes">1568</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">71</span>
+<span class="cline-any cline-yes">71</span>
+<span class="cline-any cline-yes">71</span>
+<span class="cline-any cline-yes">71</span>
+<span class="cline-any cline-yes">23</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">71</span>
+<span class="cline-any cline-yes">71</span>
+<span class="cline-any cline-yes">45</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">71</span>
+<span class="cline-any cline-yes">71</span>
+<span class="cline-any cline-yes">68</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">71</span>
+<span class="cline-any cline-yes">71</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">71</span>
+<span class="cline-any cline-yes">71</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">71</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">392</span>
+<span class="cline-any cline-yes">107</span>
+<span class="cline-any cline-yes">285</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">285</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">37</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">66</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">145</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">37</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">70</span>
+<span class="cline-any cline-yes">8</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">70</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">392</span>
+<span class="cline-any cline-yes">107</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">285</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">37</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">66</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">145</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">37</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">135</span>
+<span class="cline-any cline-yes">135</span>
+<span class="cline-any cline-yes">13</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">135</span>
+<span class="cline-any cline-yes">135</span>
+<span class="cline-any cline-yes">25</span>
+<span class="cline-any cline-yes">5</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">110</span>
+<span class="cline-any cline-yes">110</span>
+<span class="cline-any cline-yes">110</span>
+<span class="cline-any cline-yes">14</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">96</span>
+<span class="cline-any cline-yes">96</span>
+<span class="cline-any cline-yes">68</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">96</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">129</span>
+<span class="cline-any cline-yes">129</span>
+<span class="cline-any cline-yes">40</span>
+<span class="cline-any cline-yes">40</span>
+<span class="cline-any cline-yes">40</span>
+<span class="cline-any cline-yes">89</span>
+<span class="cline-any cline-yes">21</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">19</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">89</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">40</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">243</span>
+<span class="cline-any cline-yes">58</span>
+<span class="cline-any cline-yes">185</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">185</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">51</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">85</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34</span>
+<span class="cline-any cline-yes">21</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">85</span>
+<span class="cline-any cline-yes">85</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">84</span>
+<span class="cline-any cline-yes">84</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">82</span>
+<span class="cline-any cline-yes">10</span>
+<span class="cline-any cline-yes">10</span>
+<span class="cline-any cline-yes">5</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">72</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">71</span>
+<span class="cline-any cline-yes">71</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">69</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">69</span>
+<span class="cline-any cline-yes">69</span>
+<span class="cline-any cline-yes">69</span>
+<span class="cline-any cline-yes">5</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">64</span>
+<span class="cline-any cline-yes">2</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">62</span>
+<span class="cline-any cline-yes">62</span>
+<span class="cline-any cline-yes">62</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">86</span>
+<span class="cline-any cline-yes">86</span>
+<span class="cline-any cline-yes">86</span>
+<span class="cline-any cline-yes">23</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">63</span>
+<span class="cline-any cline-yes">63</span>
+<span class="cline-any cline-yes">59</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">39</span>
+<span class="cline-any cline-yes">9</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">39</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">38</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">37</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// Generated by CoffeeScript 1.9.3
+var slice = [].slice;
+&nbsp;
+(function(root, factory) {
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (('function' === typeof define) &amp;&amp; (<span class="branch-1 cbranch-no" title="branch not covered" >define.amd != null)</span>) {
+<span class="cstat-no" title="statement not covered" >    return define([], factory);</span>
+  } else <span class="missing-if-branch" title="else path not taken" >E</span>if (typeof exports !== "undefined" &amp;&amp; exports !== null) {
+    return module.exports = factory();
+  } else {
+<span class="cstat-no" title="statement not covered" >    return root.UrlPattern = factory();</span>
+  }
+})(this, function() {
+  var P, UrlPattern, astNodeContainsSegmentsForProvidedParams, astNodeToNames, astNodeToRegexString, baseAstNodeToRegexString, concatMap, defaultOptions, escapeForRegex, getParam, keysAndValuesToObject, newParser, regexGroupCount, stringConcatMap, stringify;
+  escapeForRegex = function(string) {
+    return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&amp;');
+  };
+  concatMap = function(array, f) {
+    var i, length, results;
+    results = [];
+    i = -1;
+    length = array.length;
+    while (++i &lt; length) {
+      results = results.concat(f(array[i]));
+    }
+    return results;
+  };
+  stringConcatMap = function(array, f) {
+    var i, length, result;
+    result = '';
+    i = -1;
+    length = array.length;
+    while (++i &lt; length) {
+      result += f(array[i]);
+    }
+    return result;
+  };
+  regexGroupCount = function(regex) {
+    return (new RegExp(regex.toString() + '|')).exec('').length - 1;
+  };
+  keysAndValuesToObject = function(keys, values) {
+    var i, key, length, object, value;
+    object = {};
+    i = -1;
+    length = keys.length;
+    while (++i &lt; length) {
+      key = keys[i];
+      value = values[i];
+      if (value == null) {
+        continue;
+      }
+      if (object[key] != null) {
+        if (!Array.isArray(object[key])) {
+          object[key] = [object[key]];
+        }
+        object[key].push(value);
+      } else {
+        object[key] = value;
+      }
+    }
+    return object;
+  };
+  P = {};
+  P.Result = function(value, rest) {
+    this.value = value;
+    this.rest = rest;
+  };
+  P.Tagged = function(tag, value) {
+    this.tag = tag;
+    this.value = value;
+  };
+  P.tag = function(tag, parser) {
+    return function(input) {
+      var result, tagged;
+      result = parser(input);
+      if (result == null) {
+        return;
+      }
+      tagged = new P.Tagged(tag, result.value);
+      return new P.Result(tagged, result.rest);
+    };
+  };
+  P.regex = function(regex) {
+    return function(input) {
+      var matches, result;
+      matches = regex.exec(input);
+      if (matches == null) {
+        return;
+      }
+      result = matches[0];
+      return new P.Result(result, input.slice(result.length));
+    };
+  };
+  P.sequence = function() {
+    var parsers;
+    parsers = 1 &lt;= arguments.length ? slice.call(arguments, 0) : <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
+    return function(input) {
+      var i, length, parser, rest, result, values;
+      i = -1;
+      length = parsers.length;
+      values = [];
+      rest = input;
+      while (++i &lt; length) {
+        parser = parsers[i];
+        result = parser(rest);
+        if (result == null) {
+          return;
+        }
+        values.push(result.value);
+        rest = result.rest;
+      }
+      return new P.Result(values, rest);
+    };
+  };
+  P.pick = function() {
+    var indexes, parsers;
+    indexes = arguments[0], parsers = 2 &lt;= arguments.length ? slice.call(arguments, 1) : <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
+    return function(input) {
+      var array, result;
+      result = P.sequence.apply(P, parsers)(input);
+      if (result == null) {
+        return;
+      }
+      array = result.value;
+      result.value = array[indexes];
+      return result;
+    };
+  };
+  P.string = function(string) {
+    var length;
+    length = string.length;
+    return function(input) {
+      if (input.slice(0, length) === string) {
+        return new P.Result(string, input.slice(length));
+      }
+    };
+  };
+  P.lazy = function(fn) {
+    var cached;
+    cached = null;
+    return function(input) {
+      if (cached == null) {
+        cached = fn();
+      }
+      return cached(input);
+    };
+  };
+  P.baseMany = function(parser, end, stringResult, atLeastOneResultRequired, input) {
+    var endResult, parserResult, rest, results;
+    rest = input;
+    results = stringResult ? '' : [];
+    while (true) {
+      if (end != null) {
+        endResult = end(rest);
+        if (endResult != null) {
+          break;
+        }
+      }
+      parserResult = parser(rest);
+      if (parserResult == null) {
+        break;
+      }
+      if (stringResult) {
+        results += parserResult.value;
+      } else {
+        results.push(parserResult.value);
+      }
+      rest = parserResult.rest;
+    }
+    if (atLeastOneResultRequired &amp;&amp; results.length === 0) {
+      return;
+    }
+    return new P.Result(results, rest);
+  };
+  P.many1 = function(parser) {
+    return function(input) {
+      return P.baseMany(parser, null, false, true, input);
+    };
+  };
+  P.concatMany1Till = function(parser, end) {
+    return function(input) {
+      return P.baseMany(parser, end, true, true, input);
+    };
+  };
+  P.firstChoice = function() {
+    var parsers;
+    parsers = 1 &lt;= arguments.length ? slice.call(arguments, 0) : <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
+    return function(input) {
+      var i, length, parser, result;
+      i = -1;
+      length = parsers.length;
+      while (++i &lt; length) {
+        parser = parsers[i];
+        result = parser(input);
+        if (result != null) {
+          return result;
+        }
+      }
+    };
+  };
+  newParser = function(options) {
+    var U;
+    U = {};
+    U.wildcard = P.tag('wildcard', P.string(options.wildcardChar));
+    U.optional = P.tag('optional', P.pick(1, P.string(options.optionalSegmentStartChar), P.lazy(function() {
+      return U.pattern;
+    }), P.string(options.optionalSegmentEndChar)));
+    U.name = P.regex(new RegExp("^[" + options.segmentNameCharset + "]+"));
+    U.named = P.tag('named', P.pick(1, P.string(options.segmentNameStartChar), P.lazy(function() {
+      return U.name;
+    })));
+    U.escapedChar = P.pick(1, P.string(options.escapeChar), P.regex(/^./));
+    U["static"] = P.tag('static', P.concatMany1Till(P.firstChoice(P.lazy(function() {
+      return U.escapedChar;
+    }), P.regex(/^./)), P.firstChoice(P.string(options.segmentNameStartChar), P.string(options.optionalSegmentStartChar), P.string(options.optionalSegmentEndChar), U.wildcard)));
+    U.token = P.lazy(function() {
+      return P.firstChoice(U.wildcard, U.optional, U.named, U["static"]);
+    });
+    U.pattern = P.many1(P.lazy(function() {
+      return U.token;
+    }));
+    return U;
+  };
+  defaultOptions = {
+    escapeChar: '\\',
+    segmentNameStartChar: ':',
+    segmentValueCharset: 'a-zA-Z0-9-_~ %',
+    segmentNameCharset: 'a-zA-Z0-9',
+    optionalSegmentStartChar: '(',
+    optionalSegmentEndChar: ')',
+    wildcardChar: '*'
+  };
+  baseAstNodeToRegexString = function(astNode, segmentValueCharset) {
+    if (Array.isArray(astNode)) {
+      return stringConcatMap(astNode, function(node) {
+        return baseAstNodeToRegexString(node, segmentValueCharset);
+      });
+    }
+    switch (astNode.tag) {
+      case 'wildcard':
+        return '(.*?)';
+      case 'named':
+        return "([" + segmentValueCharset + "]+)";
+      case 'static':
+        return escapeForRegex(astNode.value);
+      case 'optional':
+        return '(?:' + baseAstNodeToRegexString(astNode.value, segmentValueCharset) + ')?';
+    }
+  };
+  astNodeToRegexString = function(astNode, segmentValueCharset) {
+    if (segmentValueCharset == null) {
+      segmentValueCharset = defaultOptions.segmentValueCharset;
+    }
+    return '^' + baseAstNodeToRegexString(astNode, segmentValueCharset) + '$';
+  };
+  astNodeToNames = function(astNode) {
+    if (Array.isArray(astNode)) {
+      return concatMap(astNode, astNodeToNames);
+    }
+    switch (astNode.tag) {
+      case 'wildcard':
+        return ['_'];
+      case 'named':
+        return [astNode.value];
+      case 'static':
+        return [];
+      case 'optional':
+        return astNodeToNames(astNode.value);
+    }
+  };
+  getParam = function(params, key, nextIndexes, sideEffects) {
+    var index, maxIndex, result, value;
+    if (sideEffects == null) {
+      sideEffects = false;
+    }
+    value = params[key];
+    if (value == null) {
+      if (sideEffects) {
+        throw new Error("no values provided for key `" + key + "`");
+      } else {
+        return;
+      }
+    }
+    index = nextIndexes[key] || 0;
+    maxIndex = Array.isArray(value) ? value.length - 1 : 0;
+    if (index &gt; maxIndex) {
+      if (sideEffects) {
+        throw new Error("too few values provided for key `" + key + "`");
+      } else {
+        return;
+      }
+    }
+    result = Array.isArray(value) ? value[index] : value;
+    if (sideEffects) {
+      nextIndexes[key] = index + 1;
+    }
+    return result;
+  };
+  astNodeContainsSegmentsForProvidedParams = function(astNode, params, nextIndexes) {
+    var i, length;
+    if (Array.isArray(astNode)) {
+      i = -1;
+      length = astNode.length;
+      while (++i &lt; length) {
+        if (astNodeContainsSegmentsForProvidedParams(astNode[i], params, nextIndexes)) {
+          return true;
+        }
+      }
+      return false;
+    }
+    switch (astNode.tag) {
+      case 'wildcard':
+        return getParam(params, '_', nextIndexes, false) != null;
+      case 'named':
+        return getParam(params, astNode.value, nextIndexes, false) != null;
+      case 'static':
+        return false;
+      case 'optional':
+        return astNodeContainsSegmentsForProvidedParams(astNode.value, params, nextIndexes);
+    }
+  };
+  stringify = function(astNode, params, nextIndexes) {
+    if (Array.isArray(astNode)) {
+      return stringConcatMap(astNode, function(node) {
+        return stringify(node, params, nextIndexes);
+      });
+    }
+    switch (astNode.tag) {
+      case 'wildcard':
+        return getParam(params, '_', nextIndexes, true);
+      case 'named':
+        return getParam(params, astNode.value, nextIndexes, true);
+      case 'static':
+        return astNode.value;
+      case 'optional':
+        if (astNodeContainsSegmentsForProvidedParams(astNode.value, params, nextIndexes)) {
+          return stringify(astNode.value, params, nextIndexes);
+        } else {
+          return '';
+        }
+    }
+  };
+  UrlPattern = function(arg1, arg2) {
+    var groupCount, options, parsed, parser, withoutWhitespace;
+    if (arg1 instanceof UrlPattern) {
+      this.isRegex = arg1.isRegex;
+      this.regex = arg1.regex;
+      this.ast = arg1.ast;
+      this.names = arg1.names;
+      return;
+    }
+    this.isRegex = arg1 instanceof RegExp;
+    if (!(('string' === typeof arg1) || this.isRegex)) {
+      throw new TypeError('argument must be a regex or a string');
+    }
+    if (this.isRegex) {
+      this.regex = arg1;
+      if (arg2 != null) {
+        if (!Array.isArray(arg2)) {
+          throw new Error('if first argument is a regex the second argument may be an array of group names but you provided something else');
+        }
+        groupCount = regexGroupCount(this.regex);
+        if (arg2.length !== groupCount) {
+          throw new Error("regex contains " + groupCount + " groups but array of group names contains " + arg2.length);
+        }
+        this.names = arg2;
+      }
+      return;
+    }
+    if (arg1 === '') {
+      throw new Error('argument must not be the empty string');
+    }
+    withoutWhitespace = arg1.replace(/\s+/g, '');
+    if (withoutWhitespace !== arg1) {
+      throw new Error('argument must not contain whitespace');
+    }
+    options = {
+      escapeChar: (arg2 != null ? arg2.escapeChar : void 0) || defaultOptions.escapeChar,
+      segmentNameStartChar: (arg2 != null ? arg2.segmentNameStartChar : void 0) || defaultOptions.segmentNameStartChar,
+      segmentNameCharset: (arg2 != null ? arg2.segmentNameCharset : void 0) || defaultOptions.segmentNameCharset,
+      segmentValueCharset: (arg2 != null ? arg2.segmentValueCharset : void 0) || defaultOptions.segmentValueCharset,
+      optionalSegmentStartChar: (arg2 != null ? arg2.optionalSegmentStartChar : void 0) || defaultOptions.optionalSegmentStartChar,
+      optionalSegmentEndChar: (arg2 != null ? arg2.optionalSegmentEndChar : void 0) || defaultOptions.optionalSegmentEndChar,
+      wildcardChar: (arg2 != null ? arg2.wildcardChar : void 0) || defaultOptions.wildcardChar
+    };
+    parser = newParser(options);
+    parsed = parser.pattern(arg1);
+    if (parsed == null) {
+      throw new Error("couldn't parse pattern");
+    }
+    if (parsed.rest !== '') {
+      throw new Error("could only partially parse pattern");
+    }
+    this.ast = parsed.value;
+    this.regex = new RegExp(astNodeToRegexString(this.ast, options.segmentValueCharset));
+    this.names = astNodeToNames(this.ast);
+  };
+  UrlPattern.prototype.match = function(url) {
+    var groups, match;
+    match = this.regex.exec(url);
+    if (match == null) {
+      return null;
+    }
+    groups = match.slice(1);
+    if (this.names) {
+      return keysAndValuesToObject(this.names, groups);
+    } else {
+      return groups;
+    }
+  };
+  UrlPattern.prototype.stringify = function(params) {
+    if (params == null) {
+      params = {};
+    }
+    if (this.isRegex) {
+      throw new Error("can't stringify patterns generated from a regex");
+    }
+    if (params !== Object(params)) {
+      throw new Error("argument must be an object or undefined");
+    }
+    return stringify(this.ast, params, {});
+  };
+  UrlPattern.escapeForRegex = escapeForRegex;
+  UrlPattern.concatMap = concatMap;
+  UrlPattern.stringConcatMap = stringConcatMap;
+  UrlPattern.regexGroupCount = regexGroupCount;
+  UrlPattern.keysAndValuesToObject = keysAndValuesToObject;
+  UrlPattern.P = P;
+  UrlPattern.newParser = newParser;
+  UrlPattern.defaultOptions = defaultOptions;
+  UrlPattern.astNodeToRegexString = astNodeToRegexString;
+  UrlPattern.astNodeToNames = astNodeToNames;
+  UrlPattern.getParam = getParam;
+  UrlPattern.astNodeContainsSegmentsForProvidedParams = astNodeContainsSegmentsForProvidedParams;
+  UrlPattern.stringify = stringify;
+  return UrlPattern;
+});
+&nbsp;</pre></td></tr>
+</table></pre>
+
+</div>
+<div class="footer">
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Aug 19 2015 18:14:36 GMT+0200 (CEST)</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

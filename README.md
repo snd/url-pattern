@@ -2,20 +2,45 @@
 
 [![NPM Package](https://img.shields.io/npm/v/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
-[![NPM Package](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
-[![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern)
+[![Sauce Test Status](https://saucelabs.com/buildstatus/url-pattern)](https://saucelabs.com/u/url-pattern)
+[![coverage-99%](http://img.shields.io/badge/coverage-99%-brightgreen.svg?style=flat)](https://rawgit.com/snd/url-pattern/blob/master/coverage/lcov-report/lib/url-pattern.js.html)
+[![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 
-**simple pattern matching and segment extraction for
-urls, domains, filepaths and other strings**
+**easier than regex string matching for urls, domains, filepaths and other strings.  
+can capture named parts of strings and conveniently returns them as objects.  
+also does the reverse and generates strings given a pattern and such an object.  
+great for routing !**
+
+**[the newest version 0.10 introduces breaking changes !](CHANGELOG.md#010)**  
+[see the changelog](CHANGELOG.md#010)
 
 > This is a great little library -- thanks!  
 > [michael](https://github.com/snd/url-pattern/pull/7)
 
+- [match patterns against strings and extract values](#match-pattern-against-string)
+- [generate strings from patterns and values](#stringifying-patterns)
+- very fast matching as each pattern is compiled into a regex exactly once
+- supports Node.js, [AMD](http://requirejs.org/docs/whyamd.html) and browsers
+- [implemented in less than 500 lines of simple, readable, maintainable code](src/url-pattern.coffee)
+- [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
+  [huge test suite](test) with [99% test coverage](https://rawgit.com/snd/url-pattern/blob/master/coverage/lcov-report/lib/url-pattern.js.html)
+- tests pass in all relevant browsers  
+  [![Sauce Test Status](https://saucelabs.com/browser-matrix/url-pattern.svg)](https://saucelabs.com/u/url-pattern)
+- [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern) downloads per month
+- [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern) zero dependencies
+- npm package: `npm install url-pattern`
+- bower package: `bower install url-pattern`
+- [optional segments](#optional-segments-wildcards-and-escaping)
+- [escaping](#optional-segments-wildcards-and-escaping)
+- [wildcards](#optional-segments-wildcards-and-escaping)
+- [customizable pattern syntax](#customizing-the-pattern-syntax)
+- pattern parser implemented using elegant, modular, highly testable [parser combinators](https://en.wikipedia.org/wiki/Parser_combinator) from [pcom](https://github.com/snd/pcom)
+
+[check out **passage** if you are looking for simple composable routing that builds on top of url-pattern](https://github.com/snd/passage)
+
 ```
 npm install url-pattern
 ```
-
-or
 
 ```
 bower install url-pattern
@@ -24,6 +49,10 @@ bower install url-pattern
 ``` javascript
 > var UrlPattern = require('url-pattern');
 ```
+
+[lib/url-pattern.js](lib/url-pattern.js) supports [AMD](http://requirejs.org/docs/whyamd.html).  
+if [AMD](http://requirejs.org/docs/whyamd.html) is not available it sets the global variable `UrlPattern`.
+
 ``` javascript
 > var pattern = new UrlPattern('/api/users/:id');
 
@@ -61,19 +90,14 @@ null
 null
 ```
 
-[lib/url-pattern.js](lib/url-pattern.js) supports [AMD](http://requirejs.org/docs/whyamd.html).  
-if [AMD](http://requirejs.org/docs/whyamd.html) is not available it sets the global variable `UrlPattern`.
-
-[check out **passage** if you are looking for simple composable routing that builds on top of url-pattern](https://github.com/snd/passage)
-
 ### make pattern from string
 
 ```javascript
 > var pattern = new UrlPattern('/api/users/:id');
 ```
 
-a `pattern` is immutable after construction
-in the sense that it has no method which changes its state.
+a `pattern` is immutable after construction.  
+none of its methods changes its state.  
 that makes it easier to reason about.
 
 ### match pattern against string
@@ -92,25 +116,23 @@ or `null` if there was no match:
 null
 ```
 
-pattern strings are compiled into regexes at construction.
-this makes `.match()` superfast.
+patterns are compiled into regexes which makes `.match()` superfast.
 
 ### named segments
 
 `:id` (in the example above) is a named segment:
 
-a named segment starts with `:`.
-the `:` is followed by the **name**.
+a named segment starts with `:` followed by the **name**.  
 the **name** must be at least one character in the regex character set `a-zA-Z0-9`.
 
 when matching, a named segment consumes all characters in the regex character set
-`a-zA-Z0-9-_ %`.
-this means a named segment match stops at `/`, `.`, ... but not at `_`, `-`, ` ` and `%`.
+`a-zA-Z0-9-_~ %`.
+a named segment match stops at `/`, `.`, ... but not at `_`, `-`, ` `, `%`...
 
-[click here to see how you can change these character sets.](#modifying-the-compiler)
+[you can change these character sets. click here to see how.](#customizing-the-pattern-syntax)
 
-if a named segment **name** occurs more than once in the pattern string the multiple results
-are stored in an array on the returned object:
+if a named segment **name** occurs more than once in the pattern string,
+then the multiple results are stored in an array on the returned object:
 
 ```javascript
 > var pattern = new UrlPattern('/api/users/:ids/posts/:ids');
@@ -122,21 +144,22 @@ are stored in an array on the returned object:
 
 to make part of a pattern optional just wrap it in `(` and `)`:
 
-
 ```javascript
-> var pattern = new UrlPattern('(http(s)\\://)(:subdomain.):domain.:tld(/*)');
+> var pattern = new UrlPattern(
+  '(http(s)\\://)(:subdomain.):domain.:tld(/*)'
+);
 ```
 
 note that `\\` escapes the `:` in `http(s)\\://`.
-you can use `\\` to escape any character that has special meaning within
-url-pattern: `(`, `)`, `:`, `*`.
+you can use `\\` to escape `(`, `)`, `:` and `*` which have special meaning within
+url-pattern.
+
+optional named segments are stored in the corresponding property only if they are present in the source string:
 
 ```javascript
 > pattern.match('google.de');
 {domain: 'google', tld: 'de'}
 ```
-
-optional named segments are stored in the corresponding property, if they exist:
 
 ```javascript
 > pattern.match('https://www.google.com');
@@ -151,13 +174,15 @@ wildcard matches are collected in the `_` property:
 {subdomain: 'mail', domain: 'google', tld: 'com', _: 'mail'}
 ```
 
-if there is only one wildcard `_` contains the matching string.
+if there is only one wildcard then `_` contains the matching string.
 otherwise `_` contains an array of matching strings.
+
+[look at the tests for additional examples of `.match`](test/match-fixtures.coffee)
 
 ### make pattern from regex
 
 ```javascript
-> var pattern = new UrlPattern(/\/api\/(.*)/);
+> var pattern = new UrlPattern(/^\/api\/(.*)$/);
 ```
 
 if the pattern was created from a regex an array of the captured groups is returned on a match:
@@ -170,130 +195,132 @@ if the pattern was created from a regex an array of the captured groups is retur
 null
 ```
 
-### modifying the compiler
+when making a pattern from a regex
+you can pass an array of keys as the second argument.
+returns objects on match with each key mapped to a captured value:
+
+```javascript
+> var pattern = new UrlPattern(
+  /^\/api\/([^\/]+)(?:\/(\d+))?$/,
+  ['resource', 'id']
+);
+
+> pattern.match('/api/users');
+{resource: 'users'}
+
+> pattern.match('/api/users/5');
+{resource: 'users', id: '5'}
+
+> pattern.match('/api/users/foo');
+null
+```
+
+### stringifying patterns
+
+```javascript
+> var pattern = new UrlPattern('/api/users/:id');
+
+> pattern.stringify({id: 10})
+'/api/users/10'
+```
+
+optional segments are only included in the output if they contain named segments
+and/or wildcards and values for those are provided:
+
+```javascript
+> var pattern = new UrlPattern('/api/users(/:id)');
+
+> pattern.stringify()
+'/api/users'
+
+> pattern.stringify({id: 10})
+'/api/users/10'
+```
+
+wildcards (key = `_`), deeply nested optional groups and multiple value arrays should stringify as expected.
+
+an error is thrown if a value that is not in an optional group is not provided.
+
+an error is thrown if an optional segment contains multiple
+params and not all of them are provided.
+*one provided value for an optional segment
+makes all values in that optional segment required.*
+
+[look at the tests for additional examples of `.stringify`](test/stringify-fixtures.coffee)
+
+### customizing the pattern syntax
 
 finally we can completely change pattern-parsing and regex-compilation to suit our needs:
 
-let's make a custom compiler:
-
 ```javascript
-> var compiler = new UrlPattern.Compiler();
+> var options = {};
 ```
 
 let's change the char used for escaping (default `\\`):
 
 ```javascript
-> compiler.escapeChar = '!';
+> options.escapeChar = '!';
 ```
 
 let's change the char used to start a named segment (default `:`):
 
 ```javascript
-> compiler.segmentNameStartChar = '$';
+> options.segmentNameStartChar = '$';
 ```
 
 let's change the set of chars allowed in named segment names (default `a-zA-Z0-9`)
 to also include `_` and `-`:
 
 ```javascript
-> compiler.segmentNameCharset = 'a-zA-Z0-9_-';
+> options.segmentNameCharset = 'a-zA-Z0-9_-';
 ```
 
 let's change the set of chars allowed in named segment values
 (default `a-zA-Z0-9_- %`) to not allow non-alphanumeric chars:
 
 ```javascript
-> compiler.segmentValueCharset = 'a-zA-Z0-9';
+> options.segmentValueCharset = 'a-zA-Z0-9';
 ```
 
 let's change the chars used to surround an optional segment (default `(` and `)`):
 
 ```javascript
-> compiler.optionalSegmentStartChar = '[';
-> compiler.optionalSegmentEndChar = ']';
+> options.optionalSegmentStartChar = '[';
+> options.optionalSegmentEndChar = ']';
 ```
 
 let's change the char used to denote a wildcard (default `*`):
 
 ```javascript
-> compiler.wildcardChar = '?';
+> options.wildcardChar = '?';
 ```
 
-make url-pattern use our compiler by passing it in as the second argument to the constructor:
+pass options as the second argument to the constructor:
 
 ```javascript
 > var pattern = new UrlPattern(
   '[http[s]!://][$sub_domain.]$domain.$toplevel-domain[/?]',
-  compiler
+  options
 );
 ```
 
-### changelog
+then match:
 
-#### 0.7
-
-instead of
-
-``` javascript
-var urlPattern = require('url-pattern');
-var pattern = urlPattern.newPattern('/example');
+```javascript
+> pattern.match('http://mail.google.com/mail');
+{
+  sub_domain: 'mail',
+  domain: 'google',
+  'toplevel-domain': 'com',
+  _: 'mail'
+}
 ```
-
-now use
-
-``` javascript
-var Pattern = require('url-pattern');
-var pattern = new Pattern('/example');
-```
-
-#### 0.8
-
-single wildcard matches are now saved directly as a
-string on the `_` property and not as an array with 1 element:
-
-``` javascript
-> var pattern = new Pattern('/api/*');
-> pattern.match('/api/users/5')
-{_: 'users/5'}
-```
-
-if named segments occur more than once the results are collected in an array.
-
-parsing of named segment names (`:foo`) and named segment values now
-stops at the next non-alphanumeric character.
-it is no longer needed to declare separators other than `/` explicitely.
-it was previously necessary to use the second argument to `new UrlPattern` to
-override the default separator `/`.
-the second argument is now ignored.
-mixing of separators is now possible (`/` and `.` in this example):
-
-``` javascript
-> var pattern = new UrlPattern('/v:major(.:minor)/*');
-
-> pattern.match('/v1.2/');
-{major: '1', minor: '2', _: ''}
-
-> pattern.match('/v2/users');
-{major: '2', _: 'users'}
-
-> pattern.match('/v/');
-null
-```
-
-### 0.9
-
-named segments now also match `-`, `_`, ` ` and `%`.
-
-`\\` can now be used to escape characters.
-
-[made all special chars and charsets used in parsing configurable.](#modifying-the-compiler)
-
-added [bower.json](bower.json) and registered with bower as `url-pattern`.
 
 ### contribution
 
-**TLDR: bugfixes, issues and discussion are always welcome.
-ask me before implementing new features.**
+**TLDR:  
+bugfixes, issues and discussion are always welcome.  
+kindly ask before implementing new features.**
 
 i will happily merge pull requests that fix bugs with reasonable code.
 
@@ -301,7 +328,7 @@ i will only merge pull requests that modify/add functionality
 if the changes align with my goals for this package,
 are well written, documented and tested.
 
-**communicate!** write an issue to start a discussion
-before writing code that may or may not get merged.
+**communicate !**  
+write an issue to start a discussion before writing code that may or may not get merged.
 
 ## [license: MIT](LICENSE)

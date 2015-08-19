@@ -1,8 +1,34 @@
 {
   "name": "url-pattern",
   "version": "0.9.0",
-  "description": "simple pattern matching and segment extraction for urls, domains, filepaths and other strings",
-  "keywords": ["url", "pattern", "matching", "routing", "route", "regex", "match", "segment", "parsing", "parser", "path", "domain", "separator"],
+  "description": "easier than regex string matching for urls, domains, filepaths and other strings. can capture named parts of strings and conveniently returns them as objects. can do the reverse and generate strings given a pattern and such an object. great for routing !",
+  "keywords": [
+    "url",
+    "string",
+    "matching",
+    "pattern",
+    "matching",
+    "routing",
+    "route",
+    "regex",
+    "match",
+    "segment",
+    "parsing",
+    "parser",
+    "parse",
+    "combinator",
+    "combinators",
+    "custom",
+    "customizable",
+    "filepath",
+    "path",
+    "domain",
+    "separator",
+    "stringify",
+    "generate",
+    "text",
+    "processing"
+  ],
   "homepage": "http://github.com/snd/url-pattern",
   "author": {
     "name": "Maximilian Krüger",
@@ -26,6 +52,10 @@
     {
       "name": "Kate Hudson",
       "url": "https://github.com/k88hudson"
+    },
+    {
+      "name": "caasi Huang",
+      "url": "https://github.com/caasi"
     }
   ],
   "bugs": {
@@ -46,14 +76,20 @@
   "dependencies": {
   },
   "devDependencies": {
-    "nodeunit": "0.9.1",
-    "coffee-script": "1.9.2"
+    "coffee-script": "1.9.3",
+    "tape": "4.2.0",
+    "coffeetape": "1.0.1",
+    "istanbul": "0.3.18",
+    "zuul": "3.3.0",
+    "coffeeify": "1.1.0"
   },
   "main": "lib/url-pattern",
   "scripts": {
     "compile": "coffee --bare --compile --output lib src",
     "prepublish": "npm run compile",
     "pretest": "npm run compile",
-    "test": "nodeunit test/*.coffee"
+    "test": "istanbul cover -x test coffeetape test/*",
+    "test-zuul-local": "zuul --local 8080 test/*",
+    "test-zuul": "zuul test/*"
   }
 }

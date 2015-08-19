@@ -1,20 +1,24 @@
 ui: tape
 browsers:
   - name: ie
-    version: 6..latest
+    version: [9, 10, 11]
   - name: chrome
-    version: 22..latest
+    version: latest
   - name: firefox
-    version: 16..latest
+    version: latest
   - name: opera
-    version: '11.0..latest'
+    version: [11, 12]
   - name: safari
     version: latest
   - name: iphone
-    version: 6
-  - name: ipad
-    version: 6
+    version: [8.0, 9.0]
   - name: android-browser
     version: latest
 browserify:
   - transform: coffeeify
+env:
+  global:
+    # SAUCE_USERNAME
+    - secure: "a96dLNS6k1+eqIx3j47Em16/VfDInzhKBySJ1ncRihNHg9ZXNDpENCRRjkEbMDHieeIhaQMw1K4WJXbW54P3b8k9tBOR6iyp3Gl99W1/ursZJ5Os5VTehOvEDGEYA7ZZnxz9rVvBqJalPn3Qu+05e1op1vMYPWPcpkYEH6JJ540="
+    # SAUCE_KEY
+    - secure: "cZtjUpcTI1DO+nHO8sKpwlPjlihPFcxlrG1b6E93NqGDTQIl1WcaE9mTTn3EWL55vz3Bv1oypk7YS0v0v8LlCBY64fZzU/iyRV9LwkxNcMWnfri07mQrX7B6O/m7n9lJOCGdMKq7nkuUY/DVR5JcKK1fWFFJTv8sDGfahvgeHJw="

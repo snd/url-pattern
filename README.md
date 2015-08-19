@@ -2,13 +2,13 @@
 
 [![NPM Package](https://img.shields.io/npm/v/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
-[![coverage-99%](http://img.shields.io/badge/coverage-99%-brightgreen.svg?style=flat)](https://rawgit.com/snd/url-pattern/parser-combinators/coverage/lcov-report/lib/url-pattern.js.html)
+[![Sauce Test Status](https://saucelabs.com/buildstatus/url-pattern)](https://saucelabs.com/u/url-pattern)
+[![coverage-99%](http://img.shields.io/badge/coverage-99%-brightgreen.svg?style=flat)](https://rawgit.com/snd/url-pattern/blob/master/coverage/lcov-report/lib/url-pattern.js.html)
 [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
-[![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern)
 
 **easier than regex string matching for urls, domains, filepaths and other strings.  
 can capture named parts of strings and conveniently returns them as objects.  
-can do the reverse and generate strings given a pattern and such an object.  
+also does the reverse and generates strings given a pattern and such an object.  
 great for routing !**
 
 **[the newest version 0.10 introduces breaking changes !](CHANGELOG.md#010)**  
@@ -22,8 +22,10 @@ great for routing !**
 - very fast matching as each pattern is compiled into a regex exactly once
 - supports Node.js, [AMD](http://requirejs.org/docs/whyamd.html) and browsers
 - [implemented in less than 500 lines of simple, readable, maintainable code](src/url-pattern.coffee)
-- [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches) [huge test suite](test) with [99% test coverage](https://rawgit.com/snd/url-pattern/parser-combinators/coverage/lcov-report/lib/url-pattern.js.html)
-- tests pass in all major relevant browsers
+- [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
+  [huge test suite](test) with [99% test coverage](https://rawgit.com/snd/url-pattern/blob/master/coverage/lcov-report/lib/url-pattern.js.html)
+- tests pass in all relevant browsers  
+  [![Sauce Test Status](https://saucelabs.com/browser-matrix/url-pattern.svg)](https://saucelabs.com/u/url-pattern)
 - [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern) downloads per month
 - [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern) zero dependencies
 - npm package: `npm install url-pattern`

@@ -11,7 +11,7 @@ browsers:
   - name: safari
     version: latest
   - name: iphone
-    version: [8.0, 9.0]
+    version: latest
   - name: android
     version: latest
 browserify:

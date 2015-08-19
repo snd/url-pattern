@@ -4,3 +4,4 @@ node_js:
   - "iojs-2"
   - "iojs-3"
 script: npm test
+sudo: false

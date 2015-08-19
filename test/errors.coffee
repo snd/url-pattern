@@ -1,123 +1,107 @@
+test = require 'tape'
 UrlPattern = require '../lib/url-pattern'
 
-module.exports =
+test 'invalid argument', (t) ->
+  UrlPattern
+  t.plan 5
+  try
+    new UrlPattern()
+  catch e
+    t.equal e.message, "argument must be a regex or a string"
+  try
+    new UrlPattern(5)
+  catch e
+    t.equal e.message, "argument must be a regex or a string"
+  try
+    new UrlPattern ''
+  catch e
+    t.equal e.message, "argument must not be the empty string"
+  try
+    new UrlPattern ' '
+  catch e
+    t.equal e.message, "argument must not contain whitespace"
+  try
+    new UrlPattern ' fo o'
+  catch e
+    t.equal e.message, "argument must not contain whitespace"
+  t.end()
 
-  'invalid argument': (test) ->
-    UrlPattern
-    test.expect 5
-    try
-      new UrlPattern()
-    catch e
-      test.equal e.message, "argument must be a regex or a string"
-    try
-      new UrlPattern(5)
-    catch e
-      test.equal e.message, "argument must be a regex or a string"
-    try
-      new UrlPattern ''
-    catch e
-      test.equal e.message, "argument must not be the empty string"
-    try
-      new UrlPattern ' '
-    catch e
-      test.equal e.message, "argument must not contain whitespace"
-    try
-      new UrlPattern ' fo o'
-    catch e
-      test.equal e.message, "argument must not contain whitespace"
-    test.done()
+test 'invalid variable name in pattern', (t) ->
+  UrlPattern
+  t.plan 3
+  try
+    new UrlPattern ':'
+  catch e
+    t.equal e.message, "couldn't parse pattern"
+  try
+    new UrlPattern ':.'
+  catch e
+    t.equal e.message, "couldn't parse pattern"
+  try
+    new UrlPattern 'foo:.'
+  catch e
+    # TODO `:` must be followed by the name of the named segment consisting of at least one character in character set `a-zA-Z0-9` at 4
+    t.equal e.message, "could only partially parse pattern"
+  t.end()
 
-  'invalid variable name in pattern': (test) ->
-    UrlPattern
-    test.expect 3
-    try
-      new UrlPattern ':'
-    catch e
-      test.equal e.message, "couldn't parse pattern"
-    try
-      new UrlPattern ':.'
-    catch e
-      test.equal e.message, "couldn't parse pattern"
-    try
-      new UrlPattern 'foo:.'
-    catch e
-      # TODO `:` must be followed by the name of the named segment consisting of at least one character in character set `a-zA-Z0-9` at 4
-      test.equal e.message, "could only partially parse pattern"
-    test.done()
+test 'too many closing parentheses', (t) ->
+  t.plan 2
+  try
+    new UrlPattern ')'
+  catch e
+    # TODO did not plan ) at 0
+    t.equal e.message, "couldn't parse pattern"
+  try
+    new UrlPattern '((foo)))bar'
+  catch e
+    # TODO did not plan ) at 7
+    t.equal e.message, "could only partially parse pattern"
+  t.end()
 
-    # TODO detect this again
-#   'variable directly after variable': (test) ->
-#     test.expect 2
-#     try
-#       compiler = new Compiler
-#       compiler.compile ':foo:bar'
-#     catch e
-#       test.equal e.message, 'cannot start named segment right after named segment at 4'
-#     try
-#       compiler = new Compiler
-#       compiler.compile 'foo:foo:bar.bar'
-#     catch e
-#       test.equal e.message, 'cannot start named segment right after named segment at 7'
-#     test.done()
+test 'unclosed parentheses', (t) ->
+  t.plan 2
+  try
+    new UrlPattern '('
+  catch e
+    # TODO unclosed parentheses at 1
+    t.equal e.message, "couldn't parse pattern"
+  try
+    new UrlPattern '(((foo)bar(boo)far)'
+  catch e
+    # TODO unclosed parentheses at 19
+    t.equal e.message, "couldn't parse pattern"
+  t.end()
 
-  'too many closing parentheses': (test) ->
-    test.expect 2
-    try
-      new UrlPattern ')'
-    catch e
-      # TODO did not expect ) at 0
-      test.equal e.message, "couldn't parse pattern"
-    try
-      new UrlPattern '((foo)))bar'
-    catch e
-      # TODO did not expect ) at 7
-      test.equal e.message, "could only partially parse pattern"
-    test.done()
+test 'regex names', (t) ->
+  t.plan 3
+  try
+    new UrlPattern /x/, 5
+  catch e
+    t.equal e.message, 'if first argument is a regex the second argument may be an array of group names but you provided something else'
+  try
+    new UrlPattern /(((foo)bar(boo))far)/, []
+  catch e
+    t.equal e.message, "regex contains 4 groups but array of group names contains 0"
+  try
+    new UrlPattern /(((foo)bar(boo))far)/, ['a', 'b']
+  catch e
+    t.equal e.message, "regex contains 4 groups but array of group names contains 2"
+  t.end()
 
-  'unclosed parentheses': (test) ->
-    test.expect 2
-    try
-      new UrlPattern '('
-    catch e
-      # TODO unclosed parentheses at 1
-      test.equal e.message, "couldn't parse pattern"
-    try
-      new UrlPattern '(((foo)bar(boo)far)'
-    catch e
-      # TODO unclosed parentheses at 19
-      test.equal e.message, "couldn't parse pattern"
-    test.done()
+test 'stringify regex', (t) ->
+  t.plan 1
+  pattern = new UrlPattern /x/
+  try
+    pattern.stringify()
+  catch e
+    t.equal e.message, "can't stringify patterns generated from a regex"
+  t.end()
 
-  'regex names': (test) ->
-    test.expect 3
-    try
-      new UrlPattern /x/, 5
-    catch e
-      test.equal e.message, 'if first argument is a regex the second argument may be an array of group names but you provided something else'
-    try
-      new UrlPattern /(((foo)bar(boo))far)/, []
-    catch e
-      test.equal e.message, "regex contains 4 groups but array of group names contains 0"
-    try
-      new UrlPattern /(((foo)bar(boo))far)/, ['a', 'b']
-    catch e
-      test.equal e.message, "regex contains 4 groups but array of group names contains 2"
-    test.done()
-
-  'stringify regex': (test) ->
-    test.expect 1
-    pattern = new UrlPattern /x/
-    try
-      pattern.stringify()
-    catch e
-      test.equal e.message, "can't stringify patterns generated from a regex"
-    test.done()
-
-  'stringify argument': (test) ->
-    test.expect 1
-    pattern = new UrlPattern 'foo'
-    try
-      pattern.stringify(5)
-    catch e
-      test.equal e.message, "argument must be an object or undefined"
-    test.done()
+test 'stringify argument', (t) ->
+  t.plan 1
+  pattern = new UrlPattern 'foo'
+  try
+    pattern.stringify(5)
+  catch e
+    t.equal e.message, "argument must be an object or undefined"
+  t.end()

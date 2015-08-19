@@ -1,6 +1,6 @@
 {
   "name": "url-pattern",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "easier than regex string matching for urls, domains, filepaths and other strings. can capture named parts of strings and conveniently returns them as objects. also does the reverse and generates strings given a pattern and such an object. great for routing !",
   "keywords": [
     "url",

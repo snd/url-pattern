@@ -1,0 +1,20 @@
+ui: tape
+browsers:
+  - name: ie
+    version: 6..latest
+  - name: chrome
+    version: 22..latest
+  - name: firefox
+    version: 16..latest
+  - name: opera
+    version: '11.0..latest'
+  - name: safari
+    version: latest
+  - name: iphone
+    version: 6
+  - name: ipad
+    version: 6
+  - name: android-browser
+    version: latest
+browserify:
+  - transform: coffeeify

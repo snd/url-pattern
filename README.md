@@ -51,7 +51,7 @@ bower install url-pattern
 ```
 
 [lib/url-pattern.js](lib/url-pattern.js) supports [AMD](http://requirejs.org/docs/whyamd.html).  
-if [AMD](http://requirejs.org/docs/whyamd.html) is not available it sets the global variable `UrlPattern`.
+when used in the browser and [AMD](http://requirejs.org/docs/whyamd.html) is not available it sets the global variable `UrlPattern`.
 
 ``` javascript
 > var pattern = new UrlPattern('/api/users/:id');

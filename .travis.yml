@@ -5,7 +5,7 @@ node_js:
   - "iojs-3"
 script:
   - npm test
-  - npm test-zuul
+  - npm run test-zuul
 sudo: false
 matrix:
   # dont run zuul tests for iojs

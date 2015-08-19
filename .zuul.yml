@@ -12,7 +12,7 @@ browsers:
     version: latest
   - name: iphone
     version: [8.0, 9.0]
-  - name: android-browser
+  - name: android
     version: latest
 browserify:
   - transform: coffeeify

@@ -22,7 +22,8 @@ great for routing !**
 - very fast matching as each pattern is compiled into a regex exactly once
 - supports Node.js, [AMD](http://requirejs.org/docs/whyamd.html) and browsers
 - [implemented in less than 500 lines of simple, readable, maintainable code](src/url-pattern.coffee)
-- [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches) [huge test suite](test)
+- [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches) [huge test suite](test) with 99% test coverage
+- tests pass in all major relevant browsers
 - [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern) downloads per month
 - [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern) zero dependencies
 - npm package: `npm install url-pattern`

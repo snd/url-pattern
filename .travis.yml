@@ -13,6 +13,7 @@ env:
     - secure: "EQqkhOOf4sa6+SZcolr/jPdnodOsoOyaY25flcQ4kgfH4C4Z8sGO2KW54+8e7kJ9MRbjGtJbIeFjACqJhRxw/rek8WL67Z5HoM6ICZnz/YSPDfxm/gj9hkokKKJRvDI3TBWSP4IY0xZk0Rc+XZ6RQ9Fe1kOKzzZ3ryjPkD72g/k="
   matrix:
     - ZUUL=true
+    - ZUUL=false
 matrix:
   # dont run zuul tests for iojs
   exclude:

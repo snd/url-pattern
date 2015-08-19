@@ -1,3 +1,4 @@
+test = require 'tape'
 UrlPattern = require '../lib/url-pattern'
 
 {
@@ -8,194 +9,191 @@ UrlPattern = require '../lib/url-pattern'
 
 parse = UrlPattern.newParser(UrlPattern.defaultOptions).pattern
 
-module.exports =
-  'astNodeToRegexString and astNodeToNames':
+test 'astNodeToRegexString and astNodeToNames', (t) ->
+  t.test 'just static alphanumeric', (t) ->
+    parsed = parse 'user42'
+    t.equal astNodeToRegexString(parsed.value), '^user42$'
+    t.deepEqual astNodeToNames(parsed.value), []
+    t.end()
 
-    'just static alphanumeric': (test) ->
-      parsed = parse 'user42'
-      test.equal astNodeToRegexString(parsed.value), '^user42$'
-      test.deepEqual astNodeToNames(parsed.value), []
-      test.done()
+  t.test 'just static escaped', (t) ->
+    parsed = parse '/api/v1/users'
+    t.equal astNodeToRegexString(parsed.value), '^\\/api\\/v1\\/users$'
+    t.deepEqual astNodeToNames(parsed.value), []
+    t.end()
 
-    'just static escaped': (test) ->
-      parsed = parse '/api/v1/users'
-      test.equal astNodeToRegexString(parsed.value), '^\\/api\\/v1\\/users$'
-      test.deepEqual astNodeToNames(parsed.value), []
-      test.done()
+  t.test 'just single char variable', (t) ->
+    parsed = parse ':a'
+    t.equal astNodeToRegexString(parsed.value), '^([a-zA-Z0-9-_~ %]+)$'
+    t.deepEqual astNodeToNames(parsed.value), ['a']
+    t.end()
 
-    'just single char variable': (test) ->
-      parsed = parse ':a'
-      test.equal astNodeToRegexString(parsed.value), '^([a-zA-Z0-9-_~ %]+)$'
-      test.deepEqual astNodeToNames(parsed.value), ['a']
-      test.done()
+  t.test 'just variable', (t) ->
+    parsed = parse ':variable'
+    t.equal astNodeToRegexString(parsed.value), '^([a-zA-Z0-9-_~ %]+)$'
+    t.deepEqual astNodeToNames(parsed.value), ['variable']
+    t.end()
 
-    'just variable': (test) ->
-      parsed = parse ':variable'
-      test.equal astNodeToRegexString(parsed.value), '^([a-zA-Z0-9-_~ %]+)$'
-      test.deepEqual astNodeToNames(parsed.value), ['variable']
-      test.done()
+  t.test 'just wildcard', (t) ->
+    parsed = parse '*'
+    t.equal astNodeToRegexString(parsed.value), '^(.*?)$'
+    t.deepEqual astNodeToNames(parsed.value), ['_']
+    t.end()
 
-    'just wildcard': (test) ->
-      parsed = parse '*'
-      test.equal astNodeToRegexString(parsed.value), '^(.*?)$'
-      test.deepEqual astNodeToNames(parsed.value), ['_']
-      test.done()
+  t.test 'just optional static', (t) ->
+    parsed = parse '(foo)'
+    t.equal astNodeToRegexString(parsed.value), '^(?:foo)?$'
+    t.deepEqual astNodeToNames(parsed.value), []
+    t.end()
 
-    'just optional static': (test) ->
-      parsed = parse '(foo)'
-      test.equal astNodeToRegexString(parsed.value), '^(?:foo)?$'
-      test.deepEqual astNodeToNames(parsed.value), []
-      test.done()
+  t.test 'just optional variable', (t) ->
+    parsed = parse '(:foo)'
+    t.equal astNodeToRegexString(parsed.value), '^(?:([a-zA-Z0-9-_~ %]+))?$'
+    t.deepEqual astNodeToNames(parsed.value), ['foo']
+    t.end()
 
-    'just optional variable': (test) ->
-      parsed = parse '(:foo)'
-      test.equal astNodeToRegexString(parsed.value), '^(?:([a-zA-Z0-9-_~ %]+))?$'
-      test.deepEqual astNodeToNames(parsed.value), ['foo']
-      test.done()
+  t.test 'just optional wildcard', (t) ->
+    parsed = parse '(*)'
+    t.equal astNodeToRegexString(parsed.value), '^(?:(.*?))?$'
+    t.deepEqual astNodeToNames(parsed.value), ['_']
+    t.end()
 
-    'just optional wildcard': (test) ->
-      parsed = parse '(*)'
-      test.equal astNodeToRegexString(parsed.value), '^(?:(.*?))?$'
-      test.deepEqual astNodeToNames(parsed.value), ['_']
-      test.done()
+test 'getParam', (t) ->
+  t.test 'no side effects', (t) ->
+    next = {}
+    t.equal undefined, getParam {}, 'one', next
+    t.deepEqual next, {}
 
-    'getParam':
+    # value
 
-      'no side effects': (test) ->
-        next = {}
-        test.equal null, getParam {}, 'one', next
-        test.deepEqual next, {}
+    next = {}
+    t.equal 1, getParam {one: 1}, 'one', next
+    t.deepEqual next, {}
 
-        # value
+    next = {one: 0}
+    t.equal 1, getParam {one: 1}, 'one', next
+    t.deepEqual next, {one: 0}
 
-        next = {}
-        test.equal 1, getParam {one: 1}, 'one', next
-        test.deepEqual next, {}
+    next = {one: 1}
+    t.equal undefined, getParam {one: 1}, 'one', next
+    t.deepEqual next, {one: 1}
 
-        next = {one: 0}
-        test.equal 1, getParam {one: 1}, 'one', next
-        test.deepEqual next, {one: 0}
+    next = {one: 2}
+    t.equal undefined, getParam {one: 1}, 'one', next
+    t.deepEqual next, {one: 2}
 
-        next = {one: 1}
-        test.equal null, getParam {one: 1}, 'one', next
-        test.deepEqual next, {one: 1}
+    # array
 
-        next = {one: 2}
-        test.equal null, getParam {one: 1}, 'one', next
-        test.deepEqual next, {one: 2}
+    next = {}
+    t.equal 1, getParam {one: [1]}, 'one', next
+    t.deepEqual next, {}
 
-        # array
+    next = {one: 0}
+    t.equal 1, getParam {one: [1]}, 'one', next
+    t.deepEqual next, {one: 0}
 
-        next = {}
-        test.equal 1, getParam {one: [1]}, 'one', next
-        test.deepEqual next, {}
+    next = {one: 1}
+    t.equal undefined, getParam {one: [1]}, 'one', next
+    t.deepEqual next, {one: 1}
 
-        next = {one: 0}
-        test.equal 1, getParam {one: [1]}, 'one', next
-        test.deepEqual next, {one: 0}
+    next = {one: 2}
+    t.equal undefined, getParam {one: [1]}, 'one', next
+    t.deepEqual next, {one: 2}
 
-        next = {one: 1}
-        test.equal null, getParam {one: [1]}, 'one', next
-        test.deepEqual next, {one: 1}
+    next = {one: 0}
+    t.equal 1, getParam {one: [1, 2, 3]}, 'one', next
+    t.deepEqual next, {one: 0}
 
-        next = {one: 2}
-        test.equal null, getParam {one: [1]}, 'one', next
-        test.deepEqual next, {one: 2}
+    next = {one: 1}
+    t.equal 2, getParam {one: [1, 2, 3]}, 'one', next
+    t.deepEqual next, {one: 1}
 
-        next = {one: 0}
-        test.equal 1, getParam {one: [1, 2, 3]}, 'one', next
-        test.deepEqual next, {one: 0}
+    next = {one: 2}
+    t.equal 3, getParam {one: [1, 2, 3]}, 'one', next
+    t.deepEqual next, {one: 2}
 
-        next = {one: 1}
-        test.equal 2, getParam {one: [1, 2, 3]}, 'one', next
-        test.deepEqual next, {one: 1}
+    next = {one: 3}
+    t.equal undefined, getParam {one: [1, 2, 3]}, 'one', next
+    t.deepEqual next, {one: 3}
 
-        next = {one: 2}
-        test.equal 3, getParam {one: [1, 2, 3]}, 'one', next
-        test.deepEqual next, {one: 2}
+    t.end()
 
-        next = {one: 3}
-        test.equal null, getParam {one: [1, 2, 3]}, 'one', next
-        test.deepEqual next, {one: 3}
+  t.test 'side effects', (t) ->
+    next = {}
+    t.equal 1, getParam {one: 1}, 'one', next, true
+    t.deepEqual next, {one: 1}
 
-        test.done()
+    next = {one: 0}
+    t.equal 1, getParam {one: 1}, 'one', next, true
+    t.deepEqual next, {one: 1}
 
-      'side effects': (test) ->
-        next = {}
-        test.equal 1, getParam {one: 1}, 'one', next, true
-        test.deepEqual next, {one: 1}
+    # array
 
-        next = {one: 0}
-        test.equal 1, getParam {one: 1}, 'one', next, true
-        test.deepEqual next, {one: 1}
+    next = {}
+    t.equal 1, getParam {one: [1]}, 'one', next, true
+    t.deepEqual next, {one: 1}
 
-        # array
+    next = {one: 0}
+    t.equal 1, getParam {one: [1]}, 'one', next, true
+    t.deepEqual next, {one: 1}
 
-        next = {}
-        test.equal 1, getParam {one: [1]}, 'one', next, true
-        test.deepEqual next, {one: 1}
+    next = {one: 0}
+    t.equal 1, getParam {one: [1, 2, 3]}, 'one', next, true
+    t.deepEqual next, {one: 1}
 
-        next = {one: 0}
-        test.equal 1, getParam {one: [1]}, 'one', next, true
-        test.deepEqual next, {one: 1}
+    next = {one: 1}
+    t.equal 2, getParam {one: [1, 2, 3]}, 'one', next, true
+    t.deepEqual next, {one: 2}
 
-        next = {one: 0}
-        test.equal 1, getParam {one: [1, 2, 3]}, 'one', next, true
-        test.deepEqual next, {one: 1}
+    next = {one: 2}
+    t.equal 3, getParam {one: [1, 2, 3]}, 'one', next, true
+    t.deepEqual next, {one: 3}
 
-        next = {one: 1}
-        test.equal 2, getParam {one: [1, 2, 3]}, 'one', next, true
-        test.deepEqual next, {one: 2}
+    t.end()
 
-        next = {one: 2}
-        test.equal 3, getParam {one: [1, 2, 3]}, 'one', next, true
-        test.deepEqual next, {one: 3}
+  t.test 'side effects errors', (t) ->
+    t.plan 2 * 6
 
-        test.done()
+    next = {}
+    try
+      getParam {}, 'one', next, true
+    catch e
+      t.equal e.message, "no values provided for key `one`"
+    t.deepEqual next, {}
 
-      'side effects errors': (test) ->
-        test.expect 2 * 6
+    next = {one: 1}
+    try
+      getParam {one: 1}, 'one', next, true
+    catch e
+      t.equal e.message, "too few values provided for key `one`"
+    t.deepEqual next, {one: 1}
 
-        next = {}
-        try
-          getParam {}, 'one', next, true
-        catch e
-          test.equal e.message, "no values provided for key `one`"
-        test.deepEqual next, {}
+    next = {one: 2}
+    try
+      getParam {one: 2}, 'one', next, true
+    catch e
+      t.equal e.message, "too few values provided for key `one`"
+    t.deepEqual next, {one: 2}
 
-        next = {one: 1}
-        try
-          getParam {one: 1}, 'one', next, true
-        catch e
-          test.equal e.message, "too few values provided for key `one`"
-        test.deepEqual next, {one: 1}
+    next = {one: 1}
+    try
+      getParam {one: [1]}, 'one', next, true
+    catch e
+      t.equal e.message, "too few values provided for key `one`"
+    t.deepEqual next, {one: 1}
 
-        next = {one: 2}
-        try
-          getParam {one: 2}, 'one', next, true
-        catch e
-          test.equal e.message, "too few values provided for key `one`"
-        test.deepEqual next, {one: 2}
+    next = {one: 2}
+    try
+      getParam {one: [1]}, 'one', next, true
+    catch e
+      t.equal e.message, "too few values provided for key `one`"
+    t.deepEqual next, {one: 2}
 
-        next = {one: 1}
-        try
-          getParam {one: [1]}, 'one', next, true
-        catch e
-          test.equal e.message, "too few values provided for key `one`"
-        test.deepEqual next, {one: 1}
+    next = {one: 3}
+    try
+      getParam {one: [1, 2, 3]}, 'one', next, true
+    catch e
+      t.equal e.message, "too few values provided for key `one`"
+    t.deepEqual next, {one: 3}
 
-        next = {one: 2}
-        try
-          getParam {one: [1]}, 'one', next, true
-        catch e
-          test.equal e.message, "too few values provided for key `one`"
-        test.deepEqual next, {one: 2}
-
-        next = {one: 3}
-        try
-          getParam {one: [1, 2, 3]}, 'one', next, true
-        catch e
-          test.equal e.message, "too few values provided for key `one`"
-        test.deepEqual next, {one: 3}
-
-        test.done()
+    t.end()

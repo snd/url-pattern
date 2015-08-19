@@ -3,7 +3,7 @@
 [![NPM Package](https://img.shields.io/npm/v/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
 [![Sauce Test Status](https://saucelabs.com/buildstatus/url-pattern)](https://saucelabs.com/u/url-pattern)
-[![coverage-99%](http://img.shields.io/badge/coverage-99%-brightgreen.svg?style=flat)](https://rawgit.com/snd/url-pattern/blob/master/coverage/lcov-report/lib/url-pattern.js.html)
+[![coverage-99%](http://img.shields.io/badge/coverage-99%-brightgreen.svg?style=flat)](https://rawgit.com/snd/url-pattern/master/coverage/lcov-report/lib/url-pattern.js.html)
 [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 
 **easier than regex string matching for urls, domains, filepaths and other strings.  
@@ -23,7 +23,7 @@ great for routing !**
 - supports Node.js, [AMD](http://requirejs.org/docs/whyamd.html) and browsers
 - [implemented in less than 500 lines of simple, readable, maintainable code](src/url-pattern.coffee)
 - [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
-  [huge test suite](test) with [99% test coverage](https://rawgit.com/snd/url-pattern/blob/master/coverage/lcov-report/lib/url-pattern.js.html)
+  [huge test suite](test) with [99% test coverage](https://rawgit.com/snd/url-pattern/master/coverage/lcov-report/lib/url-pattern.js.html)
 - tests pass in all relevant browsers  
   [![Sauce Test Status](https://saucelabs.com/browser-matrix/url-pattern.svg)](https://saucelabs.com/u/url-pattern)
 - [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern) downloads per month

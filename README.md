@@ -2,7 +2,7 @@
 
 [![NPM Package](https://img.shields.io/npm/v/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
-[![Sauce Test Status](https://saucelabs.com/buildstatus/url-pattern)](https://saucelabs.com/u/url-pattern)
+[![Sauce Test Status](https://saucelabs.com/buildstatus/urlpattern)](https://saucelabs.com/u/urlpattern)
 [![coverage-99%](http://img.shields.io/badge/coverage-99%-brightgreen.svg?style=flat)](https://rawgit.com/snd/url-pattern/master/coverage/lcov-report/lib/url-pattern.js.html)
 [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 
@@ -25,7 +25,7 @@ great for routing !**
 - [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
   [huge test suite](test) with [99% test coverage](https://rawgit.com/snd/url-pattern/master/coverage/lcov-report/lib/url-pattern.js.html)
 - tests pass in all relevant browsers  
-  [![Sauce Test Status](https://saucelabs.com/browser-matrix/url-pattern.svg)](https://saucelabs.com/u/url-pattern)
+  [![Sauce Test Status](https://saucelabs.com/browser-matrix/urlpattern.svg)](https://saucelabs.com/u/urlpattern)
 - widely used [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 - zero dependencies [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern)
 - npm package: `npm install url-pattern`

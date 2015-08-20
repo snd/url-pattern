@@ -21,20 +21,17 @@ great for routing !**
 - [generate strings from patterns and values](#stringifying-patterns)
 - very fast matching as each pattern is compiled into a regex exactly once
 - supports Node.js, [AMD](http://requirejs.org/docs/whyamd.html) and browsers
-- [just under 500 lines of simple, readable, maintainable code](src/url-pattern.coffee)
+- [tiny with just under 500 lines of simple, readable, maintainable code](src/url-pattern.coffee)
 - [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
   [huge test suite](test) with [99% test coverage](https://rawgit.com/snd/url-pattern/master/coverage/lcov-report/lib/url-pattern.js.html)
 - tests pass in all relevant browsers  
   [![Sauce Test Status](https://saucelabs.com/browser-matrix/url-pattern.svg)](https://saucelabs.com/u/url-pattern)
-- [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern) downloads per month
-- [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern) zero dependencies
+- widely used [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
+- zero dependencies [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern)
 - npm package: `npm install url-pattern`
 - bower package: `bower install url-pattern`
-- [optional segments](#optional-segments-wildcards-and-escaping)
-- [escaping](#optional-segments-wildcards-and-escaping)
-- [wildcards](#optional-segments-wildcards-and-escaping)
-- [customizable pattern syntax](#customizing-the-pattern-syntax)
-- pattern parser implemented using elegant, modular, highly testable [parser combinators](https://en.wikipedia.org/wiki/Parser_combinator) from [pcom](https://github.com/snd/pcom)
+- [customizable](#customizing-the-pattern-syntax)
+- pattern parser implemented using elegant, modular, highly testable [parser combinators](https://en.wikipedia.org/wiki/Parser_combinator)
 
 [check out **passage** if you are looking for simple composable routing that builds on top of url-pattern](https://github.com/snd/passage)
 

@@ -313,10 +313,9 @@ then match:
 }
 ```
 
-### contribution
+### contributing
 
-**TLDR:  
-bugfixes, issues and discussion are always welcome.  
+**bugfixes, issues and discussion are always welcome.  
 kindly [ask](https://github.com/snd/url-pattern/issues/new) before implementing new features.**
 
 i will happily merge pull requests that fix bugs with reasonable code.

@@ -317,7 +317,7 @@ then match:
 
 **TLDR:  
 bugfixes, issues and discussion are always welcome.  
-kindly ask before implementing new features.**
+kindly [ask](https://github.com/snd/url-pattern/issues/new) before implementing new features.**
 
 i will happily merge pull requests that fix bugs with reasonable code.
 
@@ -326,6 +326,6 @@ if the changes align with my goals for this package,
 are well written, documented and tested.
 
 **communicate !**  
-write an issue to start a discussion before writing code that may or may not get merged.
+[write an issue](https://github.com/snd/url-pattern/issues/new) to start a discussion before writing code that may or may not get merged.
 
 ## [license: MIT](LICENSE)

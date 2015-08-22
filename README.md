@@ -6,10 +6,8 @@
 [![coverage-99%](http://img.shields.io/badge/coverage-99%-brightgreen.svg?style=flat)](https://rawgit.com/snd/url-pattern/master/coverage/lcov-report/lib/url-pattern.js.html)
 [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 
-**easier than regex string matching for urls, domains, filepaths and other strings.  
-can capture named parts of strings and conveniently returns them as objects.  
-also does the reverse and generates strings given a pattern and such an object.  
-great for routing !**
+**easier than regex string matching patterns for urls, domains, filepaths and other strings.  
+turn strings into data or data into strings.**
 
 **[the newest version 0.10 introduces breaking changes !](CHANGELOG.md#010)**  
 [see the changelog](CHANGELOG.md#010)

@@ -311,7 +311,7 @@ then match:
 }
 ```
 
-### contributing
+### [contributing](contributing.md)
 
 **bugfixes, issues and discussion are always welcome.  
 kindly [ask](https://github.com/snd/url-pattern/issues/new) before implementing new features.**

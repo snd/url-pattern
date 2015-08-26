@@ -325,6 +325,6 @@ are well written, documented and tested.
 **communicate !**  
 [write an issue](https://github.com/snd/url-pattern/issues/new) to start a discussion before writing code that may or may not get merged.
 
-[This project adheres to the Contributor Covenant 1.2](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [kruemaxi@gmail.com](kruemaxi@gmail.com).
+[This project adheres to the Contributor Covenant 1.2](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to kruemaxi@gmail.com.
 
 ## [license: MIT](LICENSE)

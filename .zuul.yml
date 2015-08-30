@@ -16,3 +16,6 @@ browsers:
     version: latest
 browserify:
   - transform: coffeeify
+browser_retries: 0
+# 3 minutes
+browser_output_timeout: 120000

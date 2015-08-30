@@ -20,7 +20,7 @@ turn strings into data or data into strings.**
 - very fast matching as each pattern is compiled into a regex exactly once
 - supports Node.js, [AMD](http://requirejs.org/docs/whyamd.html) and browsers
 - [tiny with just under 500 lines of simple, readable, maintainable code](src/url-pattern.coffee)
-- [huge test suite](test) with [99% test coverage](https://rawgit.com/snd/url-pattern/master/coverage/lcov-report/lib/url-pattern.js.html)
+- [huge test suite](test) with [99% coverage](https://rawgit.com/snd/url-pattern/master/coverage/lcov-report/lib/url-pattern.js.html)
   [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
 - tests pass in all relevant browsers  
   [![Sauce Test Status](https://saucelabs.com/browser-matrix/urlpattern.svg)](https://saucelabs.com/u/urlpattern)

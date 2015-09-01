@@ -89,7 +89,7 @@
     "prepublish": "npm run compile",
     "pretest": "npm run compile",
     "test": "coffeetape test/*",
-    "test-travis": "istanbul cover coffeetape test/* && cat ./coverage/lcov.info || ./node_modules/coveralls/bin/coveralls.js && rm -rf coverage",
+    "test-travis": "istanbul cover coffeetape test/* && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf coverage",
     "test-zuul-local": "zuul --local 8080 test/*",
     "test-zuul": "zuul test/*"
   }

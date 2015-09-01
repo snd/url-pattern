@@ -12,8 +12,8 @@ env:
     # SAUCE_ACCESS_KEY
     - secure: "idJFmSy6EyMNO9UoxUx0wG83G/w8H1Sh1fG5lWodAdV01/Ft0j3KQo/zelENBx7zMWf+iqdWOhL4rBLIIkaajHbmvkMYDzhFXK4GIZmd1HnV4MZCunipscMsEbtQU+uTY/I3fersnIz74aTuj3SKlFW4jVNgvc8fawijBtTbuhU="
     # COVERALLS_REPO_TOKEN
-    - secure: "JFb9IUyacsa52PMiQ91ZHumNQm+F27iUoRow7tA7VLGBaVxNaX9mmFQ8Ip4QA/aNDW1+FlhfU2BOiLrMjnUkRuIW25K4WOzull+CpnfbE2XW7uo4GgdTCOwxtmdY8oBAVg8/e+TZInfb3BnEOP6j3hqszbyUvmKM+AWO4ZJiBGk="
-    - COVERALLS_SERVICE_NAME=travis
+    - secure: "EoXG8YeWRQQaQ+LNxXNsOgFRF44RFWsDeFJahodkGlHP4aqXq0foX3iuB6JljdB8CjT4e55d/aTsVu1moRavODPU4WA4Cuqbqaob58gfWKEjOs3BxihSDvkiv8KdzXmiR9qOZmyOj8JNk38Aj8BXOc39VizqSdD5sloXfAKcTbM="
+    - COVERALLS_SERVICE_NAME=travis-pro
   matrix:
     # - ZUUL=true
     - ZUUL=false

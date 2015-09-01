@@ -1,9 +1,9 @@
 language: node_js
 node_js:
   - "0.12"
-  - "iojs-2"
-  - "iojs-3"
-script: if [ $ZUUL = 'true' ]; then npm run test-zuul; else npm test; fi
+  # - "iojs-2"
+  # - "iojs-3"
+script: if [ $ZUUL = 'true' ]; then npm run test-zuul; else npm run test-travis; fi
 sudo: false
 env:
   global:
@@ -11,8 +11,11 @@ env:
     - secure: "Js6Pr7dJfvAKY5JuuuEJSrDvoBCrnjTjISMCPBmH0CkGwtGR7J2mCvaLcXQ9RO3zrSasdj8Rb6gBmrIgk1fQbp/NpwQVwMUPH4J+dhbwTHIrrIHVtxt6q8cPx43RJqjE6qN+G1MA/Y4IVbgAzjJPnzu6A6v7E/FzSFbpNilv2i4="
     # SAUCE_ACCESS_KEY
     - secure: "idJFmSy6EyMNO9UoxUx0wG83G/w8H1Sh1fG5lWodAdV01/Ft0j3KQo/zelENBx7zMWf+iqdWOhL4rBLIIkaajHbmvkMYDzhFXK4GIZmd1HnV4MZCunipscMsEbtQU+uTY/I3fersnIz74aTuj3SKlFW4jVNgvc8fawijBtTbuhU="
+    # COVERALLS_REPO_TOKEN
+    - secure: "JFb9IUyacsa52PMiQ91ZHumNQm+F27iUoRow7tA7VLGBaVxNaX9mmFQ8Ip4QA/aNDW1+FlhfU2BOiLrMjnUkRuIW25K4WOzull+CpnfbE2XW7uo4GgdTCOwxtmdY8oBAVg8/e+TZInfb3BnEOP6j3hqszbyUvmKM+AWO4ZJiBGk="
+    - COVERALLS_SERVICE_NAME=travis
   matrix:
-    - ZUUL=true
+    # - ZUUL=true
     - ZUUL=false
 matrix:
   # dont run zuul tests for iojs

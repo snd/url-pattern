@@ -73,22 +73,23 @@
   "engines": {
     "node": ">=0.12.0"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "coffee-script": "1.9.3",
-    "tape": "4.2.0",
+    "coffeeify": "1.1.0",
     "coffeetape": "1.0.1",
+    "coveralls": "2.11.4",
     "istanbul": "0.3.18",
-    "zuul": "3.3.0",
-    "coffeeify": "1.1.0"
+    "tape": "4.2.0",
+    "zuul": "3.3.0"
   },
   "main": "lib/url-pattern",
   "scripts": {
     "compile": "coffee --bare --compile --output lib src",
     "prepublish": "npm run compile",
     "pretest": "npm run compile",
-    "test": "istanbul cover -x test coffeetape test/*",
+    "test": "coffeetape test/*",
+    "test-travis": "istanbul cover coffeetape test/* && cat ./coverage/lcov.info || ./node_modules/coveralls/bin/coveralls.js && rm -rf coverage",
     "test-zuul-local": "zuul --local 8080 test/*",
     "test-zuul": "zuul test/*"
   }

@@ -3,7 +3,7 @@
 [![NPM Package](https://img.shields.io/npm/v/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
 [![Sauce Test Status](https://saucelabs.com/buildstatus/urlpattern)](https://saucelabs.com/u/urlpattern)
-[![coverage-99%](http://img.shields.io/badge/coverage-99%-brightgreen.svg?style=flat)](https://rawgit.com/snd/url-pattern/master/coverage/lcov-report/lib/url-pattern.js.html)
+[![codecov.io](http://codecov.io/github/snd/url-pattern/coverage.svg?branch=master)](http://codecov.io/github/snd/url-pattern?branch=master)
 [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 
 **easier than regex string matching patterns for urls, domains, filepaths and other strings.  
@@ -20,8 +20,9 @@ turn strings into data or data into strings.**
 - very fast matching as each pattern is compiled into a regex exactly once
 - supports Node.js, [AMD](http://requirejs.org/docs/whyamd.html) and browsers
 - [tiny with just under 500 lines of simple, readable, maintainable code](src/url-pattern.coffee)
-- [huge test suite](test) with [99% coverage](https://rawgit.com/snd/url-pattern/master/coverage/lcov-report/lib/url-pattern.js.html)
-  [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
+- [huge test suite](test)
+  passing [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
+  with [![codecov.io](http://codecov.io/github/snd/url-pattern/coverage.svg?branch=master)](http://codecov.io/github/snd/url-pattern?branch=master)
 - tests pass in all relevant browsers  
   [![Sauce Test Status](https://saucelabs.com/browser-matrix/urlpattern.svg)](https://saucelabs.com/u/urlpattern)
 - widely used [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)

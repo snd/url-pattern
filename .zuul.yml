@@ -10,10 +10,10 @@ browsers:
     version: [11, 12]
   - name: safari
     version: latest
-  - name: iphone
-    version: latest
-  - name: android
-    version: latest
+  # - name: iphone
+  #   version: latest
+  # - name: android
+  #   version: latest
 browserify:
   - transform: coffeeify
 browser_retries: 0

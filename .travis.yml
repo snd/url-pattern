@@ -25,6 +25,6 @@ matrix:
       env: ZUUL=true
     # don't collect code coverage for iojs
     - node_js: "iojs-2"
-      env: CODECOV=true
+      env: ZUUL=false CODECOV=true
     - node_js: "iojs-3"
-      env: CODECOV=true
+      env: ZUUL=false CODECOV=true

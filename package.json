@@ -89,8 +89,8 @@
     "prepublish": "npm run compile",
     "pretest": "npm run compile",
     "test": "coffeetape test/*",
-    "test-travis": "istanbul cover coffeetape test/* && cat ./coverage/coverage.json | ./node_modules/codecov.io/bin/codecov.io.js",
-    "test-zuul-local": "zuul --local 8080 test/*",
-    "test-zuul": "zuul test/*"
+    "test-with-codecov": "istanbul cover coffeetape test/* && cat ./coverage/coverage.json | ./node_modules/codecov.io/bin/codecov.io.js",
+    "test-zuul": "zuul test/*",
+    "test-zuul-local": "zuul --local 8080 test/*"
   }
 }

@@ -1,9 +1,9 @@
 language: node_js
 node_js:
   - "0.12"
-  # - "iojs-2"
-  # - "iojs-3"
-script: if [ $ZUUL = 'true' ]; then npm run test-zuul; else npm run test-travis; fi
+  - "iojs-2"
+  - "iojs-3"
+script: ./run-travis-tests.sh
 sudo: false
 env:
   global:
@@ -12,12 +12,19 @@ env:
     # SAUCE_ACCESS_KEY
     - secure: "idJFmSy6EyMNO9UoxUx0wG83G/w8H1Sh1fG5lWodAdV01/Ft0j3KQo/zelENBx7zMWf+iqdWOhL4rBLIIkaajHbmvkMYDzhFXK4GIZmd1HnV4MZCunipscMsEbtQU+uTY/I3fersnIz74aTuj3SKlFW4jVNgvc8fawijBtTbuhU="
   matrix:
-    # - ZUUL=true
-    - ZUUL=false
+    # don't collect code coverage for zuul
+    - ZUUL=true
+    - ZUUL=false CODECOV=true
+    - ZUUL=false CODECOV=false
 matrix:
-  # dont run zuul tests for iojs
   exclude:
+    # don't run zuul tests for iojs
     - node_js: "iojs-2"
       env: ZUUL=true
     - node_js: "iojs-3"
       env: ZUUL=true
+    # don't collect code coverage for iojs
+    - node_js: "iojs-2"
+      env: CODECOV=true
+    - node_js: "iojs-3"
+      env: CODECOV=true

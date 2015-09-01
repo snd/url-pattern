@@ -28,3 +28,6 @@ matrix:
       env: ZUUL=false CODECOV=true
     - node_js: "iojs-3"
       env: ZUUL=false CODECOV=true
+    # don't test 0.12 without code coverage
+    - node_js: "0.12"
+      env: ZUUL=false CODECOV=false

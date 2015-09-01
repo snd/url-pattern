@@ -14,8 +14,8 @@ env:
   matrix:
     # don't collect code coverage for zuul
     - ZUUL=true
-    - ZUUL=false CODECOV=true
-    - ZUUL=false CODECOV=false
+    - ZUUL=false COVERAGE=true
+    - ZUUL=false COVERAGE=false
 matrix:
   exclude:
     # don't run zuul tests for iojs
@@ -25,9 +25,9 @@ matrix:
       env: ZUUL=true
     # don't collect code coverage for iojs
     - node_js: "iojs-2"
-      env: ZUUL=false CODECOV=true
+      env: ZUUL=false COVERAGE=true
     - node_js: "iojs-3"
-      env: ZUUL=false CODECOV=true
+      env: ZUUL=false COVERAGE=true
     # don't test 0.12 without code coverage
     - node_js: "0.12"
-      env: ZUUL=false CODECOV=false
+      env: ZUUL=false COVERAGE=false

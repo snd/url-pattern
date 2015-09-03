@@ -273,7 +273,7 @@ to also include `_` and `-`:
 ```
 
 let's change the set of chars allowed in named segment values
-(default `a-zA-Z0-9_- %`) to not allow non-alphanumeric chars:
+(default `a-zA-Z0-9-_~ %`) to not allow non-alphanumeric chars:
 
 ```javascript
 > options.segmentValueCharset = 'a-zA-Z0-9';

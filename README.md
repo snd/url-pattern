@@ -48,7 +48,7 @@ bower install url-pattern
 ```
 
 [lib/url-pattern.js](lib/url-pattern.js) supports [AMD](http://requirejs.org/docs/whyamd.html).  
-it sets the global variable `UrlPattern` when
+sets the global variable `UrlPattern` when
 neither CommonJS nor
 [AMD](http://requirejs.org/docs/whyamd.html) are available.
 

@@ -4,7 +4,7 @@ node_js:
   - "iojs-2"
   - "iojs-3"
   - "4.0"
-script: ./run-travis-tests.sh
+script: npm run $NPM_COMMAND
 sudo: false
 env:
   global:

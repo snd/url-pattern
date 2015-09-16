@@ -16,7 +16,7 @@ turn strings into data or data into strings.**
 > [michael](https://github.com/snd/url-pattern/pull/7)
 
 - [match patterns against strings and extract values](#match-pattern-against-string)
-- [generate strings from patterns and values](#stringifying-patterns)
+- [generate strings from patterns and values](#stringify-patterns)
 - very fast matching as each pattern is compiled into a regex exactly once
 - [tiny single file with just under 500 lines of simple, readable, maintainable code](src/url-pattern.coffee)
 - widely used [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
@@ -30,7 +30,7 @@ turn strings into data or data into strings.**
 - zero dependencies [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern)
 - npm package: `npm install url-pattern`
 - bower package: `bower install url-pattern`
-- [customizable](#customizing-the-pattern-syntax)
+- [customizable](#customize-the-pattern-syntax)
 - pattern parser implemented using elegant, combosable, testable [parser combinators](https://en.wikipedia.org/wiki/Parser_combinator)
 
 [check out **passage** if you are looking for simple composable routing that builds on top of url-pattern](https://github.com/snd/passage)
@@ -128,7 +128,7 @@ when matching, a named segment consumes all characters in the regex character se
 `a-zA-Z0-9-_~ %`.
 a named segment match stops at `/`, `.`, ... but not at `_`, `-`, ` `, `%`...
 
-[you can change these character sets. click here to see how.](#customizing-the-pattern-syntax)
+[you can change these character sets. click here to see how.](#customize-the-pattern-syntax)
 
 if a named segment **name** occurs more than once in the pattern string,
 then the multiple results are stored in an array on the returned object:
@@ -214,7 +214,7 @@ returns objects on match with each key mapped to a captured value:
 null
 ```
 
-### stringifying patterns
+### stringify patterns
 
 ```javascript
 > var pattern = new UrlPattern('/api/users/:id');
@@ -247,7 +247,7 @@ makes all values in that optional segment required.*
 
 [look at the tests for additional examples of `.stringify`](test/stringify-fixtures.coffee)
 
-### customizing the pattern syntax
+### customize the pattern syntax
 
 finally we can completely change pattern-parsing and regex-compilation to suit our needs:
 

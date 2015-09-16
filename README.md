@@ -6,7 +6,7 @@
 [![codecov.io](http://codecov.io/github/snd/url-pattern/coverage.svg?branch=master)](http://codecov.io/github/snd/url-pattern?branch=master)
 [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 
-**easier than regex string matching patterns for urls, domains, filepaths and other strings.  
+**easier than regex string matching patterns for urls and other strings.  
 turn strings into data or data into strings.**
 
 **[the newest version 0.10 introduces breaking changes !](CHANGELOG.md#010)**  

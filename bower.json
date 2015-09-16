@@ -5,7 +5,7 @@
   "authors": [
     "Maximilian Krüger <kruemaxi@googlemail.com>"
   ],
-  "description": "easier than regex string matching patterns for urls, domains, filepaths and other strings. turn strings into data or data into strings.",
+  "description": "easier than regex string matching patterns for urls and other strings. turn strings into data or data into strings.",
   "keywords": [
     "url",
     "string",

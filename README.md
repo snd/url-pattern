@@ -15,14 +15,19 @@ turn strings into data or data into strings.**
 > This is a great little library -- thanks!  
 > [michael](https://github.com/snd/url-pattern/pull/7)
 
+very simple example:
 ``` javascript
-> var pattern = new UrlPattern('/api/users/:id');
-
+> var pattern = new UrlPattern('/api/users(/:id)');
 > pattern.match('/api/users/10');
 {id: '10'}
-
+> pattern.match('/api/users');
+{}
 > pattern.match('/api/products/5');
 null
+> pattern.stringify()
+'/api/users'
+> pattern.stringify({id: 20})
+'/api/users/20'
 ```
 
 - [match patterns against strings and extract values](#match-pattern-against-string)
@@ -38,7 +43,7 @@ null
   [![Sauce Test Status](https://saucelabs.com/browser-matrix/urlpattern.svg)](https://saucelabs.com/u/urlpattern)
 - supports CommonJS, [AMD](http://requirejs.org/docs/whyamd.html) and browser globals
   - `require('url-pattern')`
-  - [lib/url-pattern.js](lib/url-pattern.js) supports [AMD](http://requirejs.org/docs/whyamd.html).  
+  - use [lib/url-pattern.js](lib/url-pattern.js) in the browser
   - sets the global variable `UrlPattern` when neither CommonJS nor [AMD](http://requirejs.org/docs/whyamd.html) are available.
 - zero dependencies [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern)
 - npm package: `npm install url-pattern`

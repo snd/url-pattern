@@ -18,14 +18,19 @@ turn strings into data or data into strings.**
 very simple example:
 ``` javascript
 > var pattern = new UrlPattern('/api/users(/:id)');
+
 > pattern.match('/api/users/10');
 {id: '10'}
+
 > pattern.match('/api/users');
 {}
+
 > pattern.match('/api/products/5');
 null
+
 > pattern.stringify()
 '/api/users'
+
 > pattern.stringify({id: 20})
 '/api/users/20'
 ```
@@ -65,6 +70,7 @@ bower install url-pattern
 > var UrlPattern = require('url-pattern');
 ```
 
+more complex examples:
 ``` javascript
 > var pattern = new UrlPattern('/v:major(.:minor)/*');
 

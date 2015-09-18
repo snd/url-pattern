@@ -15,6 +15,16 @@ turn strings into data or data into strings.**
 > This is a great little library -- thanks!  
 > [michael](https://github.com/snd/url-pattern/pull/7)
 
+``` javascript
+> var pattern = new UrlPattern('/api/users/:id');
+
+> pattern.match('/api/users/10');
+{id: '10'}
+
+> pattern.match('/api/products/5');
+null
+```
+
 - [match patterns against strings and extract values](#match-pattern-against-string)
 - [generate strings from patterns and values](#stringify-patterns)
 - very fast matching as each pattern is compiled into a regex exactly once
@@ -27,6 +37,9 @@ turn strings into data or data into strings.**
 - continously tested in Node.js (0.12, **4.0**), io.js (2, 3) and all relevant browsers:
   [![Sauce Test Status](https://saucelabs.com/browser-matrix/urlpattern.svg)](https://saucelabs.com/u/urlpattern)
 - supports CommonJS, [AMD](http://requirejs.org/docs/whyamd.html) and browser globals
+  - `require('url-pattern')`
+  - [lib/url-pattern.js](lib/url-pattern.js) supports [AMD](http://requirejs.org/docs/whyamd.html).  
+  - sets the global variable `UrlPattern` when neither CommonJS nor [AMD](http://requirejs.org/docs/whyamd.html) are available.
 - zero dependencies [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern)
 - npm package: `npm install url-pattern`
 - bower package: `bower install url-pattern`
@@ -47,20 +60,6 @@ bower install url-pattern
 > var UrlPattern = require('url-pattern');
 ```
 
-[lib/url-pattern.js](lib/url-pattern.js) supports [AMD](http://requirejs.org/docs/whyamd.html).  
-sets the global variable `UrlPattern` when
-neither CommonJS nor
-[AMD](http://requirejs.org/docs/whyamd.html) are available.
-
-``` javascript
-> var pattern = new UrlPattern('/api/users/:id');
-
-> pattern.match('/api/users/10');
-{id: '10'}
-
-> pattern.match('/api/products/5');
-null
-```
 ``` javascript
 > var pattern = new UrlPattern('/v:major(.:minor)/*');
 

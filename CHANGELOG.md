@@ -1,4 +1,4 @@
-### changelog
+# changelog
 
 #### 0.7
 
@@ -56,7 +56,7 @@ named segments now also match `-`, `_`, ` ` and `%`.
 
 `\\` can now be used to escape characters.
 
-[made all special chars and charsets used in parsing configurable.](#modifying-the-compiler)
+[made all special chars and charsets used in parsing configurable.](https://github.com/snd/url-pattern#customize-the-pattern-syntax)
 
 added [bower.json](bower.json) and registered with bower as `url-pattern`.
 
@@ -65,11 +65,12 @@ added [bower.json](bower.json) and registered with bower as `url-pattern`.
 [issue 15](https://github.com/snd/url-pattern/issues/15):  
 named segments now also match the `~` character.  
 **this will break your code if you relied on the fact that named segments
-stop matching at `~` !**
+stop matching at `~` !**  
+[you can customize the parsing to go back to the old behaviour](https://github.com/snd/url-pattern#customize-the-pattern-syntax)  
 
 the way the parser is customized has changed.  
 **this will break your code if you customized the parser !**  
-[read me](https://github.com/snd/url-pattern#customizing-the-pattern-syntax)  
+[read me](https://github.com/snd/url-pattern#customize-the-pattern-syntax)  
 updating your code is very easy.
 
 [issue 14](https://github.com/snd/url-pattern/issues/14):  
@@ -77,7 +78,7 @@ updating your code is very easy.
 non breaking
 
 [issue 11](https://github.com/snd/url-pattern/issues/11):  
-[read me](https://github.com/snd/url-pattern#stringifying-patterns)  
+[read me](https://github.com/snd/url-pattern#stringify-patterns)  
 non breaking
 
-messages on errors thrown when invalid patterns are passed in have changed slightly.
+messages on errors thrown on invalid patterns have changed slightly.

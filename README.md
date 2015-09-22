@@ -10,7 +10,6 @@
 turn strings into data or data into strings.**
 
 **[the newest version 0.10 introduces breaking changes !](CHANGELOG.md#010)**  
-[see the changelog](CHANGELOG.md#010)
 
 > This is a great little library -- thanks!  
 > [michael](https://github.com/snd/url-pattern/pull/7)
@@ -27,7 +26,7 @@ pattern.match('/api/users'); // {}
 pattern.match('/api/products/5'); // null
 ```
 
-[generate strings from pattern and values:](#stringify-patterns)
+[generate string from pattern and values:](#stringify-patterns)
 ``` javascript
 pattern.stringify() // '/api/users'
 pattern.stringify({id: 20}) // '/api/users/20'
@@ -35,11 +34,11 @@ pattern.stringify({id: 20}) // '/api/users/20'
 
 - continously tested in Node.js (0.12, **4.0**), io.js (2, 3) and all relevant browsers:
   [![Sauce Test Status](https://saucelabs.com/browser-matrix/urlpattern.svg)](https://saucelabs.com/u/urlpattern)
+- [tiny single file with just under 500 lines of simple, readable, maintainable code](src/url-pattern.coffee)
 - [huge test suite](test)
   passing [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
   with [![codecov.io](http://codecov.io/github/snd/url-pattern/coverage.svg?branch=master)](http://codecov.io/github/snd/url-pattern?branch=master)
   code coverage
-- [tiny single file with just under 500 lines of simple, readable, maintainable code](src/url-pattern.coffee)
 - widely used [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 - supports CommonJS, [AMD](http://requirejs.org/docs/whyamd.html) and browser globals
   - `require('url-pattern')`

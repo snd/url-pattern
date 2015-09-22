@@ -15,22 +15,25 @@ turn strings into data or data into strings.**
 > This is a great little library -- thanks!  
 > [michael](https://github.com/snd/url-pattern/pull/7)
 
-very simple example:
+[make:](#make-pattern-from-string)
 ``` javascript
 > var pattern = new UrlPattern('/api/users(/:id)');
+```
 
+[match:](#match-pattern-against-string)
+``` javascript
 > pattern.match('/api/users/10');
 {id: '10'}
-
 > pattern.match('/api/users');
 {}
-
 > pattern.match('/api/products/5');
 null
+```
 
+[stringify:](#stringify-patterns)
+``` javascript
 > pattern.stringify()
 '/api/users'
-
 > pattern.stringify({id: 20})
 '/api/users/20'
 ```
@@ -58,6 +61,7 @@ null
 
 [check out **passage** if you are looking for simple composable routing that builds on top of url-pattern](https://github.com/snd/passage)
 
+install:
 ```
 npm install url-pattern
 ```
@@ -66,6 +70,7 @@ npm install url-pattern
 bower install url-pattern
 ```
 
+require:
 ``` javascript
 > var UrlPattern = require('url-pattern');
 ```

@@ -15,30 +15,23 @@ turn strings into data or data into strings.**
 > This is a great little library -- thanks!  
 > [michael](https://github.com/snd/url-pattern/pull/7)
 
-[make patterns:](#make-pattern-from-string)
+[make pattern:](#make-pattern-from-string)
 ``` javascript
-> var pattern = new UrlPattern('/api/users(/:id)');
+var pattern = new UrlPattern('/api/users(/:id)');
 ```
 
-[match patterns against strings and extract values:](#match-pattern-against-string)
+[match pattern against string and extract values:](#match-pattern-against-string)
 ``` javascript
-> pattern.match('/api/users/10');
-{id: '10'}
-> pattern.match('/api/users');
-{}
-> pattern.match('/api/products/5');
-null
+pattern.match('/api/users/10'); // {id: '10'}
+pattern.match('/api/users'); // {}
+pattern.match('/api/products/5'); // null
 ```
 
-[generate strings from patterns and values:](#stringify-patterns)
+[generate strings from pattern and values:](#stringify-patterns)
 ``` javascript
-> pattern.stringify()
-'/api/users'
-> pattern.stringify({id: 20})
-'/api/users/20'
+pattern.stringify() // '/api/users'
+pattern.stringify({id: 20}) // '/api/users/20'
 ```
-
-### features
 
 - widely used [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 - [huge test suite](test)

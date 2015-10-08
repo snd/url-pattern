@@ -32,7 +32,7 @@ pattern.stringify() // '/api/users'
 pattern.stringify({id: 20}) // '/api/users/20'
 ```
 
-- continously tested in Node.js (0.12, **4.0**), io.js (2, 3) and all relevant browsers:
+- continuously tested in Node.js (0.12, **4.0**), io.js (2, 3) and all relevant browsers:
   [![Sauce Test Status](https://saucelabs.com/browser-matrix/urlpattern.svg)](https://saucelabs.com/u/urlpattern)
 - [tiny single file with just under 500 lines of simple, readable, maintainable code](src/url-pattern.coffee)
 - [huge test suite](test)

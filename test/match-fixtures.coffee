@@ -161,6 +161,39 @@ test 'match', (t) ->
   t.deepEqual pattern.match('/vvv1/resource'),
     _: 'resource'
     version: '1'
-  t.equal null, pattern.match('/vvv1.1/resource'),
+  t.equal null, pattern.match('/vvv1.1/resource')
+
+
+  regex = /\/ip\/(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
+  pattern = new UrlPattern regex
+  t.equal null, pattern.match('10.10.10.10')
+  t.equal null, pattern.match('ip/10.10.10.10')
+  t.equal null, pattern.match('/ip/10.10.10.')
+  t.equal null, pattern.match('/ip/10.')
+  t.equal null, pattern.match('/ip/')
+  t.deepEqual pattern.match('/ip/10.10.10.10'), ['10', '10', '10', '10']
+  t.deepEqual pattern.match('/ip/127.0.0.1'), ['127', '0', '0', '1']
+
+  regex = /\/ip\/((?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))$/
+  pattern = new UrlPattern regex
+  t.equal null, pattern.match('10.10.10.10')
+  t.equal null, pattern.match('ip/10.10.10.10')
+  t.equal null, pattern.match('/ip/10.10.10.')
+  t.equal null, pattern.match('/ip/10.')
+  t.equal null, pattern.match('/ip/')
+  t.deepEqual pattern.match('/ip/10.10.10.10'), ['10.10.10.10']
+  t.deepEqual pattern.match('/ip/127.0.0.1'), ['127.0.0.1']
+
+  regex = /\/ip\/((?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))$/
+  pattern = new UrlPattern regex, ['ip']
+  t.equal null, pattern.match('10.10.10.10')
+  t.equal null, pattern.match('ip/10.10.10.10')
+  t.equal null, pattern.match('/ip/10.10.10.')
+  t.equal null, pattern.match('/ip/10.')
+  t.equal null, pattern.match('/ip/')
+  t.deepEqual pattern.match('/ip/10.10.10.10'),
+    ip: '10.10.10.10'
+  t.deepEqual pattern.match('/ip/127.0.0.1'),
+    ip: '127.0.0.1'
 
   t.end()

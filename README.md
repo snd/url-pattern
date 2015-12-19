@@ -45,6 +45,7 @@ pattern.stringify({id: 20}) // '/api/users/20'
 - very fast matching as each pattern is compiled into a regex exactly once
 - zero dependencies [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern)
 - [customizable](#customize-the-pattern-syntax)
+- [frequently asked questions](#frequently-asked-questions)
 - npm package: `npm install url-pattern`
 - bower package: `bower install url-pattern`
 - pattern parser implemented using simple, combosable, testable [parser combinators](https://en.wikipedia.org/wiki/Parser_combinator)
@@ -320,6 +321,30 @@ then match:
 }
 ```
 
+### frequently asked questions
+
+#### how do i match the query part of an URL ?
+
+the query part of an URL has very different semantics than the rest.
+url-pattern is not well suited for parsing the query part.
+
+there are good existing libraries for parsing the query part of an URL.
+https://github.com/hapijs/qs is an example.
+in the interest of keeping things simple and focused
+i see no reason to add special support
+for parsing the query part to url-pattern.
+
+i recommend splitting the URL at `?`, using url-pattern
+to parse the first part (scheme, host, port, path)
+and using https://github.com/hapijs/qs to parse the last part (query).
+
+#### how do i match an IP ?
+
+you can't exactly match IPs with url-pattern so you have to
+fall back to regexes and pass in a regex object.
+
+[here's how you do it](https://github.com/snd/url-pattern/blob/c8e0a943bb62e6feeca2d2595da4e22782e617ed/test/match-fixtures.coffee#L237)
+
 ### [contributing](contributing.md)
 
 **bugfixes, issues and discussion are always welcome.  
@@ -333,6 +358,8 @@ are well written, documented and tested.
 
 **communicate !**  
 [write an issue](https://github.com/snd/url-pattern/issues/new) to start a discussion before writing code that may or may not get merged.
+
+please also read the [frequently asked questions](https://github.com/snd/url-pattern#frequently-asked-questions) before filing an issue.
 
 [this project adheres to the contributor covenant 1.2](CODE_OF_CONDUCT.MD). by participating, you are expected to uphold this code. please report unacceptable behavior to kruemaxi@gmail.com.
 

@@ -77,11 +77,11 @@
   "devDependencies": {
     "codecov.io": "0.1.6",
     "coffee-script": "1.10.0",
-    "coffeeify": "1.1.0",
+    "coffeeify": "2.0.1",
     "coffeetape": "1.0.1",
-    "istanbul": "0.3.19",
-    "tape": "4.2.0",
-    "zuul": "3.4.0"
+    "istanbul": "0.4.1",
+    "tape": "4.2.2",
+    "zuul": "3.8.0"
   },
   "main": "lib/url-pattern",
   "scripts": {

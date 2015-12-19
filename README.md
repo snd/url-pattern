@@ -76,7 +76,7 @@ bower install url-pattern
 null
 ```
 ``` javascript
-> var pattern = new UrlPattern('(http(s)\\://)(:subdomain.):domain.:tld(/*)')
+> var pattern = new UrlPattern('(http(s)\\://)(:subdomain.):domain.:tld(\\::port)(/*)')
 
 > pattern.match('google.de');
 {domain: 'google', tld: 'de'}
@@ -86,6 +86,9 @@ null
 
 > pattern.match('http://mail.google.com/mail');
 {subdomain: 'mail', domain: 'google', tld: 'com', _: 'mail'}
+
+> pattern.match('http://mail.google.com:80/mail');
+{subdomain: 'mail', domain: 'google', tld: 'com', port: '80', _: 'mail'}
 
 > pattern.match('google');
 null

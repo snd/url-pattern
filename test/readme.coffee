@@ -15,7 +15,7 @@ test 'api versioning', (t) ->
   t.end()
 
 test 'domain', (t) ->
-  pattern = new UrlPattern('(http(s)\\://)(:subdomain.):domain.:tld(/*)')
+  pattern = new UrlPattern('(http(s)\\://)(:subdomain.):domain.:tld(\\::port)(/*)')
   t.deepEqual pattern.match('google.de'),
     domain: 'google'
     tld: 'de'
@@ -27,6 +27,12 @@ test 'domain', (t) ->
     subdomain: 'mail'
     domain: 'google'
     tld: 'com'
+    _: 'mail'
+  t.deepEqual pattern.match('http://mail.google.com:80/mail'),
+    subdomain: 'mail'
+    domain: 'google'
+    tld: 'com'
+    port: '80'
     _: 'mail'
   t.equal pattern.match('google'), null
 

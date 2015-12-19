@@ -9,8 +9,6 @@
 **easier than regex string matching patterns for urls and other strings.  
 turn strings into data or data into strings.**
 
-**[the newest version 0.10 introduces breaking changes !](CHANGELOG.md#010)**  
-
 > This is a great little library -- thanks!  
 > [michael](https://github.com/snd/url-pattern/pull/7)
 
@@ -32,7 +30,7 @@ pattern.stringify() // '/api/users'
 pattern.stringify({id: 20}) // '/api/users/20'
 ```
 
-- continuously tested in Node.js (0.12, **4.0**), io.js (2, 3) and all relevant browsers:
+- continuously tested in Node.js (0.12, 4.2.3 and 5.3) and all relevant browsers:
   [![Sauce Test Status](https://saucelabs.com/browser-matrix/urlpattern.svg)](https://saucelabs.com/u/urlpattern)
 - [tiny single file with just under 500 lines of simple, readable, maintainable code](src/url-pattern.coffee)
 - [huge test suite](test)
@@ -49,7 +47,7 @@ pattern.stringify({id: 20}) // '/api/users/20'
 - [customizable](#customize-the-pattern-syntax)
 - npm package: `npm install url-pattern`
 - bower package: `bower install url-pattern`
-- pattern parser implemented using elegant, combosable, testable [parser combinators](https://en.wikipedia.org/wiki/Parser_combinator)
+- pattern parser implemented using simple, combosable, testable [parser combinators](https://en.wikipedia.org/wiki/Parser_combinator)
 
 [check out **passage** if you are looking for simple composable routing that builds on top of url-pattern](https://github.com/snd/passage)
 

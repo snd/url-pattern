@@ -163,6 +163,56 @@ test 'match', (t) ->
     version: '1'
   t.equal null, pattern.match('/vvv1.1/resource')
 
+  pattern = new UrlPattern '/api/users/:id',
+    segmentValueCharset: 'a-zA-Z0-9-_~ %.@'
+  t.deepEqual pattern.match('/api/users/someuser@example.com'),
+    id: 'someuser@example.com'
+
+  pattern = new UrlPattern '/api/users?username=:username',
+    segmentValueCharset: 'a-zA-Z0-9-_~ %.@'
+  t.deepEqual pattern.match('/api/users?username=someone@example.com'),
+    username: 'someone@example.com'
+
+  pattern = new UrlPattern '/api/users?param1=:param1&param2=:param2'
+  t.deepEqual pattern.match('/api/users?param1=foo&param2=bar'),
+    param1: 'foo'
+    param2: 'bar'
+
+  pattern = new UrlPattern ':scheme\\://:host(\\::port)',
+    segmentValueCharset: 'a-zA-Z0-9-_~ %.'
+  t.deepEqual pattern.match('ftp://ftp.example.com'),
+    scheme: 'ftp'
+    host: 'ftp.example.com'
+  t.deepEqual pattern.match('ftp://ftp.example.com:8080'),
+    scheme: 'ftp'
+    host: 'ftp.example.com'
+    port: '8080'
+  t.deepEqual pattern.match('https://example.com:80'),
+    scheme: 'https'
+    host: 'example.com'
+    port: '80'
+
+  pattern = new UrlPattern ':scheme\\://:host(\\::port)(/api(/:resource(/:id)))',
+    segmentValueCharset: 'a-zA-Z0-9-_~ %.@'
+  t.deepEqual pattern.match('https://sss.www.localhost.com'),
+    scheme: 'https'
+    host: 'sss.www.localhost.com'
+  t.deepEqual pattern.match('https://sss.www.localhost.com:8080'),
+    scheme: 'https'
+    host: 'sss.www.localhost.com'
+    port: '8080'
+  t.deepEqual pattern.match('https://sss.www.localhost.com/api'),
+    scheme: 'https'
+    host: 'sss.www.localhost.com'
+  t.deepEqual pattern.match('https://sss.www.localhost.com/api/security'),
+    scheme: 'https'
+    host: 'sss.www.localhost.com'
+    resource: 'security'
+  t.deepEqual pattern.match('https://sss.www.localhost.com/api/security/bob@example.com'),
+    scheme: 'https'
+    host: 'sss.www.localhost.com'
+    resource: 'security'
+    id: 'bob@example.com'
 
   regex = /\/ip\/(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
   pattern = new UrlPattern regex

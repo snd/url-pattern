@@ -66,10 +66,7 @@
     "type": "git",
     "url": "git://github.com/snd/url-pattern.git"
   },
-  "licenses": {
-    "type": "MIT",
-    "url": "git://github.com/snd/url-pattern/LICENSE"
-  },
+  "license": "MIT",
   "engines": {
     "node": ">=0.12.0"
   },

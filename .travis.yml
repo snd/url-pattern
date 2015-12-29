@@ -1,8 +1,9 @@
 language: node_js
 node_js:
   - "0.12"
-  - "4.2.3"
-  - "5.3"
+  - "iojs-3"
+  - "4"
+  - "5"
 script: npm run $NPM_COMMAND
 sudo: false
 env:
@@ -20,13 +21,17 @@ matrix:
     # don't test in browsers more than once
     - node_js: "0.12"
       env: NPM_COMMAND=test-in-browsers
-    - node_js: "4.2.3"
+    - node_js: "iojs-3"
+      env: NPM_COMMAND=test-in-browsers
+    - node_js: "4"
       env: NPM_COMMAND=test-in-browsers
     # don't collect code coverage more than once
     - node_js: "0.12"
       env: NPM_COMMAND=test-with-coverage
-    - node_js: "4.2.3"
+    - node_js: "iojs-3"
       env: NPM_COMMAND=test-with-coverage
-    # already tested with coverage
-    - node_js: "5.3"
+    - node_js: "4"
+      env: NPM_COMMAND=test-with-coverage
+    # already tested with coverage. no need to test again without
+    - node_js: "5"
       env: NPM_COMMAND=test

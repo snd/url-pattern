@@ -1,6 +1,6 @@
 {
   "name": "url-pattern",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "easier than regex string matching patterns for urls and other strings. turn strings into data or data into strings.",
   "keywords": [
     "url",

@@ -18,20 +18,20 @@ env:
     - NPM_COMMAND=test-in-browsers
 matrix:
   exclude:
-    # don't test in browsers more than once
+    # don't test in browsers more than once (already done with node 5)
     - node_js: "0.12"
       env: NPM_COMMAND=test-in-browsers
     - node_js: "iojs-3"
       env: NPM_COMMAND=test-in-browsers
     - node_js: "4"
       env: NPM_COMMAND=test-in-browsers
-    # don't collect code coverage more than once
+    # don't collect code coverage more than once (already done with node 5)
     - node_js: "0.12"
       env: NPM_COMMAND=test-with-coverage
     - node_js: "iojs-3"
       env: NPM_COMMAND=test-with-coverage
     - node_js: "4"
       env: NPM_COMMAND=test-with-coverage
-    # already tested with coverage. no need to test again without
+    # already tested with coverage (with node 5). no need to test again without
     - node_js: "5"
       env: NPM_COMMAND=test

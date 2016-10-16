@@ -9,12 +9,19 @@ export interface UrlPatternOptions {
     optionalSegmentEndChar?: string;
     wildcardChar: string;
 }
-    
-export default class UrlPattern {
 
-    constructor(pattern: string, options?: UrlPatternOptions);
-    constructor(pattern: RegExp, groupNames?: string[]);
+export interface UrlPattern {
 
     match(url: string): any;  
     stringify(values?: any): string;
 }
+    
+export interface UrlPatternConstructor {
+ 
+    (pattern: string, options?: UrlPatternOptions): UrlPattern;
+    (pattern: RegExp, groupNames?: string[]): UrlPattern;
+}
+
+const UrlPattern: UrlPatternConstructor;
+
+export = UrlPattern;

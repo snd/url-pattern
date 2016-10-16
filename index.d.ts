@@ -1,5 +1,5 @@
 
-export interface UrlPatternOptions {
+interface UrlPatternOptions {
     
     escapeChar?: string;
     segmentNameStartChar?: string;
@@ -10,18 +10,15 @@ export interface UrlPatternOptions {
     wildcardChar: string;
 }
 
-export interface UrlPattern {
+declare class UrlPattern {
+
+    constructor(pattern: string, options?: UrlPatternOptions);
+    constructor(pattern: RegExp, groupNames?: string[]);
 
     match(url: string): any;  
     stringify(values?: any): string;
 }
-    
-export interface UrlPatternConstructor {
- 
-    (pattern: string, options?: UrlPatternOptions): UrlPattern;
-    (pattern: RegExp, groupNames?: string[]): UrlPattern;
-}
 
-const UrlPattern: UrlPatternConstructor;
+declare module UrlPattern { }
 
 export = UrlPattern;

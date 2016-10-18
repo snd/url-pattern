@@ -1,6 +1,4 @@
-
 interface UrlPatternOptions {
-    
     escapeChar?: string;
     segmentNameStartChar?: string;
     segmentValueCharset?: string;
@@ -11,11 +9,10 @@ interface UrlPatternOptions {
 }
 
 declare class UrlPattern {
-
     constructor(pattern: string, options?: UrlPatternOptions);
     constructor(pattern: RegExp, groupNames?: string[]);
 
-    match(url: string): any;  
+    match(url: string): any;
     stringify(values?: any): string;
 }
 

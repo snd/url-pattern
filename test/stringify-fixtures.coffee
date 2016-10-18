@@ -10,6 +10,12 @@ test 'stringify', (t) ->
     userId: '10'
     taskId: '52'
 
+  pattern = new UrlPattern '/user/:userId/task/:taskId'
+  t.equal '/user/10/task/52', pattern.stringify
+    userId: '10'
+    taskId: '52'
+    ignored: 'ignored'
+
   pattern = new UrlPattern '.user.:userId.task.:taskId'
   t.equal '.user.10.task.52', pattern.stringify
     userId: '10'

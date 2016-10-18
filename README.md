@@ -49,6 +49,7 @@ pattern.stringify({id: 20}) // '/api/users/20'
 - npm package: `npm install url-pattern`
 - bower package: `bower install url-pattern`
 - pattern parser implemented using simple, combosable, testable [parser combinators](https://en.wikipedia.org/wiki/Parser_combinator)
+- [typescript typings](index.d.ts)
 
 [check out **passage** if you are looking for simple composable routing that builds on top of url-pattern](https://github.com/snd/passage)
 

@@ -43,7 +43,7 @@ pattern.stringify({id: 20}) // '/api/users/20'
   - use [lib/url-pattern.js](lib/url-pattern.js) in the browser
   - sets the global variable `UrlPattern` when neither CommonJS nor [AMD](http://requirejs.org/docs/whyamd.html) are available.
 - very fast matching as each pattern is compiled into a regex exactly once
-- zero dependencies [![Dependencies](https://david-dm.org/snd/url-pattern.svg)](https://david-dm.org/snd/url-pattern)
+- zero dependencies
 - [customizable](#customize-the-pattern-syntax)
 - [frequently asked questions](#frequently-asked-questions)
 - npm package: `npm install url-pattern`

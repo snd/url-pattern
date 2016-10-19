@@ -96,7 +96,7 @@ null
 null
 ```
 
-### make pattern from string
+## make pattern from string
 
 ```javascript
 > var pattern = new UrlPattern('/api/users/:id');
@@ -106,7 +106,7 @@ a `pattern` is immutable after construction.
 none of its methods changes its state.  
 that makes it easier to reason about.
 
-### match pattern against string
+## match pattern against string
 
 match returns the extracted segments:
 
@@ -124,7 +124,7 @@ null
 
 patterns are compiled into regexes which makes `.match()` superfast.
 
-### named segments
+## named segments
 
 `:id` (in the example above) is a named segment:
 
@@ -146,7 +146,7 @@ then the multiple results are stored in an array on the returned object:
 {ids: ['10', '5']}
 ```
 
-### optional segments, wildcards and escaping
+## optional segments, wildcards and escaping
 
 to make part of a pattern optional just wrap it in `(` and `)`:
 
@@ -185,7 +185,7 @@ otherwise `_` contains an array of matching strings.
 
 [look at the tests for additional examples of `.match`](test/match-fixtures.coffee)
 
-### make pattern from regex
+## make pattern from regex
 
 ```javascript
 > var pattern = new UrlPattern(/^\/api\/(.*)$/);
@@ -221,7 +221,7 @@ returns objects on match with each key mapped to a captured value:
 null
 ```
 
-### stringify patterns
+## stringify patterns
 
 ```javascript
 > var pattern = new UrlPattern('/api/users/:id');
@@ -254,7 +254,7 @@ makes all values in that optional segment required.*
 
 [look at the tests for additional examples of `.stringify`](test/stringify-fixtures.coffee)
 
-### customize the pattern syntax
+## customize the pattern syntax
 
 finally we can completely change pattern-parsing and regex-compilation to suit our needs:
 
@@ -322,9 +322,9 @@ then match:
 }
 ```
 
-### frequently asked questions
+## frequently asked questions
 
-#### how do i match the query part of an URL ?
+### how do i match the query part of an URL ?
 
 the query part of an URL has very different semantics than the rest.
 url-pattern is not well suited for parsing the query part.
@@ -339,13 +339,13 @@ i recommend splitting the URL at `?`, using url-pattern
 to parse the first part (scheme, host, port, path)
 and using https://github.com/hapijs/qs to parse the last part (query).
 
-#### how do i match an IP ?
+### how do i match an IP ?
 
 you can't exactly match IPs with url-pattern so you have to
 fall back to regexes and pass in a regex object.
 
 [here's how you do it](https://github.com/snd/url-pattern/blob/c8e0a943bb62e6feeca2d2595da4e22782e617ed/test/match-fixtures.coffee#L237)
 
-### [contributing](contributing.md)
+## [contributing](contributing.md)
 
-### [license: MIT](LICENSE)
+## [license: MIT](LICENSE)

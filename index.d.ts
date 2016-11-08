@@ -7,7 +7,7 @@ interface UrlPatternOptions {
     segmentNameCharset?: string;
     optionalSegmentStartChar?: string;
     optionalSegmentEndChar?: string;
-    wildcardChar: string;
+    wildcardChar?: string;
 }
 
 declare class UrlPattern {

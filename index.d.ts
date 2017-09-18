@@ -9,6 +9,8 @@ interface UrlPatternOptions {
 }
 
 declare class UrlPattern {
+    names: string[];
+
     constructor(pattern: string, options?: UrlPatternOptions);
     constructor(pattern: RegExp, groupNames?: string[]);
 

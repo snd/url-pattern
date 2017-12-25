@@ -58,6 +58,36 @@ test 'named', (t) ->
   t.equal U.named('abc'), undefined
   t.end()
 
+
+test 'namedWildcard', (t) ->
+  t.deepEqual U.namedWildcard('*:a'),
+    value:
+      tag: 'namedWildcard'
+      value: 'a'
+    rest: ''
+  t.deepEqual U.namedWildcard('*:ab96c'),
+    value:
+      tag: 'namedWildcard'
+      value: 'ab96c'
+    rest: ''
+  t.deepEqual U.namedWildcard('*:ab96c.'),
+    value:
+      tag: 'namedWildcard'
+      value: 'ab96c'
+    rest: '.'
+  t.deepEqual U.namedWildcard('*:96c-:ab'),
+    value:
+      tag: 'namedWildcard'
+      value: '96c'
+    rest: '-:ab'
+  t.equal U.namedWildcard(':'), undefined
+  t.equal U.namedWildcard('*:'), undefined
+  t.equal U.namedWildcard('*'), undefined
+  t.equal U.namedWildcard(''), undefined
+  t.equal U.namedWildcard('a'), undefined
+  t.equal U.namedWildcard('abc'), undefined
+  t.end()
+
 test 'static', (t) ->
     t.deepEqual U.static('a'),
       value:

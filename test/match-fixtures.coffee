@@ -44,6 +44,11 @@ test 'match', (t) ->
     _: '/school/10',
     userId: '10'
 
+  pattern = new UrlPattern '*:root/user/:userId'
+  t.deepEqual pattern.match('/school/10/user/10'),
+    root: '/school/10',
+    userId: '10'
+
   pattern = new UrlPattern '*-user-:userId'
   t.deepEqual pattern.match('-school-10-user-10'),
     _: '-school-10'
@@ -52,6 +57,10 @@ test 'match', (t) ->
   pattern = new UrlPattern '/admin*'
   t.deepEqual pattern.match('/admin/school/10/user/10'),
     _: '/school/10/user/10'
+
+  pattern = new UrlPattern '/admin*:tail'
+  t.deepEqual pattern.match('/admin/school/10/user/10'),
+    tail: '/school/10/user/10'
 
   pattern = new UrlPattern '#admin*'
   t.deepEqual pattern.match('#admin#school#10#user#10'),

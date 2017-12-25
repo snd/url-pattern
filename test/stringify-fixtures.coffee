@@ -26,6 +26,11 @@ test 'stringify', (t) ->
     _: '/school/10',
     userId: '10'
 
+  pattern = new UrlPattern '*:root/user/:userId'
+  t.equal '/school/10/user/10', pattern.stringify
+    root: '/school/10',
+    userId: '10'
+
   pattern = new UrlPattern '*-user-:userId'
   t.equal '-school-10-user-10', pattern.stringify
     _: '-school-10'
@@ -34,6 +39,10 @@ test 'stringify', (t) ->
   pattern = new UrlPattern '/admin*'
   t.equal '/admin/school/10/user/10', pattern.stringify
     _: '/school/10/user/10'
+
+  pattern = new UrlPattern '/admin*:tail'
+  t.equal '/admin/school/10/user/10', pattern.stringify
+    tail: '/school/10/user/10'
 
   pattern = new UrlPattern '/admin/*/user/*/tail'
   t.equal '/admin/school/10/user/10/12/tail', pattern.stringify

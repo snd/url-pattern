@@ -204,6 +204,15 @@
 
     U.name = P.regex new RegExp "^[#{options.segmentNameCharset}]+"
 
+    U.namedWildcard = P.tag(
+      'namedWildcard',
+      P.pick(2,
+        P.string(options.wildcardChar)
+        P.string(options.segmentNameStartChar)
+        P.lazy(-> U.name)
+      )
+    )
+
     U.named = P.tag(
       'named',
       P.pick(1,
@@ -235,6 +244,7 @@
 
     U.token = P.lazy ->
       P.firstChoice(
+        U.namedWildcard
         U.wildcard
         U.optional
         U.named
@@ -266,7 +276,7 @@
         baseAstNodeToRegexString(node, segmentValueCharset)
 
     switch astNode.tag
-      when 'wildcard' then '(.*?)'
+      when 'wildcard', 'namedWildcard' then '(.*?)'
       when 'named' then "([#{segmentValueCharset}]+)"
       when 'static' then escapeForRegex(astNode.value)
       when 'optional'
@@ -281,7 +291,7 @@
 
     switch astNode.tag
       when 'wildcard' then ['_']
-      when 'named' then [astNode.value]
+      when 'namedWildcard', 'named' then [astNode.value]
       when 'static' then []
       when 'optional' then astNodeToNames(astNode.value)
 
@@ -330,7 +340,7 @@
 
     switch astNode.tag
       when 'wildcard' then getParam params, '_', nextIndexes, true
-      when 'named' then getParam params, astNode.value, nextIndexes, true
+      when 'named', 'namedWildcard' then getParam params, astNode.value, nextIndexes, true
       when 'static' then astNode.value
       when 'optional'
         if astNodeContainsSegmentsForProvidedParams astNode.value, params, nextIndexes

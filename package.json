@@ -77,7 +77,7 @@
     "coffeeify": "2.0.1",
     "coffeetape": "1.0.1",
     "istanbul": "0.4.1",
-    "tape": "4.2.2",
+    "tape": "4.8.0",
     "zuul": "3.8.0"
   },
   "main": "lib/url-pattern",

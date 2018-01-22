@@ -32,7 +32,7 @@ pattern.stringify({id: 20}) // '/api/users/20'
 
 - continuously tested in Node.js (0.12, 4.2.3 and 5.3) and all relevant browsers:
   [![Sauce Test Status](https://saucelabs.com/browser-matrix/urlpattern.svg)](https://saucelabs.com/u/urlpattern)
-- [tiny single file with just under 500 lines of simple, readable, maintainable code](src/url-pattern.coffee)
+- [tiny single file with just under 500 lines of simple, readable, maintainable code](src/url-pattern.js)
 - [huge test suite](test)
   passing [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
   with [![codecov.io](http://codecov.io/github/snd/url-pattern/coverage.svg?branch=master)](http://codecov.io/github/snd/url-pattern?branch=master)
@@ -183,7 +183,7 @@ wildcard matches are collected in the `_` property:
 if there is only one wildcard then `_` contains the matching string.
 otherwise `_` contains an array of matching strings.
 
-[look at the tests for additional examples of `.match`](test/match-fixtures.coffee)
+[look at the tests for additional examples of `.match`](test/match-fixtures.js)
 
 ## make pattern from regex
 
@@ -252,7 +252,7 @@ params and not all of them are provided.
 *one provided value for an optional segment
 makes all values in that optional segment required.*
 
-[look at the tests for additional examples of `.stringify`](test/stringify-fixtures.coffee)
+[look at the tests for additional examples of `.stringify`](test/stringify-fixtures.js)
 
 ## customize the pattern syntax
 
@@ -344,7 +344,7 @@ and using https://github.com/hapijs/qs to parse the last part (query).
 you can't exactly match IPs with url-pattern so you have to
 fall back to regexes and pass in a regex object.
 
-[here's how you do it](https://github.com/snd/url-pattern/blob/c8e0a943bb62e6feeca2d2595da4e22782e617ed/test/match-fixtures.coffee#L237)
+[here's how you do it](test/match-fixtures.js#L237)
 
 ## [contributing](contributing.md)
 

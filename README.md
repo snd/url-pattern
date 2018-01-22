@@ -344,7 +344,7 @@ and using https://github.com/hapijs/qs to parse the last part (query).
 you can't exactly match IPs with url-pattern so you have to
 fall back to regexes and pass in a regex object.
 
-[here's how you do it](test/match-fixtures.js#L237)
+[here's how you do it](test/match-fixtures.js#L262)
 
 ## [contributing](contributing.md)
 

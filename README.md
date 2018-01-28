@@ -183,6 +183,15 @@ wildcard matches are collected in the `_` property:
 if there is only one wildcard then `_` contains the matching string.
 otherwise `_` contains an array of matching strings.
 
+`*:` in a pattern is a named wildcard. the match will be
+captured to the corresponding property instead of `_`:
+
+```javascript
+> var pattern = new UrlPattern('/search/*:term');
+> pattern.match('/search/fruit');
+{term: 'fruit'}
+```
+
 [look at the tests for additional examples of `.match`](test/match-fixtures.coffee)
 
 ## make pattern from regex

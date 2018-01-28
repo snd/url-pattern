@@ -40,6 +40,12 @@ test 'astNodeToRegexString and astNodeToNames', (t) ->
     t.deepEqual astNodeToNames(parsed.value), ['_']
     t.end()
 
+  t.test 'just named wildcard', (t) ->
+    parsed = parse '*:variable'
+    t.equal astNodeToRegexString(parsed.value), '^(.*?)$'
+    t.deepEqual astNodeToNames(parsed.value), ['variable']
+    t.end()
+
   t.test 'just optional static', (t) ->
     parsed = parse '(foo)'
     t.equal astNodeToRegexString(parsed.value), '^(?:foo)?$'
@@ -56,6 +62,12 @@ test 'astNodeToRegexString and astNodeToNames', (t) ->
     parsed = parse '(*)'
     t.equal astNodeToRegexString(parsed.value), '^(?:(.*?))?$'
     t.deepEqual astNodeToNames(parsed.value), ['_']
+    t.end()
+
+  t.test 'just optional named wildcard', (t) ->
+    parsed = parse '(*:foo)'
+    t.equal astNodeToRegexString(parsed.value), '^(?:(.*?))?$'
+    t.deepEqual astNodeToNames(parsed.value), ['foo']
     t.end()
 
 test 'getParam', (t) ->

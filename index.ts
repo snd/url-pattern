@@ -530,26 +530,4 @@ export class UrlPattern {
     }
     return stringify(this.ast, params, {});
   }
-
-  // make helpers available directly on UrlPattern
-  static escapeStringForRegex = escapeStringForRegex;
-  static concatMap = concatMap;
-  static stringConcatMap = stringConcatMap;
-  static regexGroupCount = regexGroupCount;
-  static keysAndValuesToObject = keysAndValuesToObject;
-
-  // make AST helpers available directly on UrlPattern
-  static astNodeToRegexString = astNodeToRegexString;
-  static astNodeToNames = astNodeToNames;
-  static getParam = getParam;
-  static astNodeContainsSegmentsForProvidedParams = astNodeContainsSegmentsForProvidedParams;
-  static stringify = stringify;
-
-  // make parsers available directly on UrlPattern
-  static P = P;
-  static newUrlPatternParser = newUrlPatternParser;
-  static defaultOptions = defaultOptions;
 }
-
-// export only the UrlPattern class
-export = UrlPattern;

@@ -1,6 +1,6 @@
 // OPTIONS
 
-interface UrlPatternOptions {
+interface IUrlPatternOptions {
   escapeChar?: string;
   segmentNameStartChar?: string;
   segmentValueCharset?: string;
@@ -10,61 +10,63 @@ interface UrlPatternOptions {
   wildcardChar?: string;
 }
 
-const defaultOptions: UrlPatternOptions = {
-  escapeChar: '\\',
-  segmentNameStartChar: ':',
-  segmentValueCharset: 'a-zA-Z0-9-_~ %',
-  segmentNameCharset: 'a-zA-Z0-9',
-  optionalSegmentStartChar: '(',
-  optionalSegmentEndChar: ')',
-  wildcardChar: '*'
+const defaultOptions: IUrlPatternOptions = {
+  escapeChar: "\\",
+  optionalSegmentEndChar: ")",
+  optionalSegmentStartChar: "(",
+  segmentNameCharset: "a-zA-Z0-9",
+  segmentNameStartChar: ":",
+  segmentValueCharset: "a-zA-Z0-9-_~ %",
+  wildcardChar: "*",
 };
 
 // HELPERS
 
 // escapes a string for insertion into a regular expression
 // source: http://stackoverflow.com/a/3561711
-function escapeStringForRegex(string: string) : string {
-  return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
+function escapeStringForRegex(str: string): string {
+  return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
 }
 
-function concatMap<T>(array: Array<T>, f: (T) => Array<T>) : Array<T> {
-  let results: Array<T> = [];
-  array.forEach(function(value) {
+function concatMap<T>(array: T[], f: (x: T) => T[]): T[] {
+  let results: T[] = [];
+  array.forEach((value) => {
     results = results.concat(f(value));
   });
   return results;
 }
 
-function stringConcatMap<T>(array: Array<T>, f: (T) => string) : string {
-  let result = '';
-  array.forEach(function(value) {
+function stringConcatMap<T>(array: T[], f: (x: T) => string): string {
+  let result = "";
+  array.forEach((value) => {
     result += f(value);
   });
   return result;
-};
+}
 
-// returns the number of groups in the `regex`.
-// source: http://stackoverflow.com/a/16047223
-function regexGroupCount(regex: RegExp) : number {
+/*
+ * returns the number of groups in the `regex`.
+ * source: http://stackoverflow.com/a/16047223
+ */
+function regexGroupCount(regex: RegExp): number {
   return new RegExp(regex.toString() + "|").exec("").length - 1;
 }
 
 // zips an array of `keys` and an array of `values` into an object.
 // `keys` and `values` must have the same length.
 // if the same key appears multiple times the associated values are collected in an array.
-function keysAndValuesToObject(keys: Array<any>, values: Array<any>) : Object {
-  let result = {};
+function keysAndValuesToObject(keys: any[], values: any[]): object {
+  const result = {};
 
   if (keys.length !== values.length) {
     throw Error("keys.length must equal values.length");
   }
 
   let i = -1;
-  let { length } = keys;
+  const { length } = keys;
   while (++i < keys.length) {
-    let key = keys[i];
-    let value = values[i];
+    const key = keys[i];
+    const value = values[i];
 
     if (value == null) {
       continue;
@@ -82,16 +84,16 @@ function keysAndValuesToObject(keys: Array<any>, values: Array<any>) : Object {
     }
   }
   return result;
-};
+}
 
 // PARSER COMBINATORS
 
 // parse result
 class Result<Value> {
   /* parsed value */
-  value: Value;
+  public readonly value: Value;
   /* unparsed rest */
-  readonly rest: string;
+  public readonly rest: string;
   constructor(value: Value, rest: string) {
     this.value = value;
     this.rest = rest;
@@ -99,8 +101,8 @@ class Result<Value> {
 }
 
 class Tagged<Value> {
-  readonly tag: string;
-  readonly value: Value;
+  public readonly tag: string;
+  public readonly value: Value;
   constructor(tag: string, value: Value) {
     this.tag = tag;
     this.value = value;
@@ -108,44 +110,45 @@ class Tagged<Value> {
 }
 
 /**
- * a parser is a function that takes a string and returns a `Result` containing a parsed `Result.value` and the rest of the string `Result.rest`
+ * a parser is a function that takes a string and returns a `Result`
+ * containing a parsed `Result.value` and the rest of the string `Result.rest`
  */
-type Parser<T> = (string: string) => Result<T> | null;
+type Parser<T> = (str: string) => Result<T> | null;
 
 // parser combinators
 let P = {
-  Result: Result,
-  Tagged: Tagged,
+  Result,
+  Tagged,
   // transforms a `parser` into a parser that tags its `Result.value` with `tag`
-  tag<T>(tag: string, parser: Parser<T>) : Parser<Tagged<T>> {
-    return function(input: string): Result<Tagged<T>> | null {
-      let result = parser(input);
+  tag<T>(tag: string, parser: Parser<T>): Parser<Tagged<T>> {
+    return (input: string) => {
+      const result = parser(input);
       if (result == null) {
         return null;
       }
-      let tagged = new Tagged(tag, result.value);
+      const tagged = new Tagged(tag, result.value);
       return new Result(tagged, result.rest);
-    }
+    };
   },
   // parser that consumes everything matched by `regex`
-  regex(regex: RegExp) : Parser<string> {
-    return function(input: string): Result<string> | null {
-      let matches = regex.exec(input);
+  regex(regex: RegExp): Parser<string> {
+    return (input: string) => {
+      const matches = regex.exec(input);
       if (matches == null) {
         return null;
       }
-      let result = matches[0];
+      const result = matches[0];
       return new Result(result, input.slice(result.length));
-    }
+    };
   },
   // takes a sequence of parsers and returns a parser that runs
   // them in sequence and produces an array of their results
-  sequence(...parsers: Array<Parser<any>>) : Parser<Array<any>> {
-    return function(input: string): Result<Array<any>> | null {
+  sequence(...parsers: Array<Parser<any>>): Parser<any[]> {
+    return (input: string) => {
       let rest = input;
-      let values = [];
-      parsers.forEach(function(parser) {
-        let result = parser(rest);
+      const values: any[] = [];
+      parsers.forEach((parser: Parser<any>) => {
+        const result = parser(rest);
         if (result == null) {
           return null;
         }
@@ -153,12 +156,12 @@ let P = {
         rest = result.rest;
       });
       return new Result(values, rest);
-    }
+    };
   },
   // returns a parser that consumes `str` exactly
-  string(str: string) : Parser<string> {
-    let { length } = str;
-    return function(input: string) : Result<string> | null {
+  string(str: string): Parser<string> {
+    const { length } = str;
+    return (input: string) => {
       if (input.slice(0, length) === str) {
         return new Result(str, input.slice(length));
       }
@@ -166,49 +169,49 @@ let P = {
   },
   // takes a sequence of parser and only returns the result
   // returned by the `index`th parser
-  pick(index, ...parsers: Array<Parser<any>>) : Parser<any> {
-    let parser = P.sequence(...parsers);
-    return function(input: string) : Result<any> | null {
-      let result = parser(input);
+  pick(index: number, ...parsers: Array<Parser<any>>): Parser<any> {
+    const parser = P.sequence(...parsers);
+    return (input: string) => {
+      const result = parser(input);
       if (result == null) {
         return null;
       }
-      let values = result.value;
-      result.value = values[index];
-      return result;
-    }
+      return new Result(result.value[index], result.rest);
+    };
   },
   // for parsers that each depend on one another (cyclic dependencies)
   // postpone lookup to when they both exist.
-  lazy<T>(get_parser: () => Parser<T>): Parser<T> {
-    let cached_parser = null;
-    return function (input: string): Result<T> | null {
-      if (cached_parser == null) {
-        cached_parser = get_parser();
+  lazy<T>(getParser: () => Parser<T>): Parser<T> {
+    let cachedParser: Parser<T> | null = null;
+    return (input: string) => {
+      if (cachedParser == null) {
+        cachedParser = getParser();
       }
-      return cached_parser(input);
+      return cachedParser(input);
     };
   },
   /*
    * base function for parsers that parse multiples.
-   * @param endParser  once the `endParser` (if not null) consumes the `baseMany` parser returns.  the result of the `endParser` is ignored.
+   *
+   * @param endParser  once the `endParser` (if not null) consumes
+   * the `baseMany` parser returns. the result of the `endParser` is ignored.
    */
   baseMany<T>(
     parser: Parser<T>,
     endParser: Parser<any> | null,
     isAtLeastOneResultRequired: boolean,
-    input: string
-  ) : Result<Array<T>> | null {
+    input: string,
+  ): Result<T[]> | null {
     let rest = input;
-    let results: Array<T> = [];
+    const results: T[] = [];
     while (true) {
       if (endParser != null) {
-        let endResult = endParser(rest);
+        const endResult = endParser(rest);
         if (endResult != null) {
           break;
         }
       }
-      let parserResult = parser(rest);
+      const parserResult = parser(rest);
       if (parserResult == null) {
         break;
       }
@@ -222,67 +225,79 @@ let P = {
 
     return new Result(results, rest);
   },
-  many1<T>(parser: Parser<T>) : Parser<Array<T>> {
-    return function(input: string) : Result<Array<T>> {
-      const endParser = null;
+  many1<T>(parser: Parser<T>): Parser<T[]> {
+    return (input: string) => {
+      const endParser: null = null;
       const isAtLeastOneResultRequired = true;
       return P.baseMany(parser, endParser, isAtLeastOneResultRequired, input);
-    }
+    };
   },
-  concatMany1Till(parser: Parser<string>, endParser: Parser<any>) : Parser<string> {
-    return function(input: string) : Result<string> | null {
+  concatMany1Till(parser: Parser<string>, endParser: Parser<any>): Parser<string> {
+    return (input: string) => {
       const isAtLeastOneResultRequired = true;
-      let result = P.baseMany(parser, endParser, isAtLeastOneResultRequired, input);
+      const result = P.baseMany(parser, endParser, isAtLeastOneResultRequired, input);
       if (result == null) {
         return null;
       }
       return new Result(result.value.join(""), result.rest);
-    }
+    };
   },
   // takes a sequence of parsers. returns the result from the first
   // parser that consumes the input.
-  firstChoice(...parsers: Array<Parser<any>>) : Parser<any> {
-    return function(input: string) : Result<any> | null {
-      parsers.forEach(function(parser) {
-        let result = parser(input);
+  firstChoice(...parsers: Array<Parser<any>>): Parser<any> {
+    return (input: string) => {
+      parsers.forEach((parser) => {
+        const result = parser(input);
         if (result != null) {
           return result;
         }
       });
       return null;
-    }
-  }
-}
+    };
+  },
+};
 
 // URL PATTERN PARSER
 
-interface UrlPatternParser {
-  wildcard: Parser<Tagged<string>>,
-  optional: Parser<Tagged<any>>,
-  name: Parser<string>,
-  named: Parser<Tagged<any>>,
-  escapedChar: Parser<any>,
-  pattern: Parser<any>,
+interface IUrlPatternParser {
+  escapedChar: Parser<any>;
+  name: Parser<string>;
+  named: Parser<Tagged<any>>;
+  optional: Parser<Tagged<any>>;
+  pattern: Parser<any>;
+  static: Parser<Tagged<string>>;
+  token: Parser<any>;
+  wildcard: Parser<Tagged<string>>;
 }
 
-function newUrlPatternParser(options: UrlPatternOptions) : UrlPatternParser {
-  let U = {
-    wildcard: P.tag('wildcard', P.string(options.wildcardChar)),
-    optional: P.tag('optional', P.pick(1, P.string(options.optionalSegmentStartChar), P.lazy(() => U.pattern), P.string(options.optionalSegmentEndChar))),
-    name: P.regex(new RegExp(`^[${ options.segmentNameCharset }]+`)),
-    named: P.tag('named', P.pick(1, P.string(options.segmentNameStartChar), P.lazy(() => U.name))),
+function newUrlPatternParser(options: IUrlPatternOptions): IUrlPatternParser {
+  const U: IUrlPatternParser = {
     escapedChar: P.pick(1, P.string(options.escapeChar), P.regex(/^./)),
-    static: P.tag('static', P.concatMany1Till(P.firstChoice(P.lazy(() => U.escapedChar), P.regex(/^./)), P.firstChoice(P.string(options.segmentNameStartChar), P.string(options.optionalSegmentStartChar), P.string(options.optionalSegmentEndChar), P.lazy(() => U.wildcard)))),
-    token: P.lazy(() => P.firstChoice(U.wildcard, U.optional, U.named, U.static)),
+    name: P.regex(new RegExp(`^[${ options.segmentNameCharset }]+`)),
+    named: P.tag("named", P.pick(1, P.string(options.segmentNameStartChar), P.lazy(() => U.name))),
+    optional: P.tag("optional", P.pick(1,
+      P.string(options.optionalSegmentStartChar),
+      P.lazy(() => U.pattern),
+      P.string(options.optionalSegmentEndChar))),
     pattern: P.many1(P.lazy(() => U.token)),
-  }
+    static: P.tag("static", P.concatMany1Till(P.firstChoice(
+      P.lazy(() => U.escapedChar),
+      P.regex(/^./)),
+      P.firstChoice(
+        P.string(options.segmentNameStartChar),
+        P.string(options.optionalSegmentStartChar),
+        P.string(options.optionalSegmentEndChar),
+        P.lazy(() => U.wildcard)))),
+    token: P.lazy(() => P.firstChoice(U.wildcard, U.optional, U.named, U.static)),
+    wildcard: P.tag("wildcard", P.string(options.wildcardChar)),
+  };
 
   return U;
-};
+}
 
 // functions that further process ASTs returned as `.value` in parser results
 
-function baseAstNodeToRegexString(astNode, segmentValueCharset) {
+function baseAstNodeToRegexString(astNode: Tagged<string>, segmentValueCharset: string): string {
   if (Array.isArray(astNode)) {
     return stringConcatMap(astNode, node => baseAstNodeToRegexString(node, segmentValueCharset));
   }

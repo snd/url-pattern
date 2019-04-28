@@ -1,6 +1,6 @@
 // OPTIONS
 
-interface IUrlPatternOptions {
+interface IUrlPatternOptionsInput {
   escapeChar?: string;
   segmentNameStartChar?: string;
   segmentValueCharset?: string;
@@ -8,6 +8,16 @@ interface IUrlPatternOptions {
   optionalSegmentStartChar?: string;
   optionalSegmentEndChar?: string;
   wildcardChar?: string;
+}
+
+interface IUrlPatternOptions {
+  escapeChar: string;
+  segmentNameStartChar: string;
+  segmentValueCharset: string;
+  segmentNameCharset: string;
+  optionalSegmentStartChar: string;
+  optionalSegmentEndChar: string;
+  wildcardChar: string;
 }
 
 export const defaultOptions: IUrlPatternOptions = {
@@ -63,7 +73,6 @@ export function keysAndValuesToObject(keys: any[], values: any[]): object {
   }
 
   let i = -1;
-  const { length } = keys;
   while (++i < keys.length) {
     const key = keys[i];
     const value = values[i];
@@ -116,7 +125,7 @@ class Tagged<Value> {
 type Parser<T> = (str: string) => Result<T> | undefined;
 
 // parser combinators
-let P = {
+const P = {
   Result,
   Tagged,
   // transforms a `parser` into a parser that tags its `Result.value` with `tag`
@@ -418,13 +427,13 @@ function stringify(astNode: Tagged<any>, params, nextIndexes): string {
 export class UrlPattern {
   public readonly isRegex: boolean;
   public readonly regex: RegExp;
-  public readonly ast: Tagged<any>;
+  public readonly ast?: Tagged<any>;
   public readonly names: string[];
 
   constructor(pattern: string, options?: IUrlPatternOptions);
   constructor(pattern: RegExp, groupNames?: string[]);
 
-  constructor(pattern: string | RegExp | UrlPattern, optionsOrGroupNames?: IUrlPatternOptions | string[]) {
+  constructor(pattern: string | RegExp | UrlPattern, optionsOrGroupNames?: IUrlPatternOptionsInput | string[]) {
     // self awareness
     if (pattern instanceof UrlPattern) {
       this.isRegex = pattern.isRegex;

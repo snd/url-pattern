@@ -4,7 +4,9 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 const test = require('tape');
-const UrlPattern = require('../lib/url-pattern');
+const {
+  UrlPattern
+} = require('../index.js');
 
 test('invalid argument', function(t) {
   let e;
@@ -14,31 +16,31 @@ test('invalid argument', function(t) {
     new UrlPattern();
   } catch (error) {
     e = error;
-    t.equal(e.message, "argument must be a regex or a string");
+    t.equal(e.message, "first argument must be a RegExp, a string or an instance of UrlPattern");
   }
   try {
     new UrlPattern(5);
   } catch (error1) {
     e = error1;
-    t.equal(e.message, "argument must be a regex or a string");
+    t.equal(e.message, "first argument must be a RegExp, a string or an instance of UrlPattern");
   }
   try {
     new UrlPattern('');
   } catch (error2) {
     e = error2;
-    t.equal(e.message, "argument must not be the empty string");
+    t.equal(e.message, "first argument must not be the empty string");
   }
   try {
     new UrlPattern(' ');
   } catch (error3) {
     e = error3;
-    t.equal(e.message, "argument must not contain whitespace");
+    t.equal(e.message, "first argument must not contain whitespace");
   }
   try {
     new UrlPattern(' fo o');
   } catch (error4) {
     e = error4;
-    t.equal(e.message, "argument must not contain whitespace");
+    t.equal(e.message, "first argument must not contain whitespace");
   }
   return t.end();
 });
@@ -116,7 +118,7 @@ test('regex names', function(t) {
     new UrlPattern(/x/, 5);
   } catch (error) {
     e = error;
-    t.equal(e.message, 'if first argument is a regex the second argument may be an array of group names but you provided something else');
+    t.equal(e.message, 'if first argument is a RegExp the second argument may be an Array<String> of group names but you provided something else');
   }
   try {
     new UrlPattern(/(((foo)bar(boo))far)/, []);

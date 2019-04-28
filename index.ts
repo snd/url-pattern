@@ -472,7 +472,7 @@ export class UrlPattern {
     }
 
     const options: IUrlPatternOptions = {
-      escapeChar: (typeof optionsOrGroupNames != null ?
+      escapeChar: (optionsOrGroupNames != null ?
         optionsOrGroupNames.escapeChar : undefined) || defaultOptions.escapeChar,
       optionalSegmentEndChar: (optionsOrGroupNames != null ?
         optionsOrGroupNames.optionalSegmentEndChar : undefined) || defaultOptions.optionalSegmentEndChar,

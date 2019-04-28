@@ -11,7 +11,7 @@ const {
 test('simple', function(t) {
   const pattern = new UrlPattern('/api/users/:id');
   t.deepEqual(pattern.match('/api/users/10'), {id: '10'});
-  t.equal(pattern.match('/api/products/5'), null);
+  t.equal(pattern.match('/api/products/5'), undefined);
   return t.end();
 });
 
@@ -19,7 +19,7 @@ test('api versioning', function(t) {
   const pattern = new UrlPattern('/v:major(.:minor)/*');
   t.deepEqual(pattern.match('/v1.2/'), {major: '1', minor: '2', _: ''});
   t.deepEqual(pattern.match('/v2/users'), {major: '2', _: 'users'});
-  t.equal(pattern.match('/v/'), null);
+  t.equal(pattern.match('/v/'), undefined);
   return t.end();
 });
 
@@ -51,7 +51,7 @@ test('domain', function(t) {
     _: 'mail'
   }
   );
-  t.equal(pattern.match('google'), null);
+  t.equal(pattern.match('google'), undefined);
 
   t.deepEqual(pattern.match('www.google.com'), {
     subdomain: 'www',
@@ -59,7 +59,7 @@ test('domain', function(t) {
     tld: 'com'
   }
   );
-  t.equal(pattern.match('httpp://mail.google.com/mail'), null);
+  t.equal(pattern.match('httpp://mail.google.com/mail'), undefined);
   t.deepEqual(pattern.match('google.de/search'), {
     domain: 'google',
     tld: 'de',
@@ -79,7 +79,7 @@ test('named segment occurs more than once', function(t) {
 test('regex', function(t) {
   const pattern = new UrlPattern(/^\/api\/(.*)$/);
   t.deepEqual(pattern.match('/api/users'), ['users']);
-  t.equal(pattern.match('/apiii/users'), null);
+  t.equal(pattern.match('/apiii/users'), undefined);
   return t.end();
 });
 
@@ -87,13 +87,13 @@ test('regex group names', function(t) {
   const pattern = new UrlPattern(/^\/api\/([^\/]+)(?:\/(\d+))?$/, ['resource', 'id']);
   t.deepEqual(pattern.match('/api/users'),
     {resource: 'users'});
-  t.equal(pattern.match('/api/users/'), null);
+  t.equal(pattern.match('/api/users/'), undefined);
   t.deepEqual(pattern.match('/api/users/5'), {
     resource: 'users',
     id: '5'
   }
   );
-  t.equal(pattern.match('/api/users/foo'), null);
+  t.equal(pattern.match('/api/users/foo'), undefined);
   return t.end();
 });
 
@@ -136,8 +136,8 @@ test('customization', function(t) {
     _: 'mail'
   }
   );
-  t.equal(pattern.match('http://mail.this-should-not-match.com/mail'), null);
-  t.equal(pattern.match('google'), null);
+  t.equal(pattern.match('http://mail.this-should-not-match.com/mail'), undefined);
+  t.equal(pattern.match('google'), undefined);
   t.deepEqual(pattern.match('www.google.com'), {
     sub_domain: 'www',
     domain: 'google',
@@ -150,7 +150,7 @@ test('customization', function(t) {
     'toplevel-domain': 'com'
   }
   );
-  t.equal(pattern.match('httpp://mail.google.com/mail'), null);
+  t.equal(pattern.match('httpp://mail.google.com/mail'), undefined);
   t.deepEqual(pattern.match('google.de/search'), {
     domain: 'google',
     'toplevel-domain': 'de',

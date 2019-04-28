@@ -471,14 +471,21 @@ export class UrlPattern {
       throw new Error("if first argument is a string second argument must be an options object or undefined");
     }
 
-    let options: UrlPatternOptions = {
-      escapeChar: (typeof optionsOrGroupNames != null ? optionsOrGroupNames.escapeChar : undefined) || defaultOptions.escapeChar,
-      segmentNameStartChar: (optionsOrGroupNames != null ? optionsOrGroupNames.segmentNameStartChar : undefined) || defaultOptions.segmentNameStartChar,
-      segmentNameCharset: (optionsOrGroupNames != null ? optionsOrGroupNames.segmentNameCharset : undefined) || defaultOptions.segmentNameCharset,
-      segmentValueCharset: (optionsOrGroupNames != null ? optionsOrGroupNames.segmentValueCharset : undefined) || defaultOptions.segmentValueCharset,
-      optionalSegmentStartChar: (optionsOrGroupNames != null ? optionsOrGroupNames.optionalSegmentStartChar : undefined) || defaultOptions.optionalSegmentStartChar,
-      optionalSegmentEndChar: (optionsOrGroupNames != null ? optionsOrGroupNames.optionalSegmentEndChar : undefined) || defaultOptions.optionalSegmentEndChar,
-      wildcardChar: (optionsOrGroupNames != null ? optionsOrGroupNames.wildcardChar : undefined) || defaultOptions.wildcardChar
+    const options: IUrlPatternOptions = {
+      escapeChar: (typeof optionsOrGroupNames != null ?
+        optionsOrGroupNames.escapeChar : undefined) || defaultOptions.escapeChar,
+      optionalSegmentEndChar: (optionsOrGroupNames != null ?
+        optionsOrGroupNames.optionalSegmentEndChar : undefined) || defaultOptions.optionalSegmentEndChar,
+      optionalSegmentStartChar: (optionsOrGroupNames != null ?
+        optionsOrGroupNames.optionalSegmentStartChar : undefined) || defaultOptions.optionalSegmentStartChar,
+      segmentNameCharset: (optionsOrGroupNames != null ?
+        optionsOrGroupNames.segmentNameCharset : undefined) || defaultOptions.segmentNameCharset,
+      segmentNameStartChar: (optionsOrGroupNames != null ?
+        optionsOrGroupNames.segmentNameStartChar : undefined) || defaultOptions.segmentNameStartChar,
+      segmentValueCharset: (optionsOrGroupNames != null ?
+        optionsOrGroupNames.segmentValueCharset : undefined) || defaultOptions.segmentValueCharset,
+      wildcardChar: (optionsOrGroupNames != null ?
+        optionsOrGroupNames.wildcardChar : undefined) || defaultOptions.wildcardChar,
     };
 
     const parser: IUrlPatternParser = newUrlPatternParser(options);

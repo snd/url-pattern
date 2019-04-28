@@ -4,7 +4,9 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 const test = require('tape');
-const UrlPattern = require('../lib/url-pattern');
+const {
+  UrlPattern
+} = require('../index.js');
 
 test('match', function(t) {
   let pattern = new UrlPattern('/foo');
@@ -14,16 +16,16 @@ test('match', function(t) {
   t.deepEqual(pattern.match('.foo'), {});
 
   pattern = new UrlPattern('/foo');
-  t.equals(pattern.match('/foobar'), null);
+  t.equals(pattern.match('/foobar'), undefined);
 
   pattern = new UrlPattern('.foo');
-  t.equals(pattern.match('.foobar'), null);
+  t.equals(pattern.match('.foobar'), undefined);
 
   pattern = new UrlPattern('/foo');
-  t.equals(pattern.match('/bar/foo'), null);
+  t.equals(pattern.match('/bar/foo'), undefined);
 
   pattern = new UrlPattern('.foo');
-  t.equals(pattern.match('.bar.foo'), null);
+  t.equals(pattern.match('.bar.foo'), undefined);
 
   pattern = new UrlPattern(/foo/);
   t.deepEqual(pattern.match('foo'), []);
@@ -146,7 +148,7 @@ test('match', function(t) {
   });
 
   pattern = new UrlPattern('/:foo_bar');
-  t.equal(pattern.match('/_bar'), null);
+  t.equal(pattern.match('/_bar'), undefined);
   t.deepEqual(pattern.match('/a_bar'),
     {foo: 'a'});
   t.deepEqual(pattern.match('/a__bar'),
@@ -158,9 +160,9 @@ test('match', function(t) {
 
   pattern = new UrlPattern('((((a)b)c)d)');
   t.deepEqual(pattern.match(''), {});
-  t.equal(pattern.match('a'), null);
-  t.equal(pattern.match('ab'), null);
-  t.equal(pattern.match('abc'), null);
+  t.equal(pattern.match('a'), undefined);
+  t.equal(pattern.match('ab'), undefined);
+  t.equal(pattern.match('abc'), undefined);
   t.deepEqual(pattern.match('abcd'), {});
   t.deepEqual(pattern.match('bcd'), {});
   t.deepEqual(pattern.match('cd'), {});
@@ -183,13 +185,13 @@ test('match', function(t) {
     {range: '10%20'});
 
   pattern = new UrlPattern('/vvv:version/*');
-  t.equal(null, pattern.match('/vvv/resource'));
+  t.equal(undefined, pattern.match('/vvv/resource'));
   t.deepEqual(pattern.match('/vvv1/resource'), {
     _: 'resource',
     version: '1'
   }
   );
-  t.equal(null, pattern.match('/vvv1.1/resource'));
+  t.equal(undefined, pattern.match('/vvv1.1/resource'));
 
   pattern = new UrlPattern('/api/users/:id',
     {segmentValueCharset: 'a-zA-Z0-9-_~ %.@'});
@@ -262,31 +264,31 @@ test('match', function(t) {
 
   let regex = /\/ip\/(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
   pattern = new UrlPattern(regex);
-  t.equal(null, pattern.match('10.10.10.10'));
-  t.equal(null, pattern.match('ip/10.10.10.10'));
-  t.equal(null, pattern.match('/ip/10.10.10.'));
-  t.equal(null, pattern.match('/ip/10.'));
-  t.equal(null, pattern.match('/ip/'));
+  t.equal(undefined, pattern.match('10.10.10.10'));
+  t.equal(undefined, pattern.match('ip/10.10.10.10'));
+  t.equal(undefined, pattern.match('/ip/10.10.10.'));
+  t.equal(undefined, pattern.match('/ip/10.'));
+  t.equal(undefined, pattern.match('/ip/'));
   t.deepEqual(pattern.match('/ip/10.10.10.10'), ['10', '10', '10', '10']);
   t.deepEqual(pattern.match('/ip/127.0.0.1'), ['127', '0', '0', '1']);
 
   regex = /\/ip\/((?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))$/;
   pattern = new UrlPattern(regex);
-  t.equal(null, pattern.match('10.10.10.10'));
-  t.equal(null, pattern.match('ip/10.10.10.10'));
-  t.equal(null, pattern.match('/ip/10.10.10.'));
-  t.equal(null, pattern.match('/ip/10.'));
-  t.equal(null, pattern.match('/ip/'));
+  t.equal(undefined, pattern.match('10.10.10.10'));
+  t.equal(undefined, pattern.match('ip/10.10.10.10'));
+  t.equal(undefined, pattern.match('/ip/10.10.10.'));
+  t.equal(undefined, pattern.match('/ip/10.'));
+  t.equal(undefined, pattern.match('/ip/'));
   t.deepEqual(pattern.match('/ip/10.10.10.10'), ['10.10.10.10']);
   t.deepEqual(pattern.match('/ip/127.0.0.1'), ['127.0.0.1']);
 
   regex = /\/ip\/((?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))$/;
   pattern = new UrlPattern(regex, ['ip']);
-  t.equal(null, pattern.match('10.10.10.10'));
-  t.equal(null, pattern.match('ip/10.10.10.10'));
-  t.equal(null, pattern.match('/ip/10.10.10.'));
-  t.equal(null, pattern.match('/ip/10.'));
-  t.equal(null, pattern.match('/ip/'));
+  t.equal(undefined, pattern.match('10.10.10.10'));
+  t.equal(undefined, pattern.match('ip/10.10.10.10'));
+  t.equal(undefined, pattern.match('/ip/10.10.10.'));
+  t.equal(undefined, pattern.match('/ip/10.'));
+  t.equal(undefined, pattern.match('/ip/'));
   t.deepEqual(pattern.match('/ip/10.10.10.10'),
     {ip: '10.10.10.10'});
   t.deepEqual(pattern.match('/ip/127.0.0.1'),

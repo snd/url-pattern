@@ -5,29 +5,29 @@
  */
 const test = require('tape');
 const {
-  escapeForRegex,
+  escapeStringForRegex,
   concatMap,
   stringConcatMap,
   regexGroupCount,
   keysAndValuesToObject
-} = require('../lib/url-pattern');
+} = require('../index.js');
 
-test('escapeForRegex', function(t) {
+test('escapeStringForRegex', function(t) {
   const expected = '\\[\\-\\/\\\\\\^\\$\\*\\+\\?\\.\\(\\)\\|\\[\\]\\{\\}\\]';
-  const actual = escapeForRegex('[-\/\\^$*+?.()|[\]{}]');
+  const actual = escapeStringForRegex('[-\/\\^$*+?.()|[\]{}]');
   t.equal(expected, actual);
 
-  t.equal(escapeForRegex('a$98kdjf(kdj)'), 'a\\$98kdjf\\(kdj\\)');
-  t.equal('a', escapeForRegex('a'));
-  t.equal('!', escapeForRegex('!'));
-  t.equal('\\.', escapeForRegex('.'));
-  t.equal('\\/', escapeForRegex('/'));
-  t.equal('\\-', escapeForRegex('-'));
-  t.equal('\\-', escapeForRegex('-'));
-  t.equal('\\[', escapeForRegex('['));
-  t.equal('\\]', escapeForRegex(']'));
-  t.equal('\\(', escapeForRegex('('));
-  t.equal('\\)', escapeForRegex(')'));
+  t.equal(escapeStringForRegex('a$98kdjf(kdj)'), 'a\\$98kdjf\\(kdj\\)');
+  t.equal('a', escapeStringForRegex('a'));
+  t.equal('!', escapeStringForRegex('!'));
+  t.equal('\\.', escapeStringForRegex('.'));
+  t.equal('\\/', escapeStringForRegex('/'));
+  t.equal('\\-', escapeStringForRegex('-'));
+  t.equal('\\-', escapeStringForRegex('-'));
+  t.equal('\\[', escapeStringForRegex('['));
+  t.equal('\\]', escapeStringForRegex(']'));
+  t.equal('\\(', escapeStringForRegex('('));
+  t.equal('\\)', escapeStringForRegex(')'));
   return t.end();
 });
 
@@ -68,15 +68,6 @@ test('keysAndValuesToObject', function(t) {
   t.deepEqual(
     keysAndValuesToObject(
       ['one'],
-      [1]
-    ),
-    {
-      one: 1
-    }
-  );
-  t.deepEqual(
-    keysAndValuesToObject(
-      ['one', 'two'],
       [1]
     ),
     {

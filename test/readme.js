@@ -4,7 +4,9 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 const test = require('tape');
-const UrlPattern = require('../lib/url-pattern');
+const {
+  UrlPattern
+} = require('../index.js');
 
 test('simple', function(t) {
   const pattern = new UrlPattern('/api/users/:id');

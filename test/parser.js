@@ -8,8 +8,11 @@
 
 const test = require('tape');
 
-const UrlPattern = require('../lib/url-pattern');
-const U = UrlPattern.newParser(UrlPattern.defaultOptions);
+const {
+  newUrlPatternParser,
+  defaultOptions,
+} = require('../index.js');
+const U = newUrlPatternParser(defaultOptions);
 const parse = U.pattern;
 
 test('wildcard', function(t) {

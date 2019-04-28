@@ -1,10 +1,15 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "noImplicitAny": true,
-        "removeComments": false,
+        "target": "ES3",
+        "strict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "removeComments": true,
         "preserveConstEnums": true,
-        "sourceMap": true
+        "sourceMap": true,
+        "allowUnreachableCode": false,
+        "declaration": true
     },
     "files": [
         "index.ts"

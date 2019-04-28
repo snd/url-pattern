@@ -88,9 +88,9 @@ function keysAndValuesToObject(keys: Array<any>, values: Array<any>) : Object {
 
 // parse result
 class Result<Value> {
-  // parsed value
+  /* parsed value */
   value: Value;
-  // unparsed rest
+  /* unparsed rest */
   readonly rest: string;
   constructor(value: Value, rest: string) {
     this.value = value;
@@ -107,8 +107,10 @@ class Tagged<Value> {
   }
 }
 
-// a parser is a function that takes a string and returns a `Result` containing a parsed `Result.value` and the rest of the string `Result.rest`
-type Parser<T> = (string) => Result<T> | null;
+/**
+ * a parser is a function that takes a string and returns a `Result` containing a parsed `Result.value` and the rest of the string `Result.rest`
+ */
+type Parser<T> = (string: string) => Result<T> | null;
 
 // parser combinators
 let P = {
@@ -187,11 +189,12 @@ let P = {
       return cached_parser(input);
     };
   },
-  // base function for parsers that parse multiples
+  /*
+   * base function for parsers that parse multiples.
+   * @param endParser  once the `endParser` (if not null) consumes the `baseMany` parser returns.  the result of the `endParser` is ignored.
+   */
   baseMany<T>(
     parser: Parser<T>,
-    // once the `endParser` (if not null) consumes the `baseMany` parser returns.
-    // the result of the `endParser` is ignored
     endParser: Parser<any> | null,
     isAtLeastOneResultRequired: boolean,
     input: string
@@ -296,14 +299,14 @@ function baseAstNodeToRegexString(astNode, segmentValueCharset) {
   }
 };
 
-let astNodeToRegexString = function (astNode, segmentValueCharset) {
+function astNodeToRegexString(astNode, segmentValueCharset) {
   if (segmentValueCharset == null) {
     ({ segmentValueCharset } = defaultOptions);
   }
   return `^${ baseAstNodeToRegexString(astNode, segmentValueCharset) }$`;
-};
+}
 
-var astNodeToNames = function (astNode) {
+function astNodeToNames(astNode) {
   if (Array.isArray(astNode)) {
     return concatMap(astNode, astNodeToNames);
   }
@@ -318,7 +321,7 @@ var astNodeToNames = function (astNode) {
     case 'optional':
       return astNodeToNames(astNode.value);
   }
-};
+}
 
 function getParam(params, key, nextIndexes, sideEffects) {
   if (sideEffects == null) {
@@ -351,7 +354,7 @@ function getParam(params, key, nextIndexes, sideEffects) {
   return result;
 };
 
-var astNodeContainsSegmentsForProvidedParams = function (astNode, params, nextIndexes) {
+function astNodeContainsSegmentsForProvidedParams(astNode, params, nextIndexes) {
   if (Array.isArray(astNode)) {
     let i = -1;
     let { length } = astNode;
@@ -373,7 +376,7 @@ var astNodeContainsSegmentsForProvidedParams = function (astNode, params, nextIn
     case 'optional':
       return astNodeContainsSegmentsForProvidedParams(astNode.value, params, nextIndexes);
   }
-};
+}
 
 function stringify(astNode, params, nextIndexes) {
   if (Array.isArray(astNode)) {
@@ -478,7 +481,7 @@ class UrlPattern {
 
   }
 
-  match(url: string): Object {
+  match(url: string): Object | null {
     let match = this.regex.exec(url);
     if (match == null) {
       return null;

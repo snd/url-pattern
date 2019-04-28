@@ -314,14 +314,14 @@ function baseAstNodeToRegexString(astNode: Tagged<any>, segmentValueCharset: str
   }
 }
 
-function astNodeToRegexString(astNode: Tagged<any>, segmentValueCharset?: string) {
+export function astNodeToRegexString(astNode: Tagged<any>, segmentValueCharset?: string) {
   if (segmentValueCharset == null) {
     ({ segmentValueCharset } = defaultOptions);
   }
   return `^${ baseAstNodeToRegexString(astNode, segmentValueCharset) }$`;
 }
 
-function astNodeToNames(astNode: Tagged<any> | Array<Tagged<any>>): string[] {
+export function astNodeToNames(astNode: Tagged<any> | Array<Tagged<any>>): string[] {
   if (Array.isArray(astNode)) {
     return concatMap(astNode, astNodeToNames);
   }

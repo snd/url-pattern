@@ -4,15 +4,16 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 const test = require('tape');
-const UrlPattern = require('../lib/url-pattern');
-
 const {
+  UrlPattern,
+  newUrlPatternParser,
+  defaultOptions,
+  getParam,
   astNodeToRegexString,
-  astNodeToNames,
-  getParam
-} = UrlPattern;
+  astNodeToNames
+} = require('../index.js');
 
-const parse = UrlPattern.newParser(UrlPattern.defaultOptions).pattern;
+const parse = newUrlPatternParser(defaultOptions).pattern;
 
 test('astNodeToRegexString and astNodeToNames', function(t) {
   t.test('just static alphanumeric', function(t) {

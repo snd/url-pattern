@@ -30,17 +30,17 @@ export function escapeStringForRegex(str: string): string {
 
 export function concatMap<T>(array: T[], f: (x: T) => T[]): T[] {
   let results: T[] = [];
-  array.forEach((value) => {
+  for (const value of array) {
     results = results.concat(f(value));
-  });
+  }
   return results;
 }
 
 export function stringConcatMap<T>(array: T[], f: (x: T) => string): string {
   let result = "";
-  array.forEach((value) => {
+  for (const value of array) {
     result += f(value);
-  });
+  }
   return result;
 }
 
@@ -147,14 +147,14 @@ let P = {
     return (input: string) => {
       let rest = input;
       const values: any[] = [];
-      parsers.forEach((parser: Parser<any>) => {
+      for (const parser of parsers) {
         const result = parser(rest);
         if (result == null) {
           return;
         }
         values.push(result.value);
         rest = result.rest;
-      });
+      }
       return new Result(values, rest);
     };
   },

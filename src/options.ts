@@ -24,7 +24,7 @@ export const defaultOptions: IOptions = {
   escapeChar: "\\",
   optionalSegmentEndChar: ")",
   optionalSegmentStartChar: "(",
-  segmentNameCharset: "a-zA-Z0-9",
+  segmentNameCharset: "a-zA-Z0-9_",
   segmentNameStartChar: ":",
   segmentValueCharset: "a-zA-Z0-9-_~ %",
   wildcardChar: "*",

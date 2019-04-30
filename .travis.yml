@@ -1,7 +1,7 @@
 language: node_js
 node_js:
-  - "12.1",
-  - "10.15",
+  - "12.1"
+  - "10.15"
 script: npm run $NPM_COMMAND
 sudo: false
 env:
@@ -14,8 +14,8 @@ env:
     - NPM_COMMAND=test
     # - NPM_COMMAND=test-with-coverage
     # - NPM_COMMAND=test-in-browsers
-matrix:
-  exclude:
+# matrix:
+#   exclude:
     # don't test in browsers more than once (already done with node 5)
     # - node_js: "0.12"
     #   env: NPM_COMMAND=test-in-browsers

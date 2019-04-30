@@ -1,19 +1,17 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
-// taken from
-// https://github.com/snd/pcom/blob/master/t/url-pattern-example.coffee
-
 const test = require('tape');
 
-const {
+import {
   newUrlPatternParser,
+  getParam,
+  astNodeToRegexString,
+  astNodeToNames
+}  from "../dist/parser.js";
+
+import {
   defaultOptions,
-} = require('../index.js');
-const U = newUrlPatternParser(defaultOptions);
-const parse = U.pattern;
+} from "../dist/options.js";
+
+const parse = newUrlPatternParser(defaultOptions);
 
 test('wildcard', function(t) {
   t.deepEqual(U.wildcard('*'), {
@@ -43,7 +41,7 @@ test('wildcard', function(t) {
   t.equal(U.wildcard('$foobar'), undefined);
   t.equal(U.wildcard('$'), undefined);
   t.equal(U.wildcard(''), undefined);
-  return t.end();
+  t.end();
 });
 
 test('named', function(t) {
@@ -83,7 +81,7 @@ test('named', function(t) {
   t.equal(U.named(''), undefined);
   t.equal(U.named('a'), undefined);
   t.equal(U.named('abc'), undefined);
-  return t.end();
+  t.end();
 });
 
 test('static', function(t) {
@@ -109,7 +107,7 @@ test('static', function(t) {
     t.equal(U.static(')'), undefined);
     t.equal(U.static('*'), undefined);
     t.equal(U.static(''), undefined);
-    return t.end();
+    t.end();
 });
 
 
@@ -494,5 +492,5 @@ test('fixtures', function(t) {
     ]
   });
 
-  return t.end();
+  t.end();
 });

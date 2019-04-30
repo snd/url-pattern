@@ -1,12 +1,6 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
-const test = require('tape');
-const {
-  UrlPattern
-} = require('../index.js');
+import test from "tape";
+
+import UrlPattern from "../dist/url-pattern.js";
 
 test('instance of UrlPattern is handled correctly as constructor argument', function(t) {
   const pattern = new UrlPattern('/user/:userId/task/:taskId');

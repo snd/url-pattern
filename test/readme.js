@@ -1,18 +1,12 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
-const test = require('tape');
-const {
-  UrlPattern
-} = require('../index.js');
+import test from "tape";
+
+import UrlPattern from "../dist/url-pattern.js";
 
 test('simple', function(t) {
   const pattern = new UrlPattern('/api/users/:id');
   t.deepEqual(pattern.match('/api/users/10'), {id: '10'});
   t.equal(pattern.match('/api/products/5'), undefined);
-  return t.end();
+  t.end();
 });
 
 test('api versioning', function(t) {
@@ -20,7 +14,7 @@ test('api versioning', function(t) {
   t.deepEqual(pattern.match('/v1.2/'), {major: '1', minor: '2', _: ''});
   t.deepEqual(pattern.match('/v2/users'), {major: '2', _: 'users'});
   t.equal(pattern.match('/v/'), undefined);
-  return t.end();
+  t.end();
 });
 
 test('domain', function(t) {
@@ -67,20 +61,20 @@ test('domain', function(t) {
   }
   );
 
-  return t.end();
+  t.end();
 });
 
 test('named segment occurs more than once', function(t) {
   const pattern = new UrlPattern('/api/users/:ids/posts/:ids');
   t.deepEqual(pattern.match('/api/users/10/posts/5'), {ids: ['10', '5']});
-  return t.end();
+  t.end();
 });
 
 test('regex', function(t) {
   const pattern = new UrlPattern(/^\/api\/(.*)$/);
   t.deepEqual(pattern.match('/api/users'), ['users']);
   t.equal(pattern.match('/apiii/users'), undefined);
-  return t.end();
+  t.end();
 });
 
 test('regex group names', function(t) {
@@ -94,7 +88,7 @@ test('regex group names', function(t) {
   }
   );
   t.equal(pattern.match('/api/users/foo'), undefined);
-  return t.end();
+  t.end();
 });
 
 test('stringify', function(t) {
@@ -105,7 +99,7 @@ test('stringify', function(t) {
   t.equal('/api/users', pattern.stringify());
   t.equal('/api/users/10', pattern.stringify({id: 10}));
 
-  return t.end();
+  t.end();
 });
 
 test('customization', function(t) {
@@ -157,5 +151,5 @@ test('customization', function(t) {
     _: 'search'
   }
   );
-  return t.end();
+  t.end();
 });

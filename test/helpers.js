@@ -1,16 +1,12 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
-const test = require('tape');
-const {
+import test from "tape";
+
+import {
   escapeStringForRegex,
   concatMap,
   stringConcatMap,
   regexGroupCount,
   keysAndValuesToObject
-} = require('../index.js');
+} from "../dist/helpers.js";
 
 test('escapeStringForRegex', function(t) {
   const expected = '\\[\\-\\/\\\\\\^\\$\\*\\+\\?\\.\\(\\)\\|\\[\\]\\{\\}\\]';
@@ -28,14 +24,14 @@ test('escapeStringForRegex', function(t) {
   t.equal('\\]', escapeStringForRegex(']'));
   t.equal('\\(', escapeStringForRegex('('));
   t.equal('\\)', escapeStringForRegex(')'));
-  return t.end();
+  t.end();
 });
 
 test('concatMap', function(t) {
   t.deepEqual([], concatMap([], function() {}));
   t.deepEqual([1], concatMap([1], x => [x]));
   t.deepEqual([1, 1, 1, 2, 2, 2, 3, 3, 3], concatMap([1, 2, 3], x => [x, x, x]));
-  return t.end();
+  t.end();
 });
 
 test('stringConcatMap', function(t) {
@@ -43,7 +39,7 @@ test('stringConcatMap', function(t) {
   t.equal('1', stringConcatMap([1], x => x));
   t.equal('123', stringConcatMap([1, 2, 3], x => x));
   t.equal('1a2a3a', stringConcatMap([1, 2, 3], x => x + 'a'));
-  return t.end();
+  t.end();
 });
 
 test('regexGroupCount', function(t) {
@@ -54,7 +50,7 @@ test('regexGroupCount', function(t) {
   t.equal(2, regexGroupCount(/f(o)(o)/));
   t.equal(2, regexGroupCount(/f(o)o()/));
   t.equal(5, regexGroupCount(/f(o)o()()(())/));
-  return t.end();
+  t.end();
 });
 
 test('keysAndValuesToObject', function(t) {
@@ -135,5 +131,5 @@ test('keysAndValuesToObject', function(t) {
       three: 5
     }
   );
-  return t.end();
+  t.end();
 });

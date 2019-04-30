@@ -1,12 +1,6 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
-const test = require('tape');
-const {
-  UrlPattern
-} = require('../index.js');
+import test from "tape";
+
+import UrlPattern from "../dist/url-pattern.js";
 
 test('match', function(t) {
   let pattern = new UrlPattern('/foo');
@@ -294,5 +288,5 @@ test('match', function(t) {
   t.deepEqual(pattern.match('/ip/127.0.0.1'),
     {ip: '127.0.0.1'});
 
-  return t.end();
+  t.end();
 });

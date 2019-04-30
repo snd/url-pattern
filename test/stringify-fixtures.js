@@ -1,12 +1,6 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
-const test = require('tape');
-const {
-  UrlPattern
-} = require('../index.js');
+import test from "tape";
+
+import UrlPattern from "../dist/url-pattern.js";
 
 test('stringify', function(t) {
   let pattern = new UrlPattern('/foo');
@@ -157,7 +151,7 @@ test('stringify', function(t) {
     range: '10-20'})
   );
 
-  return t.end();
+  t.end();
 });
 
 test('stringify errors', function(t) {
@@ -216,5 +210,5 @@ test('stringify errors', function(t) {
     t.equal(e.message, "no values provided for key `_`");
   }
 
-  return t.end();
+  t.end();
 });

@@ -1,75 +1,73 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
-const test = require('tape');
-const {
-  UrlPattern,
+import test from "tape";
+
+import {
   newUrlPatternParser,
-  defaultOptions,
   getParam,
   astNodeToRegexString,
   astNodeToNames
-} = require('../index.js');
+}  from "../dist/parser.js";
 
-const parse = newUrlPatternParser(defaultOptions).pattern;
+import {
+  defaultOptions,
+} from "../dist/options.js";
+
+const parse = newUrlPatternParser(defaultOptions);
 
 test('astNodeToRegexString and astNodeToNames', function(t) {
   t.test('just static alphanumeric', function(t) {
     const parsed = parse('user42');
     t.equal(astNodeToRegexString(parsed.value), '^user42$');
     t.deepEqual(astNodeToNames(parsed.value), []);
-    return t.end();
+    t.end();
   });
 
   t.test('just static escaped', function(t) {
     const parsed = parse('/api/v1/users');
     t.equal(astNodeToRegexString(parsed.value), '^\\/api\\/v1\\/users$');
     t.deepEqual(astNodeToNames(parsed.value), []);
-    return t.end();
+    t.end();
   });
 
   t.test('just single char variable', function(t) {
     const parsed = parse(':a');
     t.equal(astNodeToRegexString(parsed.value), '^([a-zA-Z0-9-_~ %]+)$');
     t.deepEqual(astNodeToNames(parsed.value), ['a']);
-    return t.end();
+    t.end();
   });
 
   t.test('just variable', function(t) {
     const parsed = parse(':variable');
     t.equal(astNodeToRegexString(parsed.value), '^([a-zA-Z0-9-_~ %]+)$');
     t.deepEqual(astNodeToNames(parsed.value), ['variable']);
-    return t.end();
+    t.end();
   });
 
   t.test('just wildcard', function(t) {
     const parsed = parse('*');
     t.equal(astNodeToRegexString(parsed.value), '^(.*?)$');
     t.deepEqual(astNodeToNames(parsed.value), ['_']);
-    return t.end();
+    t.end();
   });
 
   t.test('just optional static', function(t) {
     const parsed = parse('(foo)');
     t.equal(astNodeToRegexString(parsed.value), '^(?:foo)?$');
     t.deepEqual(astNodeToNames(parsed.value), []);
-    return t.end();
+    t.end();
   });
 
   t.test('just optional variable', function(t) {
     const parsed = parse('(:foo)');
     t.equal(astNodeToRegexString(parsed.value), '^(?:([a-zA-Z0-9-_~ %]+))?$');
     t.deepEqual(astNodeToNames(parsed.value), ['foo']);
-    return t.end();
+    t.end();
   });
 
-  return t.test('just optional wildcard', function(t) {
+  t.test('just optional wildcard', function(t) {
     const parsed = parse('(*)');
     t.equal(astNodeToRegexString(parsed.value), '^(?:(.*?))?$');
     t.deepEqual(astNodeToNames(parsed.value), ['_']);
-    return t.end();
+    t.end();
   });
 });
 
@@ -131,7 +129,7 @@ test('getParam', function(t) {
     t.equal(undefined, getParam({one: [1, 2, 3]}, 'one', next));
     t.deepEqual(next, {one: 3});
 
-    return t.end();
+    t.end();
   });
 
   t.test('side effects', function(t) {
@@ -165,10 +163,10 @@ test('getParam', function(t) {
     t.equal(3, getParam({one: [1, 2, 3]}, 'one', next, true));
     t.deepEqual(next, {one: 3});
 
-    return t.end();
+    t.end();
   });
 
-  return t.test('side effects errors', function(t) {
+  t.test('side effects errors', function(t) {
     let e;
     t.plan(2 * 6);
 
@@ -226,6 +224,6 @@ test('getParam', function(t) {
     }
     t.deepEqual(next, {one: 3});
 
-    return t.end();
+    t.end();
   });
 });

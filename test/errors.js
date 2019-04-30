@@ -1,12 +1,6 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
-const test = require('tape');
-const {
-  UrlPattern
-} = require('../index.js');
+import test from "tape";
+
+import UrlPattern from "../dist/url-pattern.js";
 
 test('invalid argument', function(t) {
   let e;
@@ -42,7 +36,7 @@ test('invalid argument', function(t) {
     e = error4;
     t.equal(e.message, "first argument must not contain whitespace");
   }
-  return t.end();
+  t.end();
 });
 
 test('invalid variable name in pattern', function(t) {
@@ -68,7 +62,7 @@ test('invalid variable name in pattern', function(t) {
     e = error2;
     t.equal(e.message, "could only partially parse pattern");
   }
-  return t.end();
+  t.end();
 });
 
 test('too many closing parentheses', function(t) {
@@ -88,7 +82,7 @@ test('too many closing parentheses', function(t) {
     e = error1;
     t.equal(e.message, "could only partially parse pattern");
   }
-  return t.end();
+  t.end();
 });
 
 test('unclosed parentheses', function(t) {
@@ -108,7 +102,7 @@ test('unclosed parentheses', function(t) {
     e = error1;
     t.equal(e.message, "couldn't parse pattern");
   }
-  return t.end();
+  t.end();
 });
 
 test('regex names', function(t) {
@@ -132,7 +126,7 @@ test('regex names', function(t) {
     e = error2;
     t.equal(e.message, "regex contains 4 groups but array of group names contains 2");
   }
-  return t.end();
+  t.end();
 });
 
 test('stringify regex', function(t) {
@@ -143,7 +137,7 @@ test('stringify regex', function(t) {
   } catch (e) {
     t.equal(e.message, "can't stringify patterns generated from a regex");
   }
-  return t.end();
+  t.end();
 });
 
 test('stringify argument', function(t) {
@@ -154,5 +148,5 @@ test('stringify argument', function(t) {
   } catch (e) {
     t.equal(e.message, "argument must be an object or undefined");
   }
-  return t.end();
+  t.end();
 });

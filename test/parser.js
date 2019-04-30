@@ -13,37 +13,6 @@ import {
 
 const parse = newUrlPatternParser(defaultOptions);
 
-test('wildcard', function(t) {
-  t.deepEqual(U.wildcard('*'), {
-    value: {
-      tag: 'wildcard',
-      value: '*'
-    },
-    rest: ''
-  }
-  );
-  t.deepEqual(U.wildcard('*/'), {
-    value: {
-      tag: 'wildcard',
-      value: '*'
-    },
-    rest: '/'
-  }
-  );
-  t.equal(U.wildcard(' *'), undefined);
-  t.equal(U.wildcard('()'), undefined);
-  t.equal(U.wildcard('foo(100)'), undefined);
-  t.equal(U.wildcard('(100foo)'), undefined);
-  t.equal(U.wildcard('(foo100)'), undefined);
-  t.equal(U.wildcard('(foobar)'), undefined);
-  t.equal(U.wildcard('foobar'), undefined);
-  t.equal(U.wildcard('_aa'), undefined);
-  t.equal(U.wildcard('$foobar'), undefined);
-  t.equal(U.wildcard('$'), undefined);
-  t.equal(U.wildcard(''), undefined);
-  t.end();
-});
-
 test('named', function(t) {
   t.deepEqual(U.named(':a'), {
     value: {

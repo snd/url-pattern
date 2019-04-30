@@ -142,15 +142,16 @@ test('match', function(t) {
   });
 
   pattern = new UrlPattern('/:foo_bar');
-  t.equal(pattern.match('/_bar'), undefined);
+  t.deepEqual(pattern.match('/_bar'),
+    {foo_bar: '_bar'});
   t.deepEqual(pattern.match('/a_bar'),
-    {foo: 'a'});
+    {foo_bar: 'a_bar'});
   t.deepEqual(pattern.match('/a__bar'),
-    {foo: 'a_'});
+    {foo_bar: 'a__bar'});
   t.deepEqual(pattern.match('/a-b-c-d__bar'),
-    {foo: 'a-b-c-d_'});
+    {foo_bar: 'a-b-c-d__bar'});
   t.deepEqual(pattern.match('/a b%c-d__bar'),
-    {foo: 'a b%c-d_'});
+    {foo_bar: 'a b%c-d__bar'});
 
   pattern = new UrlPattern('((((a)b)c)d)');
   t.deepEqual(pattern.match(''), {});

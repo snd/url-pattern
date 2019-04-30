@@ -50,18 +50,18 @@ export default class UrlPattern {
       this.regex = pattern;
       if (optionsOrGroupNames != null) {
         if (!Array.isArray(optionsOrGroupNames)) {
-          throw new TypeError(`
-            if first argument is a RegExp the second argument
-            may be an Array<String> of group names
-            but you provided something else
-          `);
+          throw new TypeError([
+            "if first argument is a RegExp the second argument",
+            "may be an Array<String> of group names",
+            "but you provided something else",
+          ].join(" "));
         }
         const groupCount = regexGroupCount(this.regex);
         if (optionsOrGroupNames.length !== groupCount) {
-          throw new Error(`
-            regex contains ${ groupCount } groups
-            but array of group names contains ${ optionsOrGroupNames.length }
-          `);
+          throw new Error([
+            `regex contains ${ groupCount } groups`,
+            `but array of group names contains ${ optionsOrGroupNames.length }`,
+          ].join(" "));
         }
         this.names = optionsOrGroupNames;
       }
@@ -142,6 +142,6 @@ export default class UrlPattern {
     if (params !== Object(params)) {
       throw new Error("argument must be an object or undefined");
     }
-    return stringify(this.ast, params, {});
+    return stringify(this.ast, params);
   }
 }

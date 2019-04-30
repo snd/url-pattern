@@ -101,16 +101,16 @@ test('stringify', function(t) {
 
   pattern = new UrlPattern('/:foo_bar');
   t.equal('/a_bar', pattern.stringify({
-    foo: 'a'})
+    foo_bar: 'a_bar'})
   );
   t.equal('/a__bar', pattern.stringify({
-    foo: 'a_'})
+    foo_bar: 'a__bar'})
   );
   t.equal('/a-b-c-d__bar', pattern.stringify({
-    foo: 'a-b-c-d_'})
+    foo_bar: 'a-b-c-d__bar'})
   );
   t.equal('/a b%c-d__bar', pattern.stringify({
-    foo: 'a b%c-d_'})
+    foo_bar: 'a b%c-d__bar'})
   );
 
   pattern = new UrlPattern('((((a)b)c)d)');

@@ -2,6 +2,8 @@ const test = require('tape');
 
 import {
   newUrlPatternParser,
+  newNamedSegmentParser,
+  newStaticContentParser,
   getParam,
   astNodeToRegexString,
   astNodeToNames
@@ -12,70 +14,72 @@ import {
 } from "../dist/options.js";
 
 const parse = newUrlPatternParser(defaultOptions);
+const parseNamedSegment = newNamedSegmentParser(defaultOptions);
+const parseStaticContent= newStaticContentParser(defaultOptions);
 
-test('named', function(t) {
-  t.deepEqual(U.named(':a'), {
+test('namedSegment', function(t) {
+  t.deepEqual(parseNamedSegment(':a'), {
     value: {
-      tag: 'named',
+      tag: 'namedSegment',
       value: 'a'
     },
     rest: ''
   }
   );
-  t.deepEqual(U.named(':ab96c'), {
+  t.deepEqual(parseNamedSegment(':ab96c'), {
     value: {
-      tag: 'named',
+      tag: 'namedSegment',
       value: 'ab96c'
     },
     rest: ''
   }
   );
-  t.deepEqual(U.named(':ab96c.'), {
+  t.deepEqual(parseNamedSegment(':ab96c.'), {
     value: {
-      tag: 'named',
+      tag: 'namedSegment',
       value: 'ab96c'
     },
     rest: '.'
   }
   );
-  t.deepEqual(U.named(':96c-:ab'), {
+  t.deepEqual(parseNamedSegment(':96c-:ab'), {
     value: {
-      tag: 'named',
+      tag: 'namedSegment',
       value: '96c'
     },
     rest: '-:ab'
   }
   );
-  t.equal(U.named(':'), undefined);
-  t.equal(U.named(''), undefined);
-  t.equal(U.named('a'), undefined);
-  t.equal(U.named('abc'), undefined);
+  t.equal(parseNamedSegment(':'), undefined);
+  t.equal(parseNamedSegment(''), undefined);
+  t.equal(parseNamedSegment('a'), undefined);
+  t.equal(parseNamedSegment('abc'), undefined);
   t.end();
 });
 
 test('static', function(t) {
-    t.deepEqual(U.static('a'), {
+    t.deepEqual(parseStaticContent('a'), {
       value: {
-        tag: 'static',
+        tag: 'staticContent',
         value: 'a'
       },
       rest: ''
     }
     );
-    t.deepEqual(U.static('abc:d'), {
+    t.deepEqual(parseStaticContent('abc:d'), {
       value: {
-        tag: 'static',
+        tag: 'staticContent',
         value: 'abc'
       },
       rest: ':d'
     }
     );
-    t.equal(U.static(':ab96c'), undefined);
-    t.equal(U.static(':'), undefined);
-    t.equal(U.static('('), undefined);
-    t.equal(U.static(')'), undefined);
-    t.equal(U.static('*'), undefined);
-    t.equal(U.static(''), undefined);
+    t.equal(parseStaticContent(':ab96c'), undefined);
+    t.equal(parseStaticContent(':'), undefined);
+    t.equal(parseStaticContent('('), undefined);
+    t.equal(parseStaticContent(')'), undefined);
+    t.equal(parseStaticContent('*'), undefined);
+    t.equal(parseStaticContent(''), undefined);
     t.end();
 });
 
@@ -92,7 +96,7 @@ test('fixtures', function(t) {
   t.deepEqual(parse('(foo))'), {
     rest: ')',
     value: [
-      {tag: 'optional', value: [{tag: 'static', value: 'foo'}]}
+      {tag: 'optionalSegment', value: [{tag: 'staticContent', value: 'foo'}]}
     ]
   });
 
@@ -100,9 +104,9 @@ test('fixtures', function(t) {
     rest: ')bar',
     value: [
       {
-        tag: 'optional',
+        tag: 'optionalSegment',
         value: [
-          {tag: 'optional', value: [{tag: 'static', value: 'foo'}]}
+          {tag: 'optionalSegment', value: [{tag: 'staticContent', value: 'foo'}]}
         ]
       }
     ]
@@ -112,34 +116,34 @@ test('fixtures', function(t) {
   t.deepEqual(parse('foo:*'), {
     rest: ':*',
     value: [
-      {tag: 'static', value: 'foo'}
+      {tag: 'staticContent', value: 'foo'}
     ]
   });
 
   t.deepEqual(parse(':foo:bar'), {
     rest: '',
     value: [
-      {tag: 'named', value: 'foo'},
-      {tag: 'named', value: 'bar'}
+      {tag: 'namedSegment', value: 'foo'},
+      {tag: 'namedSegment', value: 'bar'}
     ]
   });
 
   t.deepEqual(parse('a'), {
     rest: '',
     value: [
-      {tag: 'static', value: 'a'}
+      {tag: 'staticContent', value: 'a'}
     ]
   });
   t.deepEqual(parse('user42'), {
     rest: '',
     value: [
-      {tag: 'static', value: 'user42'}
+      {tag: 'staticContent', value: 'user42'}
     ]
   });
   t.deepEqual(parse(':a'), {
     rest: '',
     value: [
-      {tag: 'named', value: 'a'}
+      {tag: 'namedSegment', value: 'a'}
     ]
   });
   t.deepEqual(parse('*'), {
@@ -151,19 +155,19 @@ test('fixtures', function(t) {
   t.deepEqual(parse('(foo)'), {
     rest: '',
     value: [
-      {tag: 'optional', value: [{tag: 'static', value: 'foo'}]}
+      {tag: 'optionalSegment', value: [{tag: 'staticContent', value: 'foo'}]}
     ]
   });
   t.deepEqual(parse('(:foo)'), {
     rest: '',
     value: [
-      {tag: 'optional', value: [{tag: 'named', value: 'foo'}]}
+      {tag: 'optionalSegment', value: [{tag: 'namedSegment', value: 'foo'}]}
     ]
   });
   t.deepEqual(parse('(*)'), {
     rest: '',
     value: [
-      {tag: 'optional', value: [{tag: 'wildcard', value: '*'}]}
+      {tag: 'optionalSegment', value: [{tag: 'wildcard', value: '*'}]}
     ]
   });
 
@@ -171,23 +175,23 @@ test('fixtures', function(t) {
   t.deepEqual(parse('/api/users/:id'), {
     rest: '',
     value: [
-      {tag: 'static', value: '/api/users/'},
-      {tag: 'named', value: 'id'}
+      {tag: 'staticContent', value: '/api/users/'},
+      {tag: 'namedSegment', value: 'id'}
     ]
   });
   t.deepEqual(parse('/v:major(.:minor)/*'), {
     rest: '',
     value: [
-      {tag: 'static', value: '/v'},
-      {tag: 'named', value: 'major'},
+      {tag: 'staticContent', value: '/v'},
+      {tag: 'namedSegment', value: 'major'},
       {
-        tag: 'optional',
+        tag: 'optionalSegment',
         value: [
-          {tag: 'static', value: '.'},
-          {tag: 'named', value: 'minor'}
+          {tag: 'staticContent', value: '.'},
+          {tag: 'namedSegment', value: 'minor'}
         ]
       },
-      {tag: 'static', value: '/'},
+      {tag: 'staticContent', value: '/'},
       {tag: 'wildcard', value: '*'}
     ]
   });
@@ -195,32 +199,32 @@ test('fixtures', function(t) {
     rest: '',
     value: [
       {
-        tag: 'optional',
+        tag: 'optionalSegment',
         value: [
-          {tag: 'static', value: 'http'},
+          {tag: 'staticContent', value: 'http'},
           {
-            tag: 'optional',
+            tag: 'optionalSegment',
             value: [
-              {tag: 'static', value: 's'}
+              {tag: 'staticContent', value: 's'}
             ]
           },
-          {tag: 'static', value: '://'}
+          {tag: 'staticContent', value: '://'}
         ]
       },
       {
-        tag: 'optional',
+        tag: 'optionalSegment',
         value: [
-          {tag: 'named', value: 'subdomain'},
-          {tag: 'static', value: '.'}
+          {tag: 'namedSegment', value: 'subdomain'},
+          {tag: 'staticContent', value: '.'}
         ]
       },
-      {tag: 'named', value: 'domain'},
-      {tag: 'static', value: '.'},
-      {tag: 'named', value: 'tld'},
+      {tag: 'namedSegment', value: 'domain'},
+      {tag: 'staticContent', value: '.'},
+      {tag: 'namedSegment', value: 'tld'},
       {
-        tag: 'optional',
+        tag: 'optionalSegment',
         value: [
-          {tag: 'static', value: '/'},
+          {tag: 'staticContent', value: '/'},
           {tag: 'wildcard', value: '*'}
         ]
       }
@@ -229,30 +233,30 @@ test('fixtures', function(t) {
   t.deepEqual(parse('/api/users/:ids/posts/:ids'), {
     rest: '',
     value: [
-      {tag: 'static', value: '/api/users/'},
-      {tag: 'named', value: 'ids'},
-      {tag: 'static', value: '/posts/'},
-      {tag: 'named', value: 'ids'}
+      {tag: 'staticContent', value: '/api/users/'},
+      {tag: 'namedSegment', value: 'ids'},
+      {tag: 'staticContent', value: '/posts/'},
+      {tag: 'namedSegment', value: 'ids'}
     ]
   });
 
   t.deepEqual(parse('/user/:userId/task/:taskId'), {
     rest: '',
     value: [
-      {tag: 'static', value: '/user/'},
-      {tag: 'named', value: 'userId'},
-      {tag: 'static', value: '/task/'},
-      {tag: 'named', value: 'taskId'}
+      {tag: 'staticContent', value: '/user/'},
+      {tag: 'namedSegment', value: 'userId'},
+      {tag: 'staticContent', value: '/task/'},
+      {tag: 'namedSegment', value: 'taskId'}
     ]
   });
 
   t.deepEqual(parse('.user.:userId.task.:taskId'), {
     rest: '',
     value: [
-      {tag: 'static', value: '.user.'},
-      {tag: 'named', value: 'userId'},
-      {tag: 'static', value: '.task.'},
-      {tag: 'named', value: 'taskId'}
+      {tag: 'staticContent', value: '.user.'},
+      {tag: 'namedSegment', value: 'userId'},
+      {tag: 'staticContent', value: '.task.'},
+      {tag: 'namedSegment', value: 'taskId'}
     ]
   });
 
@@ -260,8 +264,8 @@ test('fixtures', function(t) {
     rest: '',
     value: [
       {tag: 'wildcard', value: '*'},
-      {tag: 'static', value: '/user/'},
-      {tag: 'named', value: 'userId'}
+      {tag: 'staticContent', value: '/user/'},
+      {tag: 'namedSegment', value: 'userId'}
     ]
   });
 
@@ -269,15 +273,15 @@ test('fixtures', function(t) {
     rest: '',
     value: [
       {tag: 'wildcard', value: '*'},
-      {tag: 'static', value: '-user-'},
-      {tag: 'named', value: 'userId'}
+      {tag: 'staticContent', value: '-user-'},
+      {tag: 'namedSegment', value: 'userId'}
     ]
   });
 
   t.deepEqual(parse('/admin*'), {
     rest: '',
     value: [
-      {tag: 'static', value: '/admin'},
+      {tag: 'staticContent', value: '/admin'},
       {tag: 'wildcard', value: '*'}
     ]
   });
@@ -285,7 +289,7 @@ test('fixtures', function(t) {
   t.deepEqual(parse('#admin*'), {
     rest: '',
     value: [
-      {tag: 'static', value: '#admin'},
+      {tag: 'staticContent', value: '#admin'},
       {tag: 'wildcard', value: '*'}
     ]
   });
@@ -293,69 +297,69 @@ test('fixtures', function(t) {
   t.deepEqual(parse('/admin/*/user/:userId'), {
     rest: '',
     value: [
-      {tag: 'static', value: '/admin/'},
+      {tag: 'staticContent', value: '/admin/'},
       {tag: 'wildcard', value: '*'},
-      {tag: 'static', value: '/user/'},
-      {tag: 'named', value: 'userId'}
+      {tag: 'staticContent', value: '/user/'},
+      {tag: 'namedSegment', value: 'userId'}
     ]
   });
 
   t.deepEqual(parse('$admin$*$user$:userId'), {
     rest: '',
     value: [
-      {tag: 'static', value: '$admin$'},
+      {tag: 'staticContent', value: '$admin$'},
       {tag: 'wildcard', value: '*'},
-      {tag: 'static', value: '$user$'},
-      {tag: 'named', value: 'userId'}
+      {tag: 'staticContent', value: '$user$'},
+      {tag: 'namedSegment', value: 'userId'}
     ]
   });
 
   t.deepEqual(parse('/admin/*/user/*/tail'), {
     rest: '',
     value: [
-      {tag: 'static', value: '/admin/'},
+      {tag: 'staticContent', value: '/admin/'},
       {tag: 'wildcard', value: '*'},
-      {tag: 'static', value: '/user/'},
+      {tag: 'staticContent', value: '/user/'},
       {tag: 'wildcard', value: '*'},
-      {tag: 'static', value: '/tail'}
+      {tag: 'staticContent', value: '/tail'}
     ]
   });
 
   t.deepEqual(parse('/admin/*/user/:id/*/tail'), {
     rest: '',
     value: [
-      {tag: 'static', value: '/admin/'},
+      {tag: 'staticContent', value: '/admin/'},
       {tag: 'wildcard', value: '*'},
-      {tag: 'static', value: '/user/'},
-      {tag: 'named', value: 'id'},
-      {tag: 'static', value: '/'},
+      {tag: 'staticContent', value: '/user/'},
+      {tag: 'namedSegment', value: 'id'},
+      {tag: 'staticContent', value: '/'},
       {tag: 'wildcard', value: '*'},
-      {tag: 'static', value: '/tail'}
+      {tag: 'staticContent', value: '/tail'}
     ]
   });
 
   t.deepEqual(parse('^admin^*^user^:id^*^tail'), {
     rest: '',
     value: [
-      {tag: 'static', value: '^admin^'},
+      {tag: 'staticContent', value: '^admin^'},
       {tag: 'wildcard', value: '*'},
-      {tag: 'static', value: '^user^'},
-      {tag: 'named', value: 'id'},
-      {tag: 'static', value: '^'},
+      {tag: 'staticContent', value: '^user^'},
+      {tag: 'namedSegment', value: 'id'},
+      {tag: 'staticContent', value: '^'},
       {tag: 'wildcard', value: '*'},
-      {tag: 'static', value: '^tail'}
+      {tag: 'staticContent', value: '^tail'}
     ]
   });
 
   t.deepEqual(parse('/*/admin(/:path)'), {
     rest: '',
     value: [
-      {tag: 'static', value: '/'},
+      {tag: 'staticContent', value: '/'},
       {tag: 'wildcard', value: '*'},
-      {tag: 'static', value: '/admin'},
-      {tag: 'optional', value: [
-        {tag: 'static', value: '/'},
-        {tag: 'named', value: 'path'}
+      {tag: 'staticContent', value: '/admin'},
+      {tag: 'optionalSegment', value: [
+        {tag: 'staticContent', value: '/'},
+        {tag: 'namedSegment', value: 'path'}
       ]}
     ]
   });
@@ -363,15 +367,15 @@ test('fixtures', function(t) {
   t.deepEqual(parse('/'), {
     rest: '',
     value: [
-      {tag: 'static', value: '/'}
+      {tag: 'staticContent', value: '/'}
     ]
   });
 
   t.deepEqual(parse('(/)'), {
     rest: '',
     value: [
-      {tag: 'optional', value: [
-        {tag: 'static', value: '/'}
+      {tag: 'optionalSegment', value: [
+        {tag: 'staticContent', value: '/'}
       ]}
     ]
   });
@@ -379,35 +383,35 @@ test('fixtures', function(t) {
   t.deepEqual(parse('/admin(/:foo)/bar'), {
     rest: '',
     value: [
-      {tag: 'static', value: '/admin'},
-      {tag: 'optional', value: [
-        {tag: 'static', value: '/'},
-        {tag: 'named', value: 'foo'}
+      {tag: 'staticContent', value: '/admin'},
+      {tag: 'optionalSegment', value: [
+        {tag: 'staticContent', value: '/'},
+        {tag: 'namedSegment', value: 'foo'}
       ]},
-      {tag: 'static', value: '/bar'}
+      {tag: 'staticContent', value: '/bar'}
     ]
   });
 
   t.deepEqual(parse('/admin(*/)foo'), {
     rest: '',
     value: [
-      {tag: 'static', value: '/admin'},
-      {tag: 'optional', value: [
+      {tag: 'staticContent', value: '/admin'},
+      {tag: 'optionalSegment', value: [
         {tag: 'wildcard', value: '*'},
-        {tag: 'static', value: '/'}
+        {tag: 'staticContent', value: '/'}
       ]},
-      {tag: 'static', value: 'foo'}
+      {tag: 'staticContent', value: 'foo'}
     ]
   });
 
   t.deepEqual(parse('/v:major.:minor/*'), {
     rest: '',
     value: [
-      {tag: 'static', value: '/v'},
-      {tag: 'named', value: 'major'},
-      {tag: 'static', value: '.'},
-      {tag: 'named', value: 'minor'},
-      {tag: 'static', value: '/'},
+      {tag: 'staticContent', value: '/v'},
+      {tag: 'namedSegment', value: 'major'},
+      {tag: 'staticContent', value: '.'},
+      {tag: 'namedSegment', value: 'minor'},
+      {tag: 'staticContent', value: '/'},
       {tag: 'wildcard', value: '*'}
     ]
   });
@@ -415,11 +419,11 @@ test('fixtures', function(t) {
   t.deepEqual(parse('/v:v.:v/*'), {
     rest: '',
     value: [
-      {tag: 'static', value: '/v'},
-      {tag: 'named', value: 'v'},
-      {tag: 'static', value: '.'},
-      {tag: 'named', value: 'v'},
-      {tag: 'static', value: '/'},
+      {tag: 'staticContent', value: '/v'},
+      {tag: 'namedSegment', value: 'v'},
+      {tag: 'staticContent', value: '.'},
+      {tag: 'namedSegment', value: 'v'},
+      {tag: 'staticContent', value: '/'},
       {tag: 'wildcard', value: '*'}
     ]
   });
@@ -427,26 +431,25 @@ test('fixtures', function(t) {
   t.deepEqual(parse('/:foo_bar'), {
     rest: '',
     value: [
-      {tag: 'static', value: '/'},
-      {tag: 'named', value: 'foo'},
-      {tag: 'static', value: '_bar'}
+      {tag: 'staticContent', value: '/'},
+      {tag: 'namedSegment', value: 'foo_bar'},
     ]
   });
 
   t.deepEqual(parse('((((a)b)c)d)'), {
     rest: '',
     value: [
-      {tag: 'optional', value: [
-        {tag: 'optional', value: [
-          {tag: 'optional', value: [
-            {tag: 'optional', value: [
-              {tag: 'static', value: 'a'}
+      {tag: 'optionalSegment', value: [
+        {tag: 'optionalSegment', value: [
+          {tag: 'optionalSegment', value: [
+            {tag: 'optionalSegment', value: [
+              {tag: 'staticContent', value: 'a'}
             ]},
-            {tag: 'static', value: 'b'}
+            {tag: 'staticContent', value: 'b'}
           ]},
-          {tag: 'static', value: 'c'}
+          {tag: 'staticContent', value: 'c'}
         ]},
-        {tag: 'static', value: 'd'}
+        {tag: 'staticContent', value: 'd'}
       ]}
     ]
   });
@@ -454,9 +457,9 @@ test('fixtures', function(t) {
   t.deepEqual(parse('/vvv:version/*'), {
     rest: '',
     value: [
-      {tag: 'static', value: '/vvv'},
-      {tag: 'named', value: 'version'},
-      {tag: 'static', value: '/'},
+      {tag: 'staticContent', value: '/vvv'},
+      {tag: 'namedSegment', value: 'version'},
+      {tag: 'staticContent', value: '/'},
       {tag: 'wildcard', value: '*'}
     ]
   });

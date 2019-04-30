@@ -26,27 +26,72 @@ import {
   IOptions,
 } from "./options";
 
+export function newEscapedCharParser(options: IOptions): Parser<Ast<any>> {
+  return pick(1, string(options.escapeChar), regex(/^./));
+}
+
+export function newWildcardParser(options: IOptions): Parser<Ast<any>> {
+  return newAst("wildcard", string(options.wildcardChar));
+}
+
 /*
- *
+ * parses just the segment name in a named segment
  */
-export function newUrlPatternParser(options: IOptions): Parser<Ast<any>> {
-  const parseEscapedChar = pick(1, string(options.escapeChar), regex(/^./));
+export function newSegmentNameParser(options: IOptions): Parser<string> {
+  return regex(new RegExp(`^[${ options.segmentNameCharset }]+`));
+}
 
-  const parseSegmentName = regex(new RegExp(`^[${ options.segmentNameCharset }]+`));
-
-  let parseNamedSegment = newAst("namedSegment", pick(1,
-    string(options.segmentNameStartChar),
-    parseSegmentName));
-  if (options.segmentNameEndChar != null) {
-    parseNamedSegment = newAst("namedSegment", pick(1,
+export function newNamedSegmentParser(options: IOptions): Parser<Ast<any>> {
+  const parseSegmentName = newSegmentNameParser(options);
+  if (options.segmentNameEndChar == null) {
+    return newAst("namedSegment", pick(1,
+      string(options.segmentNameStartChar),
+      parseSegmentName));
+  } else {
+    return newAst("namedSegment", pick(1,
       string(options.segmentNameStartChar),
       parseSegmentName,
       string(options.segmentNameEndChar)));
   }
+}
 
-  const parseWildcard = newAst("wildcard", string(options.wildcardChar));
+export function newNamedWildcardParser(options: IOptions): Parser<Ast<any>> {
+  if (options.segmentNameEndChar == null) {
+    return newAst("namedWildcard", pick(2,
+      string(options.wildcardChar),
+      string(options.segmentNameStartChar),
+      newSegmentNameParser(options),
+    ));
+  } else {
+    return newAst("namedWildcard", pick(2,
+      string(options.wildcardChar),
+      string(options.segmentNameStartChar),
+      newSegmentNameParser(options),
+      string(options.segmentNameEndChar),
+    ));
+  }
+}
 
-  let pattern: Parser<any> = (input: string) => {
+export function newStaticContentParser(options: IOptions): Parser<Ast<any>> {
+  return newAst("staticContent", concatMany1Till(firstChoice(
+      newEscapedCharParser(options),
+      regex(/^./)),
+      // parse any normal or escaped char until the following matches:
+      firstChoice(
+        string(options.segmentNameStartChar),
+        string(options.optionalSegmentStartChar),
+        string(options.optionalSegmentEndChar),
+        newWildcardParser(options),
+        newNamedWildcardParser(options),
+      ),
+  ));
+}
+
+/*
+ *
+ */
+export function newUrlPatternParser(options: IOptions): Parser<Ast<any>> {
+  let parsePattern: Parser<any> = (input: string) => {
     throw new Error(`
       this is just a temporary placeholder
       to make a circular dependency work.
@@ -56,27 +101,20 @@ export function newUrlPatternParser(options: IOptions): Parser<Ast<any>> {
 
   const parseOptionalSegment = newAst("optionalSegment", pick(1,
       string(options.optionalSegmentStartChar),
-      lazy(() => pattern),
+      lazy(() => parsePattern),
       string(options.optionalSegmentEndChar)));
 
-  const parseStatic = newAst("static", concatMany1Till(firstChoice(
-      parseEscapedChar,
-      regex(/^./)),
-      firstChoice(
-        string(options.segmentNameStartChar),
-        string(options.optionalSegmentStartChar),
-        string(options.optionalSegmentEndChar),
-        lazy(() => parseWildcard))));
-
-  const token = firstChoice(
-    parseWildcard,
+  const parseToken = firstChoice(
+    newNamedWildcardParser(options),
+    newWildcardParser(options),
     parseOptionalSegment,
-    parseNamedSegment,
-    parseStatic);
+    newNamedSegmentParser(options),
+    newStaticContentParser(options),
+  );
 
-  pattern = many1(token);
+  parsePattern = many1(parseToken);
 
-  return pattern;
+  return parsePattern;
 }
 
 // functions that further process ASTs returned as `.value` in parser results
@@ -91,7 +129,7 @@ function baseAstNodeToRegexString(astNode: Ast<any>, segmentValueCharset: string
       return "(.*?)";
     case "namedSegment":
       return `([${ segmentValueCharset }]+)`;
-    case "static":
+    case "staticContent":
       return escapeStringForRegex(astNode.value);
     case "optionalSegment":
       return `(?:${ baseAstNodeToRegexString(astNode.value, segmentValueCharset) })?`;
@@ -117,7 +155,7 @@ export function astNodeToNames(astNode: Ast<any> | Array<Ast<any>>): string[] {
       return ["_"];
     case "namedSegment":
       return [astNode.value];
-    case "static":
+    case "staticContent":
       return [];
     case "optionalSegment":
       return astNodeToNames(astNode.value);
@@ -184,7 +222,7 @@ function astNodeContainsSegmentsForProvidedParams(
       return getParam(params, "_", nextIndexes, false) != null;
     case "namedSegment":
       return getParam(params, astNode.value, nextIndexes, false) != null;
-    case "static":
+    case "staticContent":
       return false;
     case "optionalSegment":
       return astNodeContainsSegmentsForProvidedParams(astNode.value, params, nextIndexes);
@@ -199,7 +237,7 @@ function astNodeContainsSegmentsForProvidedParams(
 export function stringify(
   astNode: Ast<any> | Array<Ast<any>>,
   params: { [index: string]: any },
-  nextIndexes: { [index: string]: number },
+  nextIndexes: { [index: string]: number } = {},
 ): string {
   if (Array.isArray(astNode)) {
     return stringConcatMap(astNode, (node) => stringify(node, params, nextIndexes));
@@ -210,7 +248,7 @@ export function stringify(
       return getParam(params, "_", nextIndexes, true);
     case "namedSegment":
       return getParam(params, astNode.value, nextIndexes, true);
-    case "static":
+    case "staticContent":
       return astNode.value;
     case "optionalSegment":
       if (astNodeContainsSegmentsForProvidedParams(astNode.value, params, nextIndexes)) {

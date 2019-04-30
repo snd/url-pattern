@@ -1,4 +1,4 @@
-/*
+/**
  * escapes a string for insertion into a regular expression
  * source: http://stackoverflow.com/a/3561711
  */
@@ -6,7 +6,7 @@ export function escapeStringForRegex(str: string): string {
   return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
 }
 
-/*
+/**
  * like `Array.prototype.map` except that the function `f`
  * returns an array and `concatMap` returns the concatenation
  * of all arrays returned by `f`
@@ -19,7 +19,7 @@ export function concatMap<T, U>(array: T[], f: (x: T) => U[]): U[] {
   return results;
 }
 
-/*
+/**
  * like `Array.prototype.map` except that the function `f`
  * returns a string and `stringConcatMap` returns the concatenation
  * of all strings returned by `f`
@@ -32,7 +32,7 @@ export function stringConcatMap<T>(array: T[], f: (x: T) => string): string {
   return result;
 }
 
-/*
+/**
  * returns the number of groups in the `regex`.
  * source: http://stackoverflow.com/a/16047223
  */
@@ -45,7 +45,7 @@ export function regexGroupCount(regex: RegExp): number {
   return matches.length - 1;
 }
 
-/*
+/**
  * zips an array of `keys` and an array of `values` into an object
  * so `keys[i]` is associated with `values[i]` for every i.
  * `keys` and `values` must have the same length.

@@ -72,20 +72,17 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "esm": "^3.2.22",
     "codecov.io": "0.1.6",
-    "coffee-script": "1.10.0",
-    "coffeeify": "2.0.1",
-    "coffeetape": "1.0.1",
-    "istanbul": "0.4.1",
-    "tape": "4.2.2",
-    "zuul": "3.8.0"
+    "tape": "4.10.1",
+    "zuul": "3.12.0"
   },
   "main": "lib/url-pattern",
   "scripts": {
-    "compile": "coffee --bare --compile --output lib src",
+    "compile": "tsc",
+    "docs": "typedoc --out doc --module UrlPattern index.ts",
     "prepublish": "npm run compile",
-    "pretest": "npm run compile",
-    "test": "coffeetape test/*",
+    "test": "tape test/*",
     "test-with-coverage": "istanbul cover coffeetape test/* && cat ./coverage/coverage.json | ./node_modules/codecov.io/bin/codecov.io.js",
     "test-in-browsers": "zuul test/*",
     "test-zuul-local": "zuul --local 8080 test/*"

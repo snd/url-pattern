@@ -82,7 +82,7 @@
   "main": "lib/url-pattern",
   "scripts": {
     "compile": "tsc",
-    "docs": "typedoc --out doc --module UrlPattern index.ts",
+    "doc": "typedoc --out doc .",
     "prepublish": "npm run compile",
     "lint": "tslint --project .",
     "pretest": "npm run compile",

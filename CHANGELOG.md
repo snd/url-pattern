@@ -83,7 +83,7 @@ non breaking
 
 messages on errors thrown on invalid patterns have changed slightly.
 
-#### 0.11
+#### 2.0
 
 - UrlPattern now uses typescript instead of coffeescript
 - renamed `UrlPattern.newParser` to `UrlPattern.newUrlPatternParser`

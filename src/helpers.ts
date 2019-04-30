@@ -11,8 +11,8 @@ export function escapeStringForRegex(str: string): string {
  * returns an array and `concatMap` returns the concatenation
  * of all arrays returned by `f`
  */
-export function concatMap<T>(array: T[], f: (x: T) => T[]): T[] {
-  let results: T[] = [];
+export function concatMap<T, U>(array: T[], f: (x: T) => U[]): U[] {
+  let results: U[] = [];
   for (const value of array) {
     results = results.concat(f(value));
   }

@@ -28,6 +28,7 @@ export default class UrlPattern {
 
   constructor(pattern: string, options?: IUserInputOptions);
   constructor(pattern: RegExp, groupNames?: string[]);
+  constructor(pattern: UrlPattern);
 
   constructor(pattern: string | RegExp | UrlPattern, optionsOrGroupNames?: IUserInputOptions | string[]) {
     // self awareness

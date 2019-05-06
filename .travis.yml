@@ -2,7 +2,9 @@ language: node_js
 node_js:
   - "12.1"
   - "10.15"
-script: npm run $NPM_COMMAND
+script:
+  - npm run lint
+  - npm run $NPM_COMMAND
 sudo: false
 env:
   global:

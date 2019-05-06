@@ -4,15 +4,15 @@
 
 import {
   Ast,
-  concatMany1Till,
-  firstChoice,
-  lazy,
-  many1,
   newAst,
+  newAtLeastOneParser,
+  newConcatAtLeastOneUntilParser,
+  newEitherParser,
+  newLazyParser,
+  newPickNthParser,
+  newRegexParser,
+  newStringParser,
   Parser,
-  pick,
-  regex,
-  string,
 } from "./parsercombinators";
 
 import {
@@ -27,63 +27,64 @@ import {
 } from "./options";
 
 export function newEscapedCharParser(options: IOptions): Parser<Ast<any>> {
-  return pick(1, string(options.escapeChar), regex(/^./));
+  return newPickNthParser(1, newStringParser(options.escapeChar), newRegexParser(/^./));
 }
 
 export function newWildcardParser(options: IOptions): Parser<Ast<any>> {
-  return newAst("wildcard", string(options.wildcardChar));
+  return newAst("wildcard", newStringParser(options.wildcardChar));
 }
 
 /*
  * parses just the segment name in a named segment
  */
 export function newSegmentNameParser(options: IOptions): Parser<string> {
-  return regex(new RegExp(`^[${ options.segmentNameCharset }]+`));
+  return newRegexParser(new RegExp(`^[${ options.segmentNameCharset }]+`));
 }
 
 export function newNamedSegmentParser(options: IOptions): Parser<Ast<any>> {
   const parseSegmentName = newSegmentNameParser(options);
   if (options.segmentNameEndChar == null) {
-    return newAst("namedSegment", pick(1,
-      string(options.segmentNameStartChar),
+    return newAst("namedSegment", newPickNthParser(1,
+      newStringParser(options.segmentNameStartChar),
       parseSegmentName));
   } else {
-    return newAst("namedSegment", pick(1,
-      string(options.segmentNameStartChar),
+    return newAst("namedSegment", newPickNthParser(1,
+      newStringParser(options.segmentNameStartChar),
       parseSegmentName,
-      string(options.segmentNameEndChar)));
+      newStringParser(options.segmentNameEndChar)));
   }
 }
 
 export function newNamedWildcardParser(options: IOptions): Parser<Ast<any>> {
   if (options.segmentNameEndChar == null) {
-    return newAst("namedWildcard", pick(2,
-      string(options.wildcardChar),
-      string(options.segmentNameStartChar),
+    return newAst("namedWildcard", newPickNthParser(2,
+      newStringParser(options.wildcardChar),
+      newStringParser(options.segmentNameStartChar),
       newSegmentNameParser(options),
     ));
   } else {
-    return newAst("namedWildcard", pick(2,
-      string(options.wildcardChar),
-      string(options.segmentNameStartChar),
+    return newAst("namedWildcard", newPickNthParser(2,
+      newStringParser(options.wildcardChar),
+      newStringParser(options.segmentNameStartChar),
       newSegmentNameParser(options),
-      string(options.segmentNameEndChar),
+      newStringParser(options.segmentNameEndChar),
     ));
   }
 }
 
 export function newStaticContentParser(options: IOptions): Parser<Ast<any>> {
-  return newAst("staticContent", concatMany1Till(firstChoice(
+  const parseUntil = newEitherParser(
+      newStringParser(options.segmentNameStartChar),
+      newStringParser(options.optionalSegmentStartChar),
+      newStringParser(options.optionalSegmentEndChar),
+      newWildcardParser(options),
+      newNamedWildcardParser(options),
+    );
+  return newAst("staticContent", newConcatAtLeastOneUntilParser(newEitherParser(
       newEscapedCharParser(options),
-      regex(/^./)),
+      newRegexParser(/^./)),
       // parse any normal or escaped char until the following matches:
-      firstChoice(
-        string(options.segmentNameStartChar),
-        string(options.optionalSegmentStartChar),
-        string(options.optionalSegmentEndChar),
-        newWildcardParser(options),
-        newNamedWildcardParser(options),
-      ),
+      parseUntil,
   ));
 }
 
@@ -95,16 +96,16 @@ export function newUrlPatternParser(options: IOptions): Parser<Ast<any>> {
     throw new Error(`
       this is just a temporary placeholder
       to make a circular dependency work.
-      that this got called is a bug
+      if you see this error it's a bug.
     `);
   };
 
-  const parseOptionalSegment = newAst("optionalSegment", pick(1,
-      string(options.optionalSegmentStartChar),
-      lazy(() => parsePattern),
-      string(options.optionalSegmentEndChar)));
+  const parseOptionalSegment = newAst("optionalSegment", newPickNthParser(1,
+      newStringParser(options.optionalSegmentStartChar),
+      newLazyParser(() => parsePattern),
+      newStringParser(options.optionalSegmentEndChar)));
 
-  const parseToken = firstChoice(
+  const parseToken = newEitherParser(
     newNamedWildcardParser(options),
     newWildcardParser(options),
     parseOptionalSegment,
@@ -112,7 +113,7 @@ export function newUrlPatternParser(options: IOptions): Parser<Ast<any>> {
     newStaticContentParser(options),
   );
 
-  parsePattern = many1(parseToken);
+  parsePattern = newAtLeastOneParser(parseToken);
 
   return parsePattern;
 }

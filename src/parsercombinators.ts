@@ -1,8 +1,8 @@
-/*
+/**
  * generic parser combinators used to build the url pattern parser (module `parser`)
  */
 
-/*
+/**
  * parse result
  */
 export class Result<Value> {
@@ -17,6 +17,38 @@ export class Result<Value> {
 }
 
 /**
+ * a parser is a function that takes a string and returns a `Result`
+ * containing a parsed `Result.value` and the rest of the string `Result.rest`
+ */
+export type Parser<T> = (str: string) => Result<T> | undefined;
+
+/*
+ * returns a parser that consumes `str` exactly
+ */
+export function newStringParser(str: string): Parser<string> {
+  const { length } = str;
+  return (input: string) => {
+    if (input.slice(0, length) === str) {
+      return new Result(str, input.slice(length));
+    }
+  };
+}
+
+/**
+ * returns a parser that consumes everything matched by `regexp`
+ */
+export function newRegexParser(regexp: RegExp): Parser<string> {
+  return (input: string) => {
+    const matches = regexp.exec(input);
+    if (matches == null) {
+      return;
+    }
+    const result = matches[0];
+    return new Result(result, input.slice(result.length));
+  };
+}
+
+/**
  * node in the AST (abstract syntax tree)
  */
 export class Ast<Value> {
@@ -28,13 +60,7 @@ export class Ast<Value> {
   }
 }
 
-/*
- * a parser is a function that takes a string and returns a `Result`
- * containing a parsed `Result.value` and the rest of the string `Result.rest`
- */
-export type Parser<T> = (str: string) => Result<T> | undefined;
-
-/*
+/**
  * transforms a `parser` into a parser that returns an Ast node
  */
 export function newAst<T>(tag: string, parser: Parser<T>): Parser<Ast<T>> {
@@ -49,24 +75,11 @@ export function newAst<T>(tag: string, parser: Parser<T>): Parser<Ast<T>> {
 }
 
 /*
- * parser that consumes everything matched by `regex`
+ * takes many `parsers`.
+ * returns a new parser that runs
+ * all `parsers` in sequence and returns an array of their results
  */
-export function regex(regexp: RegExp): Parser<string> {
-  return (input: string) => {
-    const matches = regexp.exec(input);
-    if (matches == null) {
-      return;
-    }
-    const result = matches[0];
-    return new Result(result, input.slice(result.length));
-  };
-}
-
-/*
- * takes a sequence of parsers and returns a parser that runs
- * them in sequence and produces an array of their results
- */
-export function sequence(...parsers: Array<Parser<any>>): Parser<any[]> {
+export function newSequenceParser(...parsers: Array<Parser<any>>): Parser<any[]> {
   return (input: string) => {
     let rest = input;
     const values: any[] = [];
@@ -83,23 +96,13 @@ export function sequence(...parsers: Array<Parser<any>>): Parser<any[]> {
 }
 
 /*
- * returns a parser that consumes `str` exactly
- */
-export function string(str: string): Parser<string> {
-  const { length } = str;
-  return (input: string) => {
-    if (input.slice(0, length) === str) {
-      return new Result(str, input.slice(length));
-    }
-  };
-}
-
-/*
+ * takes an `index` and many `parsers`
+ *
  * takes a sequence of parser and only returns the result
  * returned by the `index`th parser
  */
-export function pick(index: number, ...parsers: Array<Parser<any>>): Parser<any> {
-  const parser = sequence(...parsers);
+export function newPickNthParser(index: number, ...parsers: Array<Parser<any>>): Parser<any> {
+  const parser = newSequenceParser(...parsers);
   return (input: string) => {
     const result = parser(input);
     if (result == null) {
@@ -113,7 +116,7 @@ export function pick(index: number, ...parsers: Array<Parser<any>>): Parser<any>
  * for parsers that each depend on one another (cyclic dependencies)
  * postpone lookup to when they both exist.
  */
-export function lazy<T>(getParser: () => Parser<T>): Parser<T> {
+export function newLazyParser<T>(getParser: () => Parser<T>): Parser<T> {
   let cachedParser: Parser<T> | null = null;
   return (input: string) => {
     if (cachedParser == null) {
@@ -123,66 +126,76 @@ export function lazy<T>(getParser: () => Parser<T>): Parser<T> {
   };
 }
 
-/*
- * base function for parsers that parse multiples.
- *
- * @param endParser  once the `endParser` (if not null) consumes
- * the `baseMany` parser returns. the result of the `endParser` is ignored.
+/**
+ * takes a `parser` and returns a parser that parses
+ * many occurences of the parser
+ * returns the results collected in an array.
  */
-export function baseMany<T>(
-  parser: Parser<T>,
-  endParser: Parser<any> | null,
-  isAtLeastOneResultRequired: boolean,
-  input: string,
-): Result<T[]> | undefined {
-  let rest = input;
-  const results: T[] = [];
-  while (true) {
-    if (endParser != null) {
-      const endResult = endParser(rest);
-      if (endResult != null) {
+export function newAtLeastOneParser<T>(parser: Parser<T>): Parser<T[]> {
+  return (input: string) => {
+    let rest = input;
+    const results: T[] = [];
+    while (true) {
+      const parserResult = parser(rest);
+      if (parserResult == null) {
         break;
       }
+      results.push(parserResult.value);
+      rest = parserResult.rest;
     }
-    const parserResult = parser(rest);
-    if (parserResult == null) {
-      break;
-    }
-    results.push(parserResult.value);
-    rest = parserResult.rest;
-  }
 
-  if (isAtLeastOneResultRequired && results.length === 0) {
-    return;
-  }
-
-  return new Result(results, rest);
-}
-
-export function many1<T>(parser: Parser<T>): Parser<T[]> {
-  return (input: string) => {
-    const endParser: null = null;
-    const isAtLeastOneResultRequired = true;
-    return baseMany(parser, endParser, isAtLeastOneResultRequired, input);
-  };
-}
-
-export function concatMany1Till(parser: Parser<string>, endParser: Parser<any>): Parser<string> {
-  return (input: string) => {
-    const isAtLeastOneResultRequired = true;
-    const result = baseMany(parser, endParser, isAtLeastOneResultRequired, input);
-    if (result == null) {
+    if (results.length === 0) {
       return;
     }
-    return new Result(result.value.join(""), result.rest);
+
+    return new Result(results, rest);
   };
 }
 
-/*
- * takes a sequence of parsers. returns the result from the first
- * parser that consumes the input.
+/**
+ * takes a `parser` returning strings.
+ * returns a parser that parses
+ * at least one occurence of `parser` and concatenates the results.
+ * stops parsing whenever `endParser` matches and ignores the `endParser` result.
  */
-export function firstChoice(...parsers: Array<Parser<any>>): Parser<any> {
+export function newConcatAtLeastOneUntilParser(parser: Parser<string>, endParser: Parser<any>): Parser<string> {
+  return (input: string) => {
+    let hasAtLeastOneMatch = false;
+    let rest = input;
+    let result = "";
+
+    while (true) {
+      if (endParser != null) {
+        if (endParser(rest) != null) {
+          break;
+        }
+      }
+
+      const parserResult = parser(rest);
+      if (parserResult == null) {
+        break;
+      }
+
+      hasAtLeastOneMatch = true;
+      result += parserResult.value;
+      rest = parserResult.rest;
+    }
+
+    if (!hasAtLeastOneMatch) {
+      return;
+    }
+
+    return new Result(result, rest);
+  };
+}
+
+/**
+ * takes many `parsers`.
+ * returns a new parser that tries all `parsers` in order
+ * and stops and returns as soon as a parser returns a non-null result.
+ */
+// TODO any
+export function newEitherParser(...parsers: Array<Parser<any>>): Parser<any> {
   return (input: string) => {
     for (const parser of parsers) {
       const result = parser(input);

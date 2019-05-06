@@ -170,7 +170,7 @@ export function getParam(
   params: { [index: string]: any },
   key: string,
   nextIndexes: { [index: string]: number },
-  hasSideEffects: boolean,
+  hasSideEffects: boolean = false,
 ) {
   if (hasSideEffects == null) {
     hasSideEffects = false;

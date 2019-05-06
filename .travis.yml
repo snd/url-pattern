@@ -3,6 +3,7 @@ node_js:
   - "12.1"
   - "10.15"
 script:
+  - npm audit
   - npm run lint
   - npm run $NPM_COMMAND
 sudo: false

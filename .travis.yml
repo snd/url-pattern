@@ -4,7 +4,7 @@ node_js:
   - "10.15"
 script:
   - npm audit
-  - npm compile
+  - npm run compile
   - npm run lint
   - npm test
   - npm run coverage

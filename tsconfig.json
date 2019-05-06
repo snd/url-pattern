@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "module": "ES6",
+        "module": "commonjs",
         "target": "ES6",
         "strict": true,
         "noUnusedLocals": true,

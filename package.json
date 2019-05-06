@@ -69,12 +69,12 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "typescript": "^3.4.5",
-    "tslint": "^5.16.0",
-    "esm": "^3.2.22",
-    "codecov.io": "^0.1.6",
+    "@types/tape": "^4.2.33",
+    "nyc": "^14.1.0",
     "tape": "^4.10.1",
-    "zuul": "^3.12.0"
+    "ts-node": "^8.1.0",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5"
   },
   "main": "lib/url-pattern",
   "scripts": {
@@ -82,11 +82,23 @@
     "doc": "typedoc --out doc .",
     "prepublish": "npm run compile",
     "lint": "tslint --project .",
-    "pretest": "npm run compile",
-    "test": "tape -r esm test/*",
-    "test-with-coverage": "istanbul cover coffeetape test/* && cat ./coverage/coverage.json | ./node_modules/codecov.io/bin/codecov.io.js",
+    "test": "tape -r ts-node/register test/*.ts",
+    "coverage": "nyc npm test",
     "test-in-browsers": "zuul test/*",
     "test-zuul-local": "zuul --local 8080 test/*"
   },
-  "typings": "index.d.ts"
+  "typings": "index.d.ts",
+  "nyc": {
+    "include": [
+      "src/*.ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "reporter": [
+      "json",
+      "html"
+    ],
+    "all": true
+  }
 }

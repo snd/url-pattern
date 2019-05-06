@@ -12,12 +12,12 @@ turn strings into data or data into strings.**
 > This is a great little library -- thanks!  
 > [michael](https://github.com/snd/url-pattern/pull/7)
 
-[make pattern:](#make-pattern-from-string)
+[make a pattern:](#make-pattern-from-string)
 ``` javascript
 > const pattern = new UrlPattern("/api/users(/:id)");
 ```
 
-[match pattern against string and extract values:](#match-pattern-against-string)
+[match a pattern against a string and extract values:](#match-pattern-against-string)
 ``` javascript
 > pattern.match("/api/users/10");
 {id: "10"}
@@ -29,10 +29,24 @@ turn strings into data or data into strings.**
 null
 ```
 
-[generate string from pattern and values:](#stringify-patterns)
+[generate a string from a pattern and values:](#stringify-patterns)
 ``` javascript
-> pattern.stringify() // "/api/users"
-pattern.stringify({id: 20}) // "/api/users/20"
+> pattern.stringify()
+"/api/users"
+
+> pattern.stringify({id: 20})
+"/api/users/20"
+```
+
+don't like the syntax? [customize it:](#customize-the-pattern-syntax)
+```javascript
+> const pattern = new UrlPattern("/api/users/{id}", {
+  segmentNameEndChar: "}",
+  segmentNameStartChar: "{",
+}
+
+> pattern.match("/api/users/5")
+{id: "10"}
 ```
 
 - continuously tested in Node.js (0.12, 4.2.3 and 5.3) and all relevant browsers:

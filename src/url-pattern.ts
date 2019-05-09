@@ -105,12 +105,16 @@ export default class UrlPattern {
     const parser = newUrlPatternParser(options);
     const parsed = parser(pattern);
     if (parsed == null) {
-      // TODO better error message
       throw new Error("couldn't parse pattern");
     }
-    if (parsed.rest !== "") {
-      // TODO better error message
-      throw new Error("could only partially parse pattern");
+    if (parsed.rest.length !== 0) {
+      const failureIndex = pattern.length - parsed.rest.length;
+      throw new Error([
+        `could only partially parse pattern.`,
+        `failure at character ${ failureIndex + 1} in pattern:`,
+        pattern,
+        " ".repeat(failureIndex) + "^ parsing failed here",
+      ].join("\n"));
     }
     const ast = parsed.value;
     this.ast = ast;

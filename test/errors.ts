@@ -6,7 +6,7 @@ import UrlPattern from "../src/url-pattern";
 const UntypedUrlPattern: any = UrlPattern;
 
 tape("invalid argument", (t: tape.Test) => {
-  t.plan(5);
+  t.plan(6);
 
   try {
     new UntypedUrlPattern();
@@ -32,6 +32,12 @@ tape("invalid argument", (t: tape.Test) => {
     new UrlPattern(" fo o");
   } catch (error) {
     t.equal(error.message, "first argument must not contain whitespace");
+  }
+  try {
+    const str: any = "foo";
+    new UrlPattern(str, []);
+  } catch (error) {
+    t.equal(error.message, "if first argument is a string second argument must be an options object or undefined");
   }
   t.end();
 });

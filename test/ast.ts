@@ -50,6 +50,13 @@ tape("astNodeToRegexString and astNodeToNames", (t: tape.Test) => {
     t.end();
   });
 
+  t.test("just named wildcard", (t: tape.Test) => {
+    const parsed = parse("*:variable");
+    t.equal(astNodeToRegexString(parsed.value), "^(.*?)$");
+    t.deepEqual(astNodeToNames(parsed.value), ["variable"]);
+    t.end();
+  });
+
   t.test("just optional static", (t: tape.Test) => {
     const parsed = parse("(foo)");
     t.equal(astNodeToRegexString(parsed.value), "^(?:foo)?$");
@@ -68,6 +75,13 @@ tape("astNodeToRegexString and astNodeToNames", (t: tape.Test) => {
     const parsed = parse("(*)");
     t.equal(astNodeToRegexString(parsed.value), "^(?:(.*?))?$");
     t.deepEqual(astNodeToNames(parsed.value), ["_"]);
+    t.end();
+  });
+
+  t.test("just optional named wildcard", (t: tape.Test) => {
+    const parsed = parse("(*:variable)");
+    t.equal(astNodeToRegexString(parsed.value), "^(?:(.*?))?$");
+    t.deepEqual(astNodeToNames(parsed.value), ["variable"]);
     t.end();
   });
 });

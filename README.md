@@ -96,7 +96,7 @@ undefined
 ```
 
 ``` javascript
-> var pattern = new UrlPattern("(http(s)\\://)(:subdomain.):domain.:tld(\\::port)(/*)")
+> const pattern = new UrlPattern("(http(s)\\://)(:subdomain.):domain.:tld(\\::port)(/*)")
 
 > pattern.match("google.de");
 {domain: "google", tld: "de"}
@@ -117,7 +117,7 @@ undefined
 ## make pattern from string
 
 ```javascript
-> var pattern = new UrlPattern("/api/users/:id");
+> const pattern = new UrlPattern("/api/users/:id");
 ```
 
 a `pattern` is immutable after construction.  
@@ -159,7 +159,7 @@ if a named segment **name** occurs more than once in the pattern string,
 then the multiple results are stored in an array on the returned object:
 
 ```javascript
-> var pattern = new UrlPattern("/api/users/:ids/posts/:ids");
+> const pattern = new UrlPattern("/api/users/:ids/posts/:ids");
 > pattern.match("/api/users/10/posts/5");
 {ids: ["10", "5"]}
 ```
@@ -169,7 +169,7 @@ then the multiple results are stored in an array on the returned object:
 to make part of a pattern optional just wrap it in `(` and `)`:
 
 ```javascript
-> var pattern = new UrlPattern(
+> const pattern = new UrlPattern(
   "(http(s)\\://)(:subdomain.):domain.:tld(/*)"
 );
 ```
@@ -206,7 +206,7 @@ otherwise `_` contains an array of matching strings.
 ## make pattern from regex
 
 ```javascript
-> var pattern = new UrlPattern(/^\/api\/(.*)$/);
+> const pattern = new UrlPattern(/^\/api\/(.*)$/);
 ```
 
 if the pattern was created from a regex an array of the captured groups is returned on a match:
@@ -224,7 +224,7 @@ you can pass an array of keys as the second argument.
 returns objects on match with each key mapped to a captured value:
 
 ```javascript
-> var pattern = new UrlPattern(
+> const pattern = new UrlPattern(
   /^\/api\/([^\/]+)(?:\/(\d+))?$/,
   ["resource", "id"]
 );
@@ -242,7 +242,7 @@ undefined
 ## stringify patterns
 
 ```javascript
-> var pattern = new UrlPattern("/api/users/:id");
+> const pattern = new UrlPattern("/api/users/:id");
 
 > pattern.stringify({id: 10})
 "/api/users/10"
@@ -252,7 +252,7 @@ optional segments are only included in the output if they contain named segments
 and/or wildcards and values for those are provided:
 
 ```javascript
-> var pattern = new UrlPattern("/api/users(/:id)");
+> const pattern = new UrlPattern("/api/users(/:id)");
 
 > pattern.stringify()
 "/api/users"
@@ -270,14 +270,14 @@ params and not all of them are provided.
 *one provided value for an optional segment
 makes all values in that optional segment required.*
 
-[look at the tests for additional examples of `.stringify`](test/stringify-fixtures.coffee)
+[look at the tests for additional examples of `.stringify`](test/stringify-fixtures.ts)
 
 ## customize the pattern syntax
 
 finally we can completely change pattern-parsing and regex-compilation to suit our needs:
 
 ```javascript
-> var options = {};
+> let options = {};
 ```
 
 let's change the char used for escaping (default `\\`):
@@ -322,7 +322,7 @@ let's change the char used to denote a wildcard (default `*`):
 pass options as the second argument to the constructor:
 
 ```javascript
-> var pattern = new UrlPattern(
+> const pattern = new UrlPattern(
   "[http[s]!://][$sub_domain.]$domain.$toplevel-domain[/?]",
   options
 );

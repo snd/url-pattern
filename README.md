@@ -26,7 +26,7 @@ turn strings into data or data into strings.**
 {}
 
 > pattern.match("/api/products/5");
-null
+undefined
 ```
 
 [generate a string from a pattern and values:](#stringify-patterns)
@@ -46,7 +46,7 @@ prefer a different syntax? [customize it:](#customize-the-pattern-syntax)
 }
 
 > pattern.match("/api/users/5")
-{id: "10"}
+{id: "5"}
 ```
 
 - continuously tested in Node.js (0.12, 4.2.3 and 5.3) and all relevant browsers:
@@ -92,7 +92,7 @@ bower install url-pattern
 {major: "2", _: "users"}
 
 > pattern.match("/v/");
-null
+undefined
 ```
 
 ``` javascript
@@ -111,7 +111,7 @@ null
 {subdomain: "mail", domain: "google", tld: "com", port: "80", _: "mail"}
 
 > pattern.match("google");
-null
+undefined
 ```
 
 ## make pattern from string
@@ -133,11 +133,11 @@ match returns the extracted segments:
 {id: "10"}
 ```
 
-or `null` if there was no match:
+or `undefined` if there was no match:
 
 ``` javascript
 > pattern.match("/api/products/5");
-null
+undefined
 ```
 
 patterns are compiled into regexes which makes `.match()` superfast.
@@ -216,7 +216,7 @@ if the pattern was created from a regex an array of the captured groups is retur
 ["users"]
 
 > pattern.match("/apiii/test");
-null
+undefined
 ```
 
 when making a pattern from a regex
@@ -236,7 +236,7 @@ returns objects on match with each key mapped to a captured value:
 {resource: "users", id: "5"}
 
 > pattern.match("/api/users/foo");
-null
+undefined
 ```
 
 ## stringify patterns

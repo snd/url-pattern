@@ -4,10 +4,34 @@ import * as tape from "tape";
 
 import UrlPattern from "../src/url-pattern";
 
-tape("simple", (t: tape.Test) => {
+tape("match a pattern against a string and extract values", (t: tape.Test) => {
   const pattern = new UrlPattern("/api/users/:id");
   t.deepEqual(pattern.match("/api/users/10"), {id: "10"});
   t.equal(pattern.match("/api/products/5"), undefined);
+  t.end();
+});
+
+tape("generate a string from a pattern and values", (t: tape.Test) => {
+  const pattern = new UrlPattern("/api/users/:id");
+  t.equal(pattern.stringify(), "/api/users");
+  t.equal(pattern.stringify({id: 20}), "/api/users/20");
+  t.end();
+});
+
+tape("prefer a different syntax. customize it", (t: tape.Test) => {
+  const options = {
+    segmentNameEndChar: "}",
+    segmentNameStartChar: "{",
+  };
+
+  const pattern = new UrlPattern(
+    "/api/users/{id}",
+    options,
+  );
+
+  t.deepEqual(pattern.match("/users/5"), {
+    id: "5",
+  });
   t.end();
 });
 

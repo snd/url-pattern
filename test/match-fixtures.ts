@@ -290,5 +290,21 @@ tape("match", (t: tape.Test) => {
   t.deepEqual(pattern.match("/ip/127.0.0.1"),
     {ip: "127.0.0.1"});
 
+  pattern = new UrlPattern("https\\://translate.google.com/translate?sl=auto&tl=:targetLanguage&u=:url", {
+    segmentValueCharset: "a-zA-Z0-9-_~ %.",
+  });
+  t.deepEqual(pattern.match("https://translate.google.com/translate?sl=auto&tl=es&u=yahoo.com"), {
+    targetLanguage: "es",
+    url: "yahoo.com",
+  });
+
+  pattern = new UrlPattern("https\\://translate.google.com/translate?sl=auto&tl=:target_language&u=:url", {
+    segmentValueCharset: "a-zA-Z0-9-_~ %.",
+  });
+  t.deepEqual(pattern.match("https://translate.google.com/translate?sl=auto&tl=es&u=yahoo.com"), {
+    target_language: "es",
+    url: "yahoo.com",
+  });
+
   t.end();
 });

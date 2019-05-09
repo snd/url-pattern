@@ -38,7 +38,7 @@ null
 "/api/users/20"
 ```
 
-don't like the syntax? [customize it:](#customize-the-pattern-syntax)
+prefer a different syntax? [customize it:](#customize-the-pattern-syntax)
 ```javascript
 > const pattern = new UrlPattern("/api/users/{id}", {
   segmentNameEndChar: "}",
@@ -79,7 +79,7 @@ bower install url-pattern
 ```
 
 ```javascript
-const UrlPattern = require("url-pattern");
+> const UrlPattern = require("url-pattern");
 ```
 
 ``` javascript
@@ -94,6 +94,7 @@ const UrlPattern = require("url-pattern");
 > pattern.match("/v/");
 null
 ```
+
 ``` javascript
 > var pattern = new UrlPattern("(http(s)\\://)(:subdomain.):domain.:tld(\\::port)(/*)")
 

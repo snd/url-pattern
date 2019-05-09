@@ -1,3 +1,5 @@
+// tests to ensure that there are no regressions in stringify functionality
+
 import * as tape from "tape";
 
 import UrlPattern from "../src/url-pattern";

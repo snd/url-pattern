@@ -1,4 +1,6 @@
-/* tslint:disable:max-line-length */
+// tests to ensure that there are no regressions in matching functionality
+//
+// tslint:disable:max-line-length
 import * as tape from "tape";
 
 import UrlPattern from "../src/url-pattern";

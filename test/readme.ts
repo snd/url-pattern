@@ -1,3 +1,5 @@
+// tests for all the examples in the readme
+
 import * as tape from "tape";
 
 import UrlPattern from "../src/url-pattern";

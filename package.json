@@ -83,6 +83,7 @@
     "prepublish": "npm run compile",
     "lint": "tslint --project .",
     "test": "tape -r ts-node/register test/*.ts",
+    "ts-node": "ts-node",
     "coverage": "nyc npm test",
     "test-in-browsers": "zuul test/*",
     "test-zuul-local": "zuul --local 8080 test/*"

@@ -201,7 +201,15 @@ wildcard matches are collected in the `_` property:
 if there is only one wildcard then `_` contains the matching string.
 otherwise `_` contains an array of matching strings.
 
-[look at the tests for additional examples of `.match`](test/match-fixtures.coffee)
+wildcards can be named like this:
+
+```javascript
+> const pattern = new UrlPattern('/search/*:term');
+> pattern.match('/search/fruit');
+{term: 'fruit'}
+```
+
+[look at the tests for additional examples of `.match`](test/match-fixtures.ts)
 
 ## make pattern from regex
 

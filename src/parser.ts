@@ -128,6 +128,8 @@ function baseAstNodeToRegexString(astNode: Ast<any>, segmentValueCharset: string
   switch (astNode.tag) {
     case "wildcard":
       return "(.*?)";
+    case "namedWildcard":
+      return "(.*?)";
     case "namedSegment":
       return `([${ segmentValueCharset }]+)`;
     case "staticContent":
@@ -154,6 +156,8 @@ export function astNodeToNames(astNode: Ast<any> | Array<Ast<any>>): string[] {
   switch (astNode.tag) {
     case "wildcard":
       return ["_"];
+    case "namedWildcard":
+      return [astNode.value];
     case "namedSegment":
       return [astNode.value];
     case "staticContent":

@@ -51,7 +51,12 @@ tape("invalid variable name in pattern", (t: tape.Test) => {
   try {
     new UrlPattern("foo:.");
   } catch (error) {
-    t.equal(error.message, "could only partially parse pattern");
+    t.equal(error.message, [
+      "could only partially parse pattern.",
+      "failure at character 4 in pattern:",
+      "foo:.",
+      "   ^ parsing failed here",
+    ].join("\n"));
   }
   t.end();
 });
@@ -66,7 +71,12 @@ tape("too many closing parentheses", (t: tape.Test) => {
   try {
     new UrlPattern("((foo)))bar");
   } catch (error) {
-    t.equal(error.message, "could only partially parse pattern");
+    t.equal(error.message, [
+      "could only partially parse pattern.",
+      "failure at character 8 in pattern:",
+      "((foo)))bar",
+      "       ^ parsing failed here",
+    ].join("\n"));
   }
   t.end();
 });

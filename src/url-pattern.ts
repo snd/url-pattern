@@ -5,7 +5,7 @@ import {
 
 import {
   Ast,
-} from "./parsercombinators";
+} from "./parser-combinators";
 
 import {
   defaultOptions,
@@ -14,11 +14,14 @@ import {
 } from "./options";
 
 import {
-  astNodeToNames,
-  astNodeToRegexString,
   newUrlPatternParser,
-  stringify,
 } from "./parser";
+
+import {
+  astRootToRegexString,
+  astToNames,
+  stringify,
+} from "./ast-helpers";
 
 export default class UrlPattern {
   public readonly isRegex: boolean;
@@ -119,8 +122,8 @@ export default class UrlPattern {
     const ast = parsed.value;
     this.ast = ast;
 
-    this.regex = new RegExp(astNodeToRegexString(ast, options.segmentValueCharset));
-    this.names = astNodeToNames(ast);
+    this.regex = new RegExp(astRootToRegexString(ast, options.segmentValueCharset));
+    this.names = astToNames(ast);
   }
 
   public match(url: string): object | undefined {

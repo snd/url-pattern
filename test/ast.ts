@@ -2,11 +2,14 @@
 import * as tape from "tape";
 
 import {
-  astNodeToNames,
-  astNodeToRegexString,
-  getParam,
   newUrlPatternParser,
 } from "../src/parser";
+
+import {
+  astRootToRegexString,
+  astToNames,
+  getParam,
+} from "../src/ast-helpers";
 
 import {
   defaultOptions,
@@ -14,74 +17,74 @@ import {
 
 const parse: any = newUrlPatternParser(defaultOptions);
 
-tape("astNodeToRegexString and astNodeToNames", (t: tape.Test) => {
+tape("astRootToRegexString and astToNames", (t: tape.Test) => {
   t.test("just static alphanumeric", (t: tape.Test) => {
     const parsed = parse("user42");
-    t.equal(astNodeToRegexString(parsed.value), "^user42$");
-    t.deepEqual(astNodeToNames(parsed.value), []);
+    t.equal(astRootToRegexString(parsed.value), "^user42$");
+    t.deepEqual(astToNames(parsed.value), []);
     t.end();
   });
 
   t.test("just static escaped", (t: tape.Test) => {
     const parsed = parse("/api/v1/users");
-    t.equal(astNodeToRegexString(parsed.value), "^\\/api\\/v1\\/users$");
-    t.deepEqual(astNodeToNames(parsed.value), []);
+    t.equal(astRootToRegexString(parsed.value), "^\\/api\\/v1\\/users$");
+    t.deepEqual(astToNames(parsed.value), []);
     t.end();
   });
 
   t.test("just single char variable", (t: tape.Test) => {
     const parsed = parse(":a");
-    t.equal(astNodeToRegexString(parsed.value), "^([a-zA-Z0-9-_~ %]+)$");
-    t.deepEqual(astNodeToNames(parsed.value), ["a"]);
+    t.equal(astRootToRegexString(parsed.value), "^([a-zA-Z0-9-_~ %]+)$");
+    t.deepEqual(astToNames(parsed.value), ["a"]);
     t.end();
   });
 
   t.test("just variable", (t: tape.Test) => {
     const parsed = parse(":variable");
-    t.equal(astNodeToRegexString(parsed.value), "^([a-zA-Z0-9-_~ %]+)$");
-    t.deepEqual(astNodeToNames(parsed.value), ["variable"]);
+    t.equal(astRootToRegexString(parsed.value), "^([a-zA-Z0-9-_~ %]+)$");
+    t.deepEqual(astToNames(parsed.value), ["variable"]);
     t.end();
   });
 
   t.test("just wildcard", (t: tape.Test) => {
     const parsed = parse("*");
-    t.equal(astNodeToRegexString(parsed.value), "^(.*?)$");
-    t.deepEqual(astNodeToNames(parsed.value), ["_"]);
+    t.equal(astRootToRegexString(parsed.value), "^(.*?)$");
+    t.deepEqual(astToNames(parsed.value), ["_"]);
     t.end();
   });
 
   t.test("just named wildcard", (t: tape.Test) => {
     const parsed = parse("*:variable");
-    t.equal(astNodeToRegexString(parsed.value), "^(.*?)$");
-    t.deepEqual(astNodeToNames(parsed.value), ["variable"]);
+    t.equal(astRootToRegexString(parsed.value), "^(.*?)$");
+    t.deepEqual(astToNames(parsed.value), ["variable"]);
     t.end();
   });
 
   t.test("just optional static", (t: tape.Test) => {
     const parsed = parse("(foo)");
-    t.equal(astNodeToRegexString(parsed.value), "^(?:foo)?$");
-    t.deepEqual(astNodeToNames(parsed.value), []);
+    t.equal(astRootToRegexString(parsed.value), "^(?:foo)?$");
+    t.deepEqual(astToNames(parsed.value), []);
     t.end();
   });
 
   t.test("just optional variable", (t: tape.Test) => {
     const parsed = parse("(:foo)");
-    t.equal(astNodeToRegexString(parsed.value), "^(?:([a-zA-Z0-9-_~ %]+))?$");
-    t.deepEqual(astNodeToNames(parsed.value), ["foo"]);
+    t.equal(astRootToRegexString(parsed.value), "^(?:([a-zA-Z0-9-_~ %]+))?$");
+    t.deepEqual(astToNames(parsed.value), ["foo"]);
     t.end();
   });
 
   t.test("just optional wildcard", (t: tape.Test) => {
     const parsed = parse("(*)");
-    t.equal(astNodeToRegexString(parsed.value), "^(?:(.*?))?$");
-    t.deepEqual(astNodeToNames(parsed.value), ["_"]);
+    t.equal(astRootToRegexString(parsed.value), "^(?:(.*?))?$");
+    t.deepEqual(astToNames(parsed.value), ["_"]);
     t.end();
   });
 
   t.test("just optional named wildcard", (t: tape.Test) => {
     const parsed = parse("(*:variable)");
-    t.equal(astNodeToRegexString(parsed.value), "^(?:(.*?))?$");
-    t.deepEqual(astNodeToNames(parsed.value), ["variable"]);
+    t.equal(astRootToRegexString(parsed.value), "^(?:(.*?))?$");
+    t.deepEqual(astToNames(parsed.value), ["variable"]);
     t.end();
   });
 });

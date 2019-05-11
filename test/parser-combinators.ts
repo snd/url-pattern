@@ -3,7 +3,7 @@ import * as tape from "tape";
 import {
   newRegexParser,
   newStringParser,
-} from "../src/parsercombinators";
+} from "../src/parser-combinators";
 
 tape("newStringParser", (t: tape.Test) => {
   const parse = newStringParser("foo");

@@ -1,15 +1,3 @@
-language: node_js
-node_js:
-  - "12"
-  - "10.15"
-script:
-  - npm audit
-  - npm run compile
-  - npm run lint
-  - npm test
-  - npm run coverage
-  # - npm run $NPM_COMMAND
-sudo: false
 env:
   global:
     # SAUCE_USERNAME
@@ -18,31 +6,17 @@ env:
     - secure: "idJFmSy6EyMNO9UoxUx0wG83G/w8H1Sh1fG5lWodAdV01/Ft0j3KQo/zelENBx7zMWf+iqdWOhL4rBLIIkaajHbmvkMYDzhFXK4GIZmd1HnV4MZCunipscMsEbtQU+uTY/I3fersnIz74aTuj3SKlFW4jVNgvc8fawijBtTbuhU="
 matrix:
   include:
-    name: "deno"
+  - node_js: "12"
+    script:
+    - npm audit
+    - npm run compile
+    - npm run lint
+    - npm run coverage
+  - node_js: "10.15"
+    script:
+      - npm test
+  - name: "deno"
     script:
       - curl -fsSL https://deno.land/x/install/install.sh | sh
       - export PATH="$HOME/.deno/bin:$PATH"
       - deno run deno-test.ts
-  # matrix:
-  #   - NPM_COMMAND=test
-    # - NPM_COMMAND=test-with-coverage
-    # - NPM_COMMAND=test-in-browsers
-# matrix:
-#   exclude:
-    # don't test in browsers more than once (already done with node 5)
-    # - node_js: "0.12"
-    #   env: NPM_COMMAND=test-in-browsers
-    # - node_js: "iojs-3"
-    #   env: NPM_COMMAND=test-in-browsers
-    # - node_js: "4"
-    #   env: NPM_COMMAND=test-in-browsers
-    # don't collect code coverage more than once (already done with node 5)
-    # - node_js: "0.12"
-    #   env: NPM_COMMAND=test-with-coverage
-    # - node_js: "iojs-3"
-    #   env: NPM_COMMAND=test-with-coverage
-    # - node_js: "4"
-    #   env: NPM_COMMAND=test-with-coverage
-    # already tested with coverage (with node 5). no need to test again without
-    # - node_js: "5"
-    #   env: NPM_COMMAND=test

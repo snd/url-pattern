@@ -115,7 +115,7 @@ function astContainsAnySegmentsForParams(
 }
 
 /**
- * turn an url-pattern AST and a mapping of `namesToValues`
+ * turn an url-pattern AST and a mapping of `namesToValues` into a string
  */
 export function stringify(
   nodes: Array<Ast<any>>,

@@ -2,6 +2,7 @@ import * as tape from "tape";
 
 import {
   newNamedSegmentParser,
+  newNamedWildcardParser,
   newStaticContentParser,
   newUrlPatternParser,
 } from "../src/parser";
@@ -13,6 +14,7 @@ import {
 const parse = newUrlPatternParser(defaultOptions);
 const parseNamedSegment = newNamedSegmentParser(defaultOptions);
 const parseStaticContent = newStaticContentParser(defaultOptions);
+const parseNamedWildcard = newNamedWildcardParser(defaultOptions);
 
 tape("namedSegment", (t: tape.Test) => {
   t.deepEqual(parseNamedSegment(":a"), {
@@ -55,29 +57,40 @@ tape("namedSegment", (t: tape.Test) => {
 });
 
 tape("static", (t: tape.Test) => {
-    t.deepEqual(parseStaticContent("a"), {
-      rest: "",
-      value: {
-        tag: "staticContent",
-        value: "a",
-      },
+  t.deepEqual(parseStaticContent("a"), {
+    rest: "",
+    value: {
+      tag: "staticContent",
+      value: "a",
     },
-    );
-    t.deepEqual(parseStaticContent("abc:d"), {
-      rest: ":d",
-      value: {
-        tag: "staticContent",
-        value: "abc",
-      },
+  },
+  );
+  t.deepEqual(parseStaticContent("abc:d"), {
+    rest: ":d",
+    value: {
+      tag: "staticContent",
+      value: "abc",
     },
-    );
-    t.equal(parseStaticContent(":ab96c"), undefined);
-    t.equal(parseStaticContent(":"), undefined);
-    t.equal(parseStaticContent("("), undefined);
-    t.equal(parseStaticContent(")"), undefined);
-    t.equal(parseStaticContent("*"), undefined);
-    t.equal(parseStaticContent(""), undefined);
-    t.end();
+  },
+  );
+  t.equal(parseStaticContent(":ab96c"), undefined);
+  t.equal(parseStaticContent(":"), undefined);
+  t.equal(parseStaticContent("("), undefined);
+  t.equal(parseStaticContent(")"), undefined);
+  t.equal(parseStaticContent("*"), undefined);
+  t.equal(parseStaticContent(""), undefined);
+  t.end();
+});
+
+tape("namedWildcard", (t: tape.Test) => {
+  t.deepEqual(parseNamedWildcard("*:a"), {
+    rest: "",
+    value: {
+      tag: "namedWildcard",
+      value: "a",
+    },
+  });
+  t.end();
 });
 
 tape("fixtures", (t: tape.Test) => {

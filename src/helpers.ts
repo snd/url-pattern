@@ -7,32 +7,6 @@ export function escapeStringForRegex(str: string): string {
 }
 
 /**
- * like `Array.prototype.map` except that the function `f`
- * returns an array and `concatMap` returns the concatenation
- * of all arrays returned by `f`
- */
-export function concatMap<Input, Output>(array: Input[], f: (x: Input) => Output[]): Output[] {
-  let results: Output[] = [];
-  for (const value of array) {
-    results = results.concat(f(value));
-  }
-  return results;
-}
-
-/**
- * like `Array.prototype.map` except that the function `f`
- * returns a string and `stringConcatMap` returns the concatenation
- * of all strings returned by `f`
- */
-export function stringConcatMap<T>(array: T[], f: (x: T) => string): string {
-  let result = "";
-  for (const value of array) {
-    result += f(value);
-  }
-  return result;
-}
-
-/**
  * returns the number of groups in the `regex`.
  * source: http://stackoverflow.com/a/16047223
  */
@@ -58,8 +32,7 @@ export function keysAndValuesToObject(keys: string[], values: any[]): object {
     throw Error("keys.length must equal values.length");
   }
 
-  let i = -1;
-  while (++i < keys.length) {
+  for (let i = 0; i < keys.length; i++) {
     const key = keys[i];
     const value = values[i];
 

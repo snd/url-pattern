@@ -37,80 +37,114 @@ tape("match", (t: tape.Test) => {
   t.deepEqual(pattern.match("/user/10/task/52"), {
     taskId: "52",
     userId: "10",
-  },
-  );
+  });
 
   pattern = new UrlPattern(".user.:userId.task.:taskId");
   t.deepEqual(pattern.match(".user.10.task.52"), {
     taskId: "52",
     userId: "10",
-  },
-  );
+  });
 
   pattern = new UrlPattern("*/user/:userId");
   t.deepEqual(pattern.match("/school/10/user/10"), {
-    _: "/school/10",
     userId: "10",
-  },
-  );
+  });
+
+  pattern = new UrlPattern("*:prefix/user/:userId");
+  t.deepEqual(pattern.match("/school/10/user/10"), {
+    prefix: "/school/10",
+    userId: "10",
+  });
 
   pattern = new UrlPattern("*-user-:userId");
   t.deepEqual(pattern.match("-school-10-user-10"), {
-    _: "-school-10",
     userId: "10",
-  },
-  );
+  });
+
+  pattern = new UrlPattern("*:prefix-user-:userId");
+  t.deepEqual(pattern.match("-school-10-user-10"), {
+    prefix: "-school-10",
+    userId: "10",
+  });
 
   pattern = new UrlPattern("/admin*");
-  t.deepEqual(pattern.match("/admin/school/10/user/10"),
-    {_: "/school/10/user/10"});
+  t.deepEqual(pattern.match("/admin/school/10/user/10"), {});
+
+  pattern = new UrlPattern("/admin*:suffix");
+  t.deepEqual(pattern.match("/admin/school/10/user/10"), {
+    suffix: "/school/10/user/10",
+  });
+  t.deepEqual(pattern.match("/admin"), {
+    suffix: "",
+  });
+
+  pattern = new UrlPattern("/admin(*:suffix)");
+  t.deepEqual(pattern.match("/admin/school/10/user/10"), {
+    suffix: "/school/10/user/10",
+  });
+  t.deepEqual(pattern.match("/admin"), {});
 
   pattern = new UrlPattern("#admin*");
-  t.deepEqual(pattern.match("#admin#school#10#user#10"),
-    {_: "#school#10#user#10"});
+  t.deepEqual(pattern.match("#admin#school#10#user#10"), {});
+
+  pattern = new UrlPattern("#admin*:suffix");
+  t.deepEqual(pattern.match("#admin#school#10#user#10"), {
+    suffix: "#school#10#user#10",
+  });
 
   pattern = new UrlPattern("/admin/*/user/:userId");
   t.deepEqual(pattern.match("/admin/school/10/user/10"), {
-    _: "school/10",
     userId: "10",
-  },
-  );
+  });
+
+  pattern = new UrlPattern("/admin/*:infix/user/:userId");
+  t.deepEqual(pattern.match("/admin/school/10/user/10"), {
+    infix: "school/10",
+    userId: "10",
+  });
 
   pattern = new UrlPattern("$admin$*$user$:userId");
   t.deepEqual(pattern.match("$admin$school$10$user$10"), {
-    _: "school$10",
     userId: "10",
-  },
-  );
+  });
+
+  pattern = new UrlPattern("$admin$*:infix$user$:userId");
+  t.deepEqual(pattern.match("$admin$school$10$user$10"), {
+    infix: "school$10",
+    userId: "10",
+  });
 
   pattern = new UrlPattern("/admin/*/user/*/tail");
-  t.deepEqual(pattern.match("/admin/school/10/user/10/12/tail"),
-    {_: ["school/10", "10/12"]});
+  t.deepEqual(pattern.match("/admin/school/10/user/10/12/tail"), {});
 
-  pattern = new UrlPattern("$admin$*$user$*$tail");
-  t.deepEqual(pattern.match("$admin$school$10$user$10$12$tail"),
-    {_: ["school$10", "10$12"]});
+  pattern = new UrlPattern("/admin/*:infix1/user/*:infix2/tail");
+  t.deepEqual(pattern.match("/admin/school/10/user/10/12/tail"), {
+    infix1: "school/10",
+    infix2: "10/12",
+  });
 
   pattern = new UrlPattern("/admin/*/user/:id/*/tail");
   t.deepEqual(pattern.match("/admin/school/10/user/10/12/13/tail"), {
-    _: ["school/10", "12/13"],
     id: "10",
-  },
-  );
+  });
 
-  pattern = new UrlPattern("^admin^*^user^:id^*^tail");
-  t.deepEqual(pattern.match("^admin^school^10^user^10^12^13^tail"), {
-    _: ["school^10", "12^13"],
+  pattern = new UrlPattern("/admin/*:infix1/user/:id/*:infix2/tail");
+  t.deepEqual(pattern.match("/admin/school/10/user/10/12/13/tail"), {
     id: "10",
-  },
-  );
+    infix1: "school/10",
+    infix2: "12/13",
+  });
 
   pattern = new UrlPattern("/*/admin(/:path)");
   t.deepEqual(pattern.match("/admin/admin/admin"), {
-    _: "admin",
     path: "admin",
-  },
-  );
+  });
+
+  pattern = new UrlPattern("/*:infix/admin(/:path)");
+  t.deepEqual(pattern.match("/admin/admin/admin"), {
+    infix: "admin",
+    path: "admin",
+  });
 
   pattern = new UrlPattern("(/)");
   t.deepEqual(pattern.match(""), {});
@@ -127,21 +161,38 @@ tape("match", (t: tape.Test) => {
 
   pattern = new UrlPattern("/admin/(*/)foo");
   t.deepEqual(pattern.match("/admin/foo"), {});
-  t.deepEqual(pattern.match("/admin/baz/bar/biff/foo"),
-    {_: "baz/bar/biff"});
+  t.deepEqual(pattern.match("/admin/baz/bar/biff/foo"), {});
+
+  pattern = new UrlPattern("/admin/(*:infix/)foo");
+  t.deepEqual(pattern.match("/admin/foo"), {});
+  t.deepEqual(pattern.match("/admin/baz/bar/biff/foo"), {
+    infix: "baz/bar/biff",
+  });
 
   pattern = new UrlPattern("/v:major.:minor/*");
   t.deepEqual(pattern.match("/v1.2/resource/"), {
-    _: "resource/",
     major: "1",
     minor: "2",
-  },
-  );
+  });
 
-  pattern = new UrlPattern("/v:v.:v/*");
+  pattern = new UrlPattern("/v:major.:minor/*:suffix");
   t.deepEqual(pattern.match("/v1.2/resource/"), {
-    _: "resource/",
-    v: ["1", "2"],
+    major: "1",
+    minor: "2",
+    suffix: "resource/",
+  });
+
+  pattern = new UrlPattern("/v:minor.:major/*");
+  t.deepEqual(pattern.match("/v1.2/resource/"), {
+    major: "2",
+    minor: "1",
+  });
+
+  pattern = new UrlPattern("/v:minor.:major/*:suffix");
+  t.deepEqual(pattern.match("/v1.2/resource/"), {
+    major: "2",
+    minor: "1",
+    suffix: "resource/",
   });
 
   pattern = new UrlPattern("/:foo_bar");
@@ -185,10 +236,16 @@ tape("match", (t: tape.Test) => {
   pattern = new UrlPattern("/vvv:version/*");
   t.equal(undefined, pattern.match("/vvv/resource"));
   t.deepEqual(pattern.match("/vvv1/resource"), {
-    _: "resource",
     version: "1",
-  },
-  );
+  });
+  t.equal(undefined, pattern.match("/vvv1.1/resource"));
+
+  pattern = new UrlPattern("/vvv:version/*:suffix");
+  t.equal(undefined, pattern.match("/vvv/resource"));
+  t.deepEqual(pattern.match("/vvv1/resource"), {
+    suffix: "resource",
+    version: "1",
+  });
   t.equal(undefined, pattern.match("/vvv1.1/resource"));
 
   pattern = new UrlPattern("/api/users/:id",
@@ -205,60 +262,51 @@ tape("match", (t: tape.Test) => {
   t.deepEqual(pattern.match("/api/users?param1=foo&param2=bar"), {
     param1: "foo",
     param2: "bar",
-  },
-  );
+  });
 
   pattern = new UrlPattern(":scheme\\://:host(\\::port)",
     {segmentValueCharset: "a-zA-Z0-9-_~ %."});
   t.deepEqual(pattern.match("ftp://ftp.example.com"), {
     host: "ftp.example.com",
     scheme: "ftp",
-  },
-  );
+  });
   t.deepEqual(pattern.match("ftp://ftp.example.com:8080"), {
     host: "ftp.example.com",
     port: "8080",
     scheme: "ftp",
-  },
-  );
+  });
   t.deepEqual(pattern.match("https://example.com:80"), {
     host: "example.com",
     port: "80",
     scheme: "https",
-  },
-  );
+  });
 
   pattern = new UrlPattern(":scheme\\://:host(\\::port)(/api(/:resource(/:id)))",
     {segmentValueCharset: "a-zA-Z0-9-_~ %.@"});
   t.deepEqual(pattern.match("https://sss.www.localhost.com"), {
     host: "sss.www.localhost.com",
     scheme: "https",
-  },
-  );
+  });
   t.deepEqual(pattern.match("https://sss.www.localhost.com:8080"), {
     host: "sss.www.localhost.com",
     port: "8080",
     scheme: "https",
-  },
-  );
+  });
   t.deepEqual(pattern.match("https://sss.www.localhost.com/api"), {
     host: "sss.www.localhost.com",
     scheme: "https",
-  },
-  );
+  });
   t.deepEqual(pattern.match("https://sss.www.localhost.com/api/security"), {
     host: "sss.www.localhost.com",
     resource: "security",
     scheme: "https",
-  },
-  );
+  });
   t.deepEqual(pattern.match("https://sss.www.localhost.com/api/security/bob@example.com"), {
     host: "sss.www.localhost.com",
     id: "bob@example.com",
     resource: "security",
     scheme: "https",
-  },
-  );
+  });
 
   let regex = /\/ip\/(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
   pattern = new UrlPattern(regex);

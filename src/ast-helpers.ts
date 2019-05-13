@@ -8,110 +8,75 @@ import {
 } from "./parser-combinators";
 
 import {
-  concatMap,
   escapeStringForRegex,
-  stringConcatMap,
 } from "./helpers";
 
-import {
-  defaultOptions,
-} from "./options";
-
 /**
- * converts an `astNode` within the AST of a parsed url-pattern into
- * a string representing the regex that matches the url-pattern.
+ * converts an array of AST nodes `nodes` representing a parsed url-pattern into
+ * a string representing the regex which matches that url-pattern.
  */
-function astToRegexString(astNode: Ast<any>, segmentValueCharset: string): string {
-  if (Array.isArray(astNode)) {
-    return stringConcatMap(astNode, (node) => astToRegexString(node, segmentValueCharset));
+function astToRegexString(nodes: Array<Ast<any>>, segmentValueCharset: string): string {
+  let result = "";
+
+  for (const node of nodes) {
+    switch (node.tag) {
+      case "wildcard":
+        // ? = lazy
+        result += ".*?";
+        continue;
+      case "namedWildcard":
+        // ? = lazy
+        result += "(.*?)";
+        continue;
+      case "namedSegment":
+        result += `([${ segmentValueCharset }]+)`;
+        continue;
+      case "staticContent":
+        result += escapeStringForRegex(node.value);
+        continue;
+      case "optionalSegment":
+        result += `(?:${ astToRegexString(node.value, segmentValueCharset) })?`;
+        continue;
+      default:
+        throw new Error(`unknown tag \`${ node.tag }\``);
+    }
   }
 
-  switch (astNode.tag) {
-    case "wildcard":
-      return "(.*?)";
-    case "namedWildcard":
-      return "(.*?)";
-    case "namedSegment":
-      return `([${ segmentValueCharset }]+)`;
-    case "staticContent":
-      return escapeStringForRegex(astNode.value);
-    case "optionalSegment":
-      return `(?:${ astToRegexString(astNode.value, segmentValueCharset) })?`;
-    default:
-      throw new Error(`unknown tag \`${ astNode.tag }\``);
-  }
+  return result;
 }
 
 /**
  * converts the root `astNode` of a parsed url-pattern into
  * a string representing the regex that matches the url-pattern.
  */
-export function astRootToRegexString(astNode: Ast<any>, segmentValueCharset?: string) {
-  if (segmentValueCharset == null) {
-    ({ segmentValueCharset } = defaultOptions);
-  }
-  return `^${ astToRegexString(astNode, segmentValueCharset) }$`;
+export function astRootToRegexString(nodes: Array<Ast<any>>, segmentValueCharset: string) {
+  return `^${ astToRegexString(nodes, segmentValueCharset) }$`;
 }
 
 /**
- * returns the names of any named segments and wildcards contained
- * in the url-pattern represented by the given `astNode` in order.
+ * returns the names of any named segments and named wildcards contained
+ * in the url-pattern represented by the given AST `nodes` in order.
  */
-export function astToNames(astNode: Ast<any> | Array<Ast<any>>): string[] {
-  if (Array.isArray(astNode)) {
-    return concatMap(astNode, astToNames);
-  }
+export function astToNames(nodes: Array<Ast<any>>): string[] {
+  const result: string[] = [];
 
-  switch (astNode.tag) {
-    case "wildcard":
-      return ["_"];
-    case "namedWildcard":
-      return [astNode.value];
-    case "namedSegment":
-      return [astNode.value];
-    case "staticContent":
-      return [];
-    case "optionalSegment":
-      return astToNames(astNode.value);
-    default:
-      throw new Error(`unknown tag \`${ astNode.tag }\``);
-  }
-}
-
-/**
- * since a param
- * nextIndexes contains a mapping from param key to the
- * next index
- * `hasSideEffects` is a boolean that controls whether
- */
-export function getParam(
-  params: { [index: string]: any },
-  key: string,
-  nextIndexes: { [index: string]: number },
-  hasSideEffects: boolean = false,
-) {
-  const value = params[key];
-  if (value == null) {
-    if (hasSideEffects) {
-      throw new Error(`no values provided for key \`${ key }\``);
-    } else {
-      return;
+  for (const node of nodes) {
+    switch (node.tag) {
+      case "wildcard":
+      case "staticContent":
+        continue;
+      case "namedWildcard":
+      case "namedSegment":
+        result.push(node.value);
+        continue;
+      case "optionalSegment":
+        // recurse into the optional segment
+        // optional segments values are always arrays
+        result.push(...astToNames(node.value));
+        continue;
+      default:
+        throw new Error(`unknown tag \`${ node.tag }\``);
     }
-  }
-  const index = nextIndexes[key] || 0;
-  const maxIndex = Array.isArray(value) ? value.length - 1 : 0;
-  if (index > maxIndex) {
-    if (hasSideEffects) {
-      throw new Error(`too few values provided for key \`${ key }\``);
-    } else {
-      return;
-    }
-  }
-
-  const result = Array.isArray(value) ? value[index] : value;
-
-  if (hasSideEffects) {
-    nextIndexes[key] = index + 1;
   }
 
   return result;
@@ -119,67 +84,74 @@ export function getParam(
 
 /**
  * returns whether the given `astNode` contains
+ * any segments that
+ * based on this information optional segments are included or not.
  */
-function astNodeContainsAnySegmentsForParams(
-  astNode: Ast<any>,
+function astContainsAnySegmentsForParams(
+  nodes: Array<Ast<any>>,
   params: { [index: string]: any },
-  nextIndexes: { [index: string]: number },
 ): boolean {
-  if (Array.isArray(astNode)) {
-    let i = -1;
-    const { length } = astNode;
-    while (++i < length) {
-      if (astNodeContainsAnySegmentsForParams(astNode[i], params, nextIndexes)) {
-        return true;
-      }
+  for (const node of nodes) {
+    switch (node.tag) {
+      case "staticContent":
+      case "wildcard":
+        continue;
+      case "namedWildcard":
+      case "namedSegment":
+        if (params[node.value] != null) {
+          return true;
+        }
+        continue;
+      case "optionalSegment":
+        if (astContainsAnySegmentsForParams(node.value, params)) {
+          return false;
+        }
+        continue;
+      default:
+        throw new Error(`unknown tag \`${ node.tag }\``);
     }
-    return false;
   }
-
-  // TODO namedWildcard
-  switch (astNode.tag) {
-    case "wildcard":
-      return getParam(params, "_", nextIndexes, false) != null;
-    case "namedSegment":
-      return getParam(params, astNode.value, nextIndexes, false) != null;
-    case "staticContent":
-      return false;
-    case "optionalSegment":
-      return astNodeContainsAnySegmentsForParams(astNode.value, params, nextIndexes);
-    default:
-      throw new Error(`unknown tag \`${ astNode.tag }\``);
-  }
+  return false;
 }
 
 /**
- * stringify an url-pattern AST
+ * turn an url-pattern AST and a mapping of `namesToValues`
  */
 export function stringify(
-  astNode: Ast<any> | Array<Ast<any>>,
-  params: { [index: string]: any },
-  nextIndexes: { [index: string]: number } = {},
+  nodes: Array<Ast<any>>,
+  namesToValues: { [index: string]: any },
 ): string {
-  // stringify an array by concatenating the result of stringifying its elements
-  if (Array.isArray(astNode)) {
-    return stringConcatMap(astNode, (node) => stringify(node, params, nextIndexes));
+  let result = "";
+
+  for (const node of nodes) {
+    switch (node.tag) {
+      case "wildcard":
+        continue;
+      case "namedWildcard":
+      case "namedSegment":
+        const value = namesToValues[node.value];
+        if (value == null) {
+          throw new Error(`no value provided for name \`${ node.value }\``);
+        }
+        result += value;
+        continue;
+      case "staticContent":
+        result += node.value;
+        continue;
+      case "optionalSegment":
+        // only add optional segments if values are present.
+        // optional segments are only included if values are provided
+        // for all names (of named segments) within the optional segment
+        if (astContainsAnySegmentsForParams(node.value, namesToValues)) {
+          // recurse into the optional segment
+          // optional segments values are always arrays
+          result += stringify(node.value, namesToValues);
+        }
+        continue;
+      default:
+        throw new Error(`unknown tag \`${ node.tag }\``);
+    }
   }
 
-  switch (astNode.tag) {
-    case "wildcard":
-      return getParam(params, "_", nextIndexes, true);
-    case "namedWildcard":
-      return getParam(params, astNode.value, nextIndexes, true);
-    case "namedSegment":
-      return getParam(params, astNode.value, nextIndexes, true);
-    case "staticContent":
-      return astNode.value;
-    case "optionalSegment":
-      if (astNodeContainsAnySegmentsForParams(astNode.value, params, nextIndexes)) {
-        return stringify(astNode.value, params, nextIndexes);
-      } else {
-        return "";
-      }
-    default:
-      throw new Error(`unknown tag \`${ astNode.tag }\``);
-  }
+  return result;
 }

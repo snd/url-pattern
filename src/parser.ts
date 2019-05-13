@@ -84,7 +84,7 @@ export function newStaticContentParser(options: IOptions): Parser<Ast<any>> {
 /*
  *
  */
-export function newUrlPatternParser(options: IOptions): Parser<Ast<any>> {
+export function newUrlPatternParser(options: IOptions): Parser<Array<Ast<any>>> {
   let parsePattern: Parser<any> = (input: string) => {
     throw new Error(`
       this is just a temporary placeholder

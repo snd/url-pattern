@@ -36,68 +36,44 @@ tape("prefer a different syntax. customize it", (t: tape.Test) => {
   t.end();
 });
 
-tape("api versioning", (t: tape.Test) => {
+tape("api versioning example", (t: tape.Test) => {
   const pattern = new UrlPattern("/v:major(.:minor)/*");
-  t.deepEqual(pattern.match("/v1.2/"), {major: "1", minor: "2", _: ""});
-  t.deepEqual(pattern.match("/v2/users"), {major: "2", _: "users"});
+  t.deepEqual(pattern.match("/v1.2/"), {major: "1", minor: "2"});
+  t.deepEqual(pattern.match("/v2/users"), {major: "2"});
   t.equal(pattern.match("/v/"), undefined);
   t.end();
 });
 
-tape("domain", (t: tape.Test) => {
-  const pattern = new UrlPattern("(http(s)\\://)(:subdomain.):domain.:tld(\\::port)(/*)");
+tape("domain example", (t: tape.Test) => {
+  const pattern = new UrlPattern("(http(s)\\://)(:subdomain.):domain.:tld(\\::port)(/*:path)");
   t.deepEqual(pattern.match("google.de"), {
     domain: "google",
     tld: "de",
-  },
-  );
+  });
   t.deepEqual(pattern.match("https://www.google.com"), {
     domain: "google",
     subdomain: "www",
     tld: "com",
-  },
-  );
+  });
   t.deepEqual(pattern.match("http://mail.google.com/mail"), {
-    _: "mail",
     domain: "google",
+    path: "mail",
     subdomain: "mail",
     tld: "com",
-  },
-  );
-  t.deepEqual(pattern.match("http://mail.google.com:80/mail"), {
-    _: "mail",
+  });
+  t.deepEqual(pattern.match("http://mail.google.com:80/mail/inbox"), {
     domain: "google",
+    path: "mail/inbox",
     port: "80",
     subdomain: "mail",
     tld: "com",
-  },
-  );
+  });
   t.equal(pattern.match("google"), undefined);
 
-  t.deepEqual(pattern.match("www.google.com"), {
-    domain: "google",
-    subdomain: "www",
-    tld: "com",
-  },
-  );
-  t.equal(pattern.match("httpp://mail.google.com/mail"), undefined);
-  t.deepEqual(pattern.match("google.de/search"), {
-    _: "search",
-    domain: "google",
-    tld: "de",
-  },
-  );
-
   t.end();
 });
 
-tape("named segment occurs more than once", (t: tape.Test) => {
-  const pattern = new UrlPattern("/api/users/:ids/posts/:ids");
-  t.deepEqual(pattern.match("/api/users/10/posts/5"), {ids: ["10", "5"]});
-  t.end();
-});
-
-tape("regex", (t: tape.Test) => {
+tape("regex example", (t: tape.Test) => {
   const pattern = new UrlPattern(/^\/api\/(.*)$/);
   t.deepEqual(pattern.match("/api/users"), ["users"]);
   t.equal(pattern.match("/apiii/users"), undefined);
@@ -141,7 +117,7 @@ tape("customization", (t: tape.Test) => {
   };
 
   const pattern = new UrlPattern(
-    "[http[s]!://][$sub_domain.]$domain.$toplevel-domain[/?]",
+    "[http[s]!://][$sub_domain.]$domain.$toplevel-domain[/?$path]",
     options,
   );
 
@@ -151,8 +127,8 @@ tape("customization", (t: tape.Test) => {
   },
   );
   t.deepEqual(pattern.match("http://mail.google.com/mail"), {
-    "_": "mail",
     "domain": "google",
+    "path": "mail",
     "sub_domain": "mail",
     "toplevel-domain": "com",
   },
@@ -173,8 +149,8 @@ tape("customization", (t: tape.Test) => {
   );
   t.equal(pattern.match("httpp://mail.google.com/mail"), undefined);
   t.deepEqual(pattern.match("google.de/search"), {
-    "_": "search",
     "domain": "google",
+    "path": "search",
     "toplevel-domain": "de",
   },
   );

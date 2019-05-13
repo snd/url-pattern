@@ -86,17 +86,17 @@ bower install url-pattern
 > const pattern = new UrlPattern("/v:major(.:minor)/*");
 
 > pattern.match("/v1.2/");
-{major: "1", minor: "2", _: ""}
+{major: "1", minor: "2"}
 
 > pattern.match("/v2/users");
-{major: "2", _: "users"}
+{major: "2"}
 
 > pattern.match("/v/");
 undefined
 ```
 
 ``` javascript
-> const pattern = new UrlPattern("(http(s)\\://)(:subdomain.):domain.:tld(\\::port)(/*)")
+> const pattern = new UrlPattern("(http(s)\\://)(:subdomain.):domain.:tld(\\::port)(/*:path)")
 
 > pattern.match("google.de");
 {domain: "google", tld: "de"}
@@ -105,10 +105,10 @@ undefined
 {subdomain: "www", domain: "google", tld: "com"}
 
 > pattern.match("http://mail.google.com/mail");
-{subdomain: "mail", domain: "google", tld: "com", _: "mail"}
+{subdomain: "mail", domain: "google", tld: "com", path: "mail"}
 
-> pattern.match("http://mail.google.com:80/mail");
-{subdomain: "mail", domain: "google", tld: "com", port: "80", _: "mail"}
+> pattern.match("http://mail.google.com:80/mail/inbox");
+{subdomain: "mail", domain: "google", tld: "com", port: "80", path: "mail/inbox"}
 
 > pattern.match("google");
 undefined
@@ -155,14 +155,7 @@ a named segment match stops at `/`, `.`, ... but not at `_`, `-`, ` `, `%`...
 
 [you can change these character sets. click here to see how.](#customize-the-pattern-syntax)
 
-if a named segment **name** occurs more than once in the pattern string,
-then the multiple results are stored in an array on the returned object:
-
-```javascript
-> const pattern = new UrlPattern("/api/users/:ids/posts/:ids");
-> pattern.match("/api/users/10/posts/5");
-{ids: ["10", "5"]}
-```
+a named segment name can only occur once in the pattern string.
 
 ## optional segments, wildcards and escaping
 
@@ -170,7 +163,7 @@ to make part of a pattern optional just wrap it in `(` and `)`:
 
 ```javascript
 > const pattern = new UrlPattern(
-  "(http(s)\\://)(:subdomain.):domain.:tld(/*)"
+  "(http(s)\\://)(:subdomain.):domain.:tld(/*:path)"
 );
 ```
 
@@ -190,18 +183,15 @@ optional named segments are stored in the corresponding property only if they ar
 {subdomain: "www", domain: "google", tld: "com"}
 ```
 
-`*` in patterns are wildcards and match anything.
-wildcard matches are collected in the `_` property:
+`:*{name}` in patterns are named wildcards and match anything.
 
 ```javascript
 > pattern.match("http://mail.google.com/mail");
-{subdomain: "mail", domain: "google", tld: "com", _: "mail"}
+{subdomain: "mail", domain: "google", tld: "com", path: "mail"}
 ```
 
-if there is only one wildcard then `_` contains the matching string.
-otherwise `_` contains an array of matching strings.
-
 wildcards can be named like this:
+unnamed wildcards are not collected.
 
 ```javascript
 > const pattern = new UrlPattern('/search/*:term');
@@ -269,14 +259,18 @@ and/or wildcards and values for those are provided:
 "/api/users/10"
 ```
 
-wildcards (key = `_`), deeply nested optional groups and multiple value arrays should stringify as expected.
+named wildcards and deeply nested optional groups should stringify as expected.
 
+TODO
 an error is thrown if a value that is not in an optional group is not provided.
 
 an error is thrown if an optional segment contains multiple
 params and not all of them are provided.
 *one provided value for an optional segment
 makes all values in that optional segment required.*
+
+TODO
+anonymous wildcards are ignored.
 
 [look at the tests for additional examples of `.stringify`](test/stringify-fixtures.ts)
 
@@ -331,7 +325,7 @@ pass options as the second argument to the constructor:
 
 ```javascript
 > const pattern = new UrlPattern(
-  "[http[s]!://][$sub_domain.]$domain.$toplevel-domain[/?]",
+  "[http[s]!://][$sub_domain.]$domain.$toplevel-domain[/?$path]",
   options
 );
 ```
@@ -344,7 +338,7 @@ then match:
   sub_domain: "mail",
   domain: "google",
   "toplevel-domain": "com",
-  _: "mail"
+  path: "mail"
 }
 ```
 

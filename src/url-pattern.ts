@@ -26,7 +26,7 @@ import {
 export default class UrlPattern {
   public readonly isRegex: boolean;
   public readonly regex: RegExp;
-  public readonly ast?: Ast<any>;
+  public readonly ast?: Array<Ast<any>>;
   public readonly names?: string[];
 
   constructor(pattern: string, options?: IUserInputOptions);
@@ -124,6 +124,7 @@ export default class UrlPattern {
 
     this.regex = new RegExp(astRootToRegexString(ast, options.segmentValueCharset));
     this.names = astToNames(ast);
+    // TODO don't allow duplicate names
   }
 
   public match(url: string): object | undefined {

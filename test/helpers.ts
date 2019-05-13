@@ -1,11 +1,9 @@
 import * as tape from "tape";
 
 import {
-  concatMap,
   escapeStringForRegex,
   keysAndValuesToObject,
   regexGroupCount,
-  stringConcatMap,
 } from "../src/helpers";
 
 tape("escapeStringForRegex", (t: tape.Test) => {
@@ -24,21 +22,6 @@ tape("escapeStringForRegex", (t: tape.Test) => {
   t.equal("\\]", escapeStringForRegex("]"));
   t.equal("\\(", escapeStringForRegex("("));
   t.equal("\\)", escapeStringForRegex(")"));
-  t.end();
-});
-
-tape("concatMap", (t: tape.Test) => {
-  t.deepEqual([], concatMap([], () => []));
-  t.deepEqual([1], concatMap([1], (x) => [x]));
-  t.deepEqual([1, 1, 1, 2, 2, 2, 3, 3, 3], concatMap([1, 2, 3], (x) => [x, x, x]));
-  t.end();
-});
-
-tape("stringConcatMap", (t: tape.Test) => {
-  t.equal("", stringConcatMap([], () => ""));
-  t.equal("1", stringConcatMap([1], (x) => x.toString()));
-  t.equal("123", stringConcatMap([1, 2, 3], (x) => x.toString()));
-  t.equal("1a2a3a", stringConcatMap([1, 2, 3], (x) => x + "a"));
   t.end();
 });
 

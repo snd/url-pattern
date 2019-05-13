@@ -175,7 +175,7 @@ tape("stringify errors", (t: tape.Test) => {
   let e;
   t.plan(3);
 
-  const pattern = new UrlPattern("(:a-)1-:b(-2-:c-3-:d(-4-*-:a))");
+  const pattern = new UrlPattern("(:a-)1-:b(-2-:c-3-:d(-4-*-:e))");
 
   try {
     pattern.stringify();

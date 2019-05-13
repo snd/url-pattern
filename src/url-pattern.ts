@@ -1,5 +1,5 @@
 import {
-  keysAndValuesToObject,
+  indexOfDuplicateElement,
   regexGroupCount,
 } from "./helpers";
 
@@ -124,10 +124,15 @@ export default class UrlPattern {
 
     this.regex = new RegExp(astRootToRegexString(ast, options.segmentValueCharset));
     this.names = astToNames(ast);
-    // TODO don't allow duplicate names
+    const index = indexOfDuplicateElement(this.names);
+    if (index !== -1) {
+      throw new Error(
+        `duplicate name "${ this.names[index] } in pattern. names must be unique`,
+      );
+    }
   }
 
-  public match(url: string): object | undefined {
+  public match(url: string): { [index: string]: string } | string[] | undefined {
     const match = this.regex.exec(url);
     if (match == null) {
       return;
@@ -135,7 +140,13 @@ export default class UrlPattern {
 
     const groups = match.slice(1);
     if (this.names != null) {
-      return keysAndValuesToObject(this.names, groups);
+      const result: { [index: string]: string } = {};
+      for (let i = 0; i < this.names.length; i++) {
+        if (groups[i] != null) {
+          result[this.names[i]] = groups[i];
+        }
+      }
+      return result;
     } else {
       return groups;
     }

@@ -2,7 +2,7 @@ import * as tape from "tape";
 
 import {
   escapeStringForRegex,
-  keysAndValuesToObject,
+  indexOfDuplicateElement,
   regexGroupCount,
 } from "../src/helpers";
 
@@ -36,83 +36,13 @@ tape("regexGroupCount", (t: tape.Test) => {
   t.end();
 });
 
-tape("keysAndValuesToObject", (t: tape.Test) => {
-  t.deepEqual(
-    keysAndValuesToObject(
-      [],
-      [],
-    ),
-    {},
-  );
-  t.deepEqual(
-    keysAndValuesToObject(
-      ["one"],
-      [1],
-    ),
-    {
-      one: 1,
-    },
-  );
-  t.deepEqual(
-    keysAndValuesToObject(
-      ["one", "two", "two"],
-      [1, 2, 3],
-    ),
-    {
-      one: 1,
-      two: [2, 3],
-    },
-  );
-  t.deepEqual(
-    keysAndValuesToObject(
-      ["one", "two", "two", "two"],
-      [1, 2, 3, null],
-    ),
-    {
-      one: 1,
-      two: [2, 3],
-    },
-  );
-  t.deepEqual(
-    keysAndValuesToObject(
-      ["one", "two", "two", "two"],
-      [1, 2, 3, 4],
-    ),
-    {
-      one: 1,
-      two: [2, 3, 4],
-    },
-  );
-  t.deepEqual(
-    keysAndValuesToObject(
-      ["one", "two", "two", "two", "three"],
-      [1, 2, 3, 4, undefined],
-    ),
-    {
-      one: 1,
-      two: [2, 3, 4],
-    },
-  );
-  t.deepEqual(
-    keysAndValuesToObject(
-      ["one", "two", "two", "two", "three"],
-      [1, 2, 3, 4, 5],
-    ),
-    {
-      one: 1,
-      three: 5,
-      two: [2, 3, 4],
-    },
-  );
-  t.deepEqual(
-    keysAndValuesToObject(
-      ["one", "two", "two", "two", "three"],
-      [null, 2, 3, 4, 5],
-    ),
-    {
-      three: 5,
-      two: [2, 3, 4],
-    },
-  );
+tape("indexOfDuplicateElement", (t: tape.Test) => {
+  t.equal(-1, indexOfDuplicateElement([]));
+  t.equal(-1, indexOfDuplicateElement([1, 2, 3, 4, 5]));
+  t.equal(1, indexOfDuplicateElement([1, 1, 3, 4, 5]));
+  t.equal(2, indexOfDuplicateElement([1, 2, 1, 4, 5]));
+  t.equal(3, indexOfDuplicateElement([1, 2, 3, 2, 5]));
+  t.equal(-1, indexOfDuplicateElement(["a", "b", "c"]));
+  t.equal(2, indexOfDuplicateElement(["a", "b", "a"]));
   t.end();
 });

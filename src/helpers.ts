@@ -20,36 +20,19 @@ export function regexGroupCount(regex: RegExp): number {
 }
 
 /**
- * zips an array of `keys` and an array of `values` into an object
- * so `keys[i]` is associated with `values[i]` for every i.
- * `keys` and `values` must have the same length.
- * if the same key appears multiple times the associated values are collected in an array.
+ * returns the index of the first duplicate element in `elements`
+ * or -1 if there are no duplicates.
  */
-export function keysAndValuesToObject(keys: string[], values: any[]): object {
-  const result: { [index: string]: any } = {};
+export function indexOfDuplicateElement<T>(elements: T[]): number {
+  const knownElements: Set<T> = new Set();
 
-  if (keys.length !== values.length) {
-    throw Error("keys.length must equal values.length");
+  for (let i = 0; i < elements.length; i++) {
+    const element = elements[i];
+    if (knownElements.has(element)) {
+      return i;
+    }
+    knownElements.add(element);
   }
 
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i];
-    const value = values[i];
-
-    if (value == null) {
-      continue;
-    }
-
-    // key already encountered
-    if (result[key] != null) {
-      // capture multiple values for same key in an array
-      if (!Array.isArray(result[key])) {
-        result[key] = [result[key]];
-      }
-      result[key].push(value);
-    } else {
-      result[key] = value;
-    }
-  }
-  return result;
+  return -1;
 }

@@ -49,18 +49,18 @@ prefer a different syntax? [customize it:](#customize-the-pattern-syntax)
 {id: "5"}
 ```
 
+- very fast matching as each pattern is compiled into a regex
+- [tiny source of around 500 lines of simple, readable typescript](src/)
+- widely used [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
+- zero dependencies
+- [parser](src/parser.ts) implemented using simple, precise, reusable [parser combinators](src/parsercombinators.ts)
 - continuously tested in Node.js (10.15 (LTS), 12) and all relevant browsers:
-- [tiny source of around 500 lines of simple, readable, maintainable typescript](src/)
 - [huge test suite](test)
   passing [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
   with [![codecov.io](http://codecov.io/github/snd/url-pattern/coverage.svg?branch=master)](http://codecov.io/github/snd/url-pattern?branch=master)
   code coverage
-- widely used [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
-- very fast matching as each pattern is compiled into a regex
-- zero dependencies
 - [customizable](#customize-the-pattern-syntax)
 - [frequently asked questions](#frequently-asked-questions)
-- pattern parser implemented using simple, composable, testable [parser combinators](https://en.wikipedia.org/wiki/Parser_combinator)
 
 ## a more complex example showing the power of url-pattern
 
@@ -97,24 +97,17 @@ or
 > const UrlPattern = require("url-pattern");
 ```
 
-## url-pattern works with [deno](https://deno.land/):
+## works with [deno](https://deno.land/):
 
-**bleeding edge** master:
+**stable** latest release:
 ```typescript
 import UrlPattern from "https://raw.githubusercontent.com/snd/url-pattern/2.0.0/src/url-pattern.ts";
 ```
 
-**stable** latest release:
+**bleeding edge** master:
 ```typescript
 import UrlPattern from "https://raw.githubusercontent.com/snd/url-pattern/master/src/url-pattern.ts";
 ```
-
-you can also use the parser combinators url-pattern is build on:
-```typescript
-import UrlPattern from "https://raw.githubusercontent.com/snd/url-pattern/master/src/parser-combinators.ts";
-```
-
-TODO see the documentation here
 
 ## reference
 
@@ -124,7 +117,7 @@ TODO see the documentation here
 > const pattern = new UrlPattern("/api/users/:id");
 ```
 
-a `pattern` is immutable after construction.  
+a `UrlPattern` is immutable after construction.  
 none of its methods changes its state.  
 that makes it easier to reason about.
 
@@ -151,15 +144,15 @@ patterns are compiled into regexes which makes `.match()` superfast.
 `:id` (in the example above) is a named segment:
 
 a named segment starts with `:` followed by the **name**.  
-the **name** must be at least one character in the regex character set `a-zA-Z0-9`.
+the **name** must be at least one character in the regex character set `a-zA-Z0-9_`.
 
 when matching, a named segment consumes all characters in the regex character set
-`a-zA-Z0-9-_~ %`.
+`a-zA-Z0-9-_~ %`.  
 a named segment match stops at `/`, `.`, ... but not at `_`, `-`, ` `, `%`...
 
 [you can change these character sets. click here to see how.](#customize-the-pattern-syntax)
 
-a named segment name can only occur once in the pattern string.
+names must be unique. a **name** may not appear twice in a pattern.
 
 ### optional segments, wildcards and escaping
 
@@ -187,14 +180,17 @@ optional named segments are stored in the corresponding property only if they ar
 {subdomain: "www", domain: "google", tld: "com"}
 ```
 
-`:*{name}` in patterns are named wildcards and match anything.
+`:*path` in the pattern above is a named wildcard with the name `path`.
+named wildcards match anything. that makes them different from named segments which
+only match characters inside the `options.segmentNameCharset` (default: `a-zA-Z0-9_-`).
 
 ```typescript
-> pattern.match("http://mail.google.com/mail");
-{subdomain: "mail", domain: "google", tld: "com", path: "mail"}
+> pattern.match("http://mail.google.com/mail/inbox");
+{subdomain: "mail", domain: "google", tld: "com", path: "mail/inbox"}
 ```
 
-wildcards can be named like this:
+there are also
+
 unnamed wildcards are not collected.
 
 ```typescript

@@ -17,7 +17,8 @@ matrix:
     node_js: "10.15"
     script:
       - npm test
-  - name: "deno"
+  - language: "generic"
+    name: "deno"
     script:
       - curl -fsSL https://deno.land/x/install/install.sh | sh
       - export PATH="$HOME/.deno/bin:$PATH"

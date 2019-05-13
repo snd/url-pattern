@@ -1,5 +1,5 @@
 /**
- * escapes a string for insertion into a regular expression
+ * escapes a string for insertion into a regular expression.
  * source: http://stackoverflow.com/a/3561711
  */
 export function escapeStringForRegex(str: string): string {
@@ -23,7 +23,7 @@ export function regexGroupCount(regex: RegExp): number {
 
 /**
  * returns the index of the first duplicate element in `elements`
- * or -1 if there are no duplicates.
+ * or `-1` if there are no duplicates.
  */
 export function indexOfDuplicateElement<T>(elements: T[]): number {
   const knownElements: Set<T> = new Set();

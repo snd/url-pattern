@@ -4,3 +4,5 @@ test/url-pattern.js
 npm-debug.log
 dist
 package-lock.json
+.nyc_output
+coverage

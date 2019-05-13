@@ -140,13 +140,13 @@ export default class UrlPattern {
 
     const groups = match.slice(1);
     if (this.names != null) {
-      const result: { [index: string]: string } = {};
+      const mergedNamesAndGroups: { [index: string]: string } = {};
       for (let i = 0; i < this.names.length; i++) {
         if (groups[i] != null) {
-          result[this.names[i]] = groups[i];
+          mergedNamesAndGroups[this.names[i]] = groups[i];
         }
       }
-      return result;
+      return mergedNamesAndGroups;
     } else {
       return groups;
     }

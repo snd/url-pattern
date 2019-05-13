@@ -74,8 +74,8 @@ tape("domain example", (t: tape.Test) => {
 });
 
 tape("regex example", (t: tape.Test) => {
-  const pattern = new UrlPattern(/^\/api\/(.*)$/);
-  t.deepEqual(pattern.match("/api/users"), ["users"]);
+  const pattern = new UrlPattern(/^\/api\/(.*)$/, ["path"]);
+  t.deepEqual(pattern.match("/api/users"), {path: "users"});
   t.equal(pattern.match("/apiii/users"), undefined);
   t.end();
 });

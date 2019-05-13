@@ -117,10 +117,9 @@ tape("regex names", (t: tape.Test) => {
   try {
     new UntypedUrlPattern(/x/, 5);
   } catch (error) {
-    t.equal(error.message, [
-      "if first argument is a RegExp the second argument may be an Array<String>",
-      "of group names but you provided something else",
-    ].join(" "));
+    t.equal(error.message,
+      "if first argument is a RegExp the second argument must be an Array<String> of group names",
+    );
   }
   try {
     new UrlPattern(/(((foo)bar(boo))far)/, []);
@@ -137,7 +136,7 @@ tape("regex names", (t: tape.Test) => {
 
 tape("stringify regex", (t: tape.Test) => {
   t.plan(1);
-  const pattern = new UrlPattern(/x/);
+  const pattern = new UrlPattern(/x/, []);
   try {
     pattern.stringify();
   } catch (error) {

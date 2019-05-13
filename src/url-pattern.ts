@@ -26,7 +26,7 @@ export default class UrlPattern {
   public readonly isRegex: boolean;
   public readonly regex: RegExp;
   public readonly ast?: Array<Ast<any>>;
-  public readonly names?: string[];
+  public readonly names: string[];
 
   constructor(pattern: string, options?: IUserInputOptions);
   constructor(pattern: RegExp, groupNames?: string[]);
@@ -51,22 +51,25 @@ export default class UrlPattern {
     // handle regex pattern and return early
     if (pattern instanceof RegExp) {
       this.regex = pattern;
-      if (optionsOrGroupNames != null) {
-        if (!Array.isArray(optionsOrGroupNames)) {
-          throw new TypeError([
-            "if first argument is a RegExp the second argument",
-            "may be an Array<String> of group names",
-            "but you provided something else",
-          ].join(" "));
-        }
-        const groupCount = regexGroupCount(this.regex);
-        if (optionsOrGroupNames.length !== groupCount) {
-          throw new Error([
-            `regex contains ${ groupCount } groups`,
-            `but array of group names contains ${ optionsOrGroupNames.length }`,
-          ].join(" "));
-        }
-        this.names = optionsOrGroupNames;
+      if (optionsOrGroupNames == null || !Array.isArray(optionsOrGroupNames)) {
+        throw new TypeError([
+          "if first argument is a RegExp the second argument",
+          "must be an Array<String> of group names",
+        ].join(" "));
+      }
+      const groupCount = regexGroupCount(this.regex);
+      if (optionsOrGroupNames.length !== groupCount) {
+        throw new Error([
+          `regex contains ${ groupCount } groups`,
+          `but array of group names contains ${ optionsOrGroupNames.length }`,
+        ].join(" "));
+      }
+      this.names = optionsOrGroupNames;
+      const regexNameIndex = indexOfDuplicateElement(this.names);
+      if (regexNameIndex !== -1) {
+        throw new Error(
+          `duplicate name "${ this.names[regexNameIndex] }" in pattern. names must be unique`,
+        );
       }
       return;
     }
@@ -114,24 +117,20 @@ export default class UrlPattern {
     }
   }
 
-  public match(url: string): { [index: string]: string } | string[] | undefined {
+  public match(url: string): { [index: string]: string } | undefined {
     const match = this.regex.exec(url);
     if (match == null) {
       return;
     }
 
     const groups = match.slice(1);
-    if (this.names != null) {
-      const mergedNamesAndGroups: { [index: string]: string } = {};
-      for (let i = 0; i < this.names.length; i++) {
-        if (groups[i] != null) {
-          mergedNamesAndGroups[this.names[i]] = groups[i];
-        }
+    const mergedNamesAndGroups: { [index: string]: string } = {};
+    for (let i = 0; i < this.names.length; i++) {
+      if (groups[i] != null) {
+        mergedNamesAndGroups[this.names[i]] = groups[i];
       }
-      return mergedNamesAndGroups;
-    } else {
-      return groups;
     }
+    return mergedNamesAndGroups;
   }
 
   public stringify(params?: object): string {

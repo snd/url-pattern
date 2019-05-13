@@ -24,14 +24,12 @@ tape("match", (t: tape.Test) => {
   pattern = new UrlPattern(".foo");
   t.equals(pattern.match(".bar.foo"), undefined);
 
-  pattern = new UrlPattern(/foo/);
+  pattern = new UrlPattern(/foo/, []);
   t.deepEqual(pattern.match("foo"), []);
 
-  pattern = new UrlPattern(/\/foo\/(.*)/);
-  t.deepEqual(pattern.match("/foo/bar"), ["bar"]);
-
-  pattern = new UrlPattern(/\/foo\/(.*)/);
-  t.deepEqual(pattern.match("/foo/"), [""]);
+  pattern = new UrlPattern(/\/foo\/(.*)/, ["path"]);
+  t.deepEqual(pattern.match("/foo/bar"), {path: "bar"});
+  t.deepEqual(pattern.match("/foo/"), {path: ""});
 
   pattern = new UrlPattern("/user/:userId/task/:taskId");
   t.deepEqual(pattern.match("/user/10/task/52"), {
@@ -308,27 +306,7 @@ tape("match", (t: tape.Test) => {
     scheme: "https",
   });
 
-  let regex = /\/ip\/(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-  pattern = new UrlPattern(regex);
-  t.equal(undefined, pattern.match("10.10.10.10"));
-  t.equal(undefined, pattern.match("ip/10.10.10.10"));
-  t.equal(undefined, pattern.match("/ip/10.10.10."));
-  t.equal(undefined, pattern.match("/ip/10."));
-  t.equal(undefined, pattern.match("/ip/"));
-  t.deepEqual(pattern.match("/ip/10.10.10.10"), ["10", "10", "10", "10"]);
-  t.deepEqual(pattern.match("/ip/127.0.0.1"), ["127", "0", "0", "1"]);
-
-  regex = /\/ip\/((?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))$/;
-  pattern = new UrlPattern(regex);
-  t.equal(undefined, pattern.match("10.10.10.10"));
-  t.equal(undefined, pattern.match("ip/10.10.10.10"));
-  t.equal(undefined, pattern.match("/ip/10.10.10."));
-  t.equal(undefined, pattern.match("/ip/10."));
-  t.equal(undefined, pattern.match("/ip/"));
-  t.deepEqual(pattern.match("/ip/10.10.10.10"), ["10.10.10.10"]);
-  t.deepEqual(pattern.match("/ip/127.0.0.1"), ["127.0.0.1"]);
-
-  regex = /\/ip\/((?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))$/;
+  const regex = /\/ip\/((?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))$/;
   pattern = new UrlPattern(regex, ["ip"]);
   t.equal(undefined, pattern.match("10.10.10.10"));
   t.equal(undefined, pattern.match("ip/10.10.10.10"));

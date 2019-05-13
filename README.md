@@ -204,21 +204,17 @@ unnamed wildcards are not collected.
 ## make pattern from regex
 
 ```javascript
-> const pattern = new UrlPattern(/^\/api\/(.*)$/);
-```
+> const pattern = new UrlPattern(/^\/api\/(.*)$/, ["path"]);
 
-if the pattern was created from a regex an array of the captured groups is returned on a match:
-
-```javascript
 > pattern.match("/api/users");
-["users"]
+{path: "users"}
 
 > pattern.match("/apiii/test");
 undefined
 ```
 
 when making a pattern from a regex
-you can pass an array of keys as the second argument.
+you have to pass an array of keys as the second argument.
 returns objects on match with each key mapped to a captured value:
 
 ```javascript

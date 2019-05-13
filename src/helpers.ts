@@ -11,11 +11,13 @@ export function escapeStringForRegex(str: string): string {
  * source: http://stackoverflow.com/a/16047223
  */
 export function regexGroupCount(regex: RegExp): number {
+  // add a "|" to the end of the regex meaning logical OR.
   const testingRegex = new RegExp(regex.toString() + "|");
-  const matches = testingRegex.exec("");
-  if (matches == null) {
-    throw new Error("no matches");
-  }
+  // executing the regex on an empty string matches the empty right side of the "|" (OR).
+  const matches: any = testingRegex.exec("");
+  // `matches` is never null here as the regex always matches.
+  // the matches array contains an element for every group in the `regex`.
+  // thus we detect the number of groups in the regex.
   return matches.length - 1;
 }
 

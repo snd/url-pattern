@@ -37,14 +37,6 @@ tape("prefer a different syntax. customize it", (t: tape.Test) => {
   t.end();
 });
 
-tape("api versioning example", (t: tape.Test) => {
-  const pattern = new UrlPattern("/v:major(.:minor)/*");
-  t.deepEqual(pattern.match("/v1.2/"), {major: "1", minor: "2"});
-  t.deepEqual(pattern.match("/v2/users"), {major: "2"});
-  t.equal(pattern.match("/v/"), undefined);
-  t.end();
-});
-
 tape("domain example", (t: tape.Test) => {
   const pattern = new UrlPattern("(http(s)\\://)(:subdomain.):domain.:tld(\\::port)(/*:path)");
   t.deepEqual(pattern.match("google.de"), {
@@ -54,12 +46,6 @@ tape("domain example", (t: tape.Test) => {
   t.deepEqual(pattern.match("https://www.google.com"), {
     domain: "google",
     subdomain: "www",
-    tld: "com",
-  });
-  t.deepEqual(pattern.match("http://mail.google.com/mail"), {
-    domain: "google",
-    path: "mail",
-    subdomain: "mail",
     tld: "com",
   });
   t.deepEqual(pattern.match("http://mail.google.com:80/mail/inbox"), {

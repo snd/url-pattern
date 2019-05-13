@@ -9,7 +9,6 @@ import {
 
 import {
   defaultOptions,
-  IOptions,
   IUserInputOptions,
 } from "./options";
 
@@ -86,24 +85,7 @@ export default class UrlPattern {
       throw new Error("if first argument is a string second argument must be an options object or undefined");
     }
 
-    const options: IOptions = {
-      escapeChar: (optionsOrGroupNames != null ?
-        optionsOrGroupNames.escapeChar : undefined) || defaultOptions.escapeChar,
-      optionalSegmentEndChar: (optionsOrGroupNames != null ?
-        optionsOrGroupNames.optionalSegmentEndChar : undefined) || defaultOptions.optionalSegmentEndChar,
-      optionalSegmentStartChar: (optionsOrGroupNames != null ?
-        optionsOrGroupNames.optionalSegmentStartChar : undefined) || defaultOptions.optionalSegmentStartChar,
-      segmentNameCharset: (optionsOrGroupNames != null ?
-        optionsOrGroupNames.segmentNameCharset : undefined) || defaultOptions.segmentNameCharset,
-      segmentNameEndChar: (optionsOrGroupNames != null ?
-        optionsOrGroupNames.segmentNameEndChar : undefined),
-      segmentNameStartChar: (optionsOrGroupNames != null ?
-        optionsOrGroupNames.segmentNameStartChar : undefined) || defaultOptions.segmentNameStartChar,
-      segmentValueCharset: (optionsOrGroupNames != null ?
-        optionsOrGroupNames.segmentValueCharset : undefined) || defaultOptions.segmentValueCharset,
-      wildcardChar: (optionsOrGroupNames != null ?
-        optionsOrGroupNames.wildcardChar : undefined) || defaultOptions.wildcardChar,
-    };
+    const options = Object.assign({}, defaultOptions, optionsOrGroupNames);
 
     const parser = newUrlPatternParser(options);
     const parsed = parser(pattern);

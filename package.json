@@ -79,12 +79,12 @@
   "main": "lib/url-pattern",
   "scripts": {
     "compile": "tsc",
-    "doc": "typedoc --out doc .",
+    "doc": "typedoc --out doc",
     "prepublish": "npm run compile",
     "lint": "tslint --project .",
     "test": "tape -r ts-node/register test/*.ts",
     "node": "ts-node",
-    "coverage": "rm -r .nyc_output && rm -r coverage && nyc npm test",
+    "coverage": "rm -r .nyc_output || true && rm -r coverage || true && nyc npm test",
     "test-in-browsers": "zuul test/*",
     "test-zuul-local": "zuul --local 8080 test/*"
   },

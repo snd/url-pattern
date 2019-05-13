@@ -127,7 +127,7 @@ export default class UrlPattern {
     const index = indexOfDuplicateElement(this.names);
     if (index !== -1) {
       throw new Error(
-        `duplicate name "${ this.names[index] } in pattern. names must be unique`,
+        `duplicate name "${ this.names[index] }" in pattern. names must be unique`,
       );
     }
   }

@@ -67,6 +67,16 @@ tape("invalid variable name in pattern", (t: tape.Test) => {
   t.end();
 });
 
+tape("duplicate variable name in pattern", (t: tape.Test) => {
+  t.plan(1);
+  try {
+    new UrlPattern(":a/:a");
+  } catch (error) {
+    t.equal(error.message, "duplicate name \"a\" in pattern. names must be unique");
+  }
+  t.end();
+});
+
 tape("too many closing parentheses", (t: tape.Test) => {
   t.plan(2);
   try {

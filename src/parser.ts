@@ -13,11 +13,13 @@ import {
   newRegexParser,
   newStringParser,
   Parser,
-} from "./parser-combinators";
+// @ts-ignore
+} from "./parser-combinators.ts";
 
 import {
   IOptions,
-} from "./options";
+// @ts-ignore
+} from "./options.ts";
 
 export function newEscapedCharParser(options: IOptions): Parser<Ast<any>> {
   return newPickNthParser(1, newStringParser(options.escapeChar), newRegexParser(/^./));

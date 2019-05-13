@@ -5,11 +5,13 @@ import {
   newNamedWildcardParser,
   newStaticContentParser,
   newUrlPatternParser,
-} from "../src/parser";
+// @ts-ignore
+} from "../src/parser.ts";
 
 import {
   defaultOptions,
-} from "../src/options";
+// @ts-ignore
+} from "../src/options.ts";
 
 const parse = newUrlPatternParser(defaultOptions);
 const parseNamedSegment = newNamedSegmentParser(defaultOptions);

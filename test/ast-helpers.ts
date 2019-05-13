@@ -3,16 +3,19 @@ import * as tape from "tape";
 
 import {
   newUrlPatternParser,
-} from "../src/parser";
+// @ts-ignore
+} from "../src/parser.ts";
 
 import {
   astRootToRegexString,
   astToNames,
-} from "../src/ast-helpers";
+// @ts-ignore
+} from "../src/ast-helpers.ts";
 
 import {
   defaultOptions,
-} from "../src/options";
+// @ts-ignore
+} from "../src/options.ts";
 
 const parse: any = newUrlPatternParser(defaultOptions);
 

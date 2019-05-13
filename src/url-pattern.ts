@@ -1,26 +1,31 @@
 import {
   indexOfDuplicateElement,
   regexGroupCount,
-} from "./helpers";
+// @ts-ignore
+} from "./helpers.ts";
 
 import {
   Ast,
-} from "./parser-combinators";
+// @ts-ignore
+} from "./parser-combinators.ts";
 
 import {
   defaultOptions,
   IUserInputOptions,
-} from "./options";
+// @ts-ignore
+} from "./options.ts";
 
 import {
   newUrlPatternParser,
-} from "./parser";
+// @ts-ignore
+} from "./parser.ts";
 
 import {
   astRootToRegexString,
   astToNames,
   stringify,
-} from "./ast-helpers";
+// @ts-ignore
+} from "./ast-helpers.ts";
 
 export default class UrlPattern {
   public readonly isRegex: boolean;

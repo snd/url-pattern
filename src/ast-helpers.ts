@@ -5,11 +5,13 @@
 
 import {
   Ast,
-} from "./parser-combinators";
+// @ts-ignore
+} from "./parser-combinators.ts";
 
 import {
   escapeStringForRegex,
-} from "./helpers";
+// @ts-ignore
+} from "./helpers.ts";
 
 /**
  * converts an array of AST nodes `nodes` representing a parsed url-pattern into

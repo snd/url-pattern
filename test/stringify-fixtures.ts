@@ -2,7 +2,8 @@
 
 import * as tape from "tape";
 
-import UrlPattern from "../src/url-pattern";
+// @ts-ignore
+import UrlPattern from "../src/url-pattern.ts";
 
 tape("stringify", (t: tape.Test) => {
   let pattern = new UrlPattern("/foo");

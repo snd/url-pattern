@@ -4,7 +4,8 @@ import {
   escapeStringForRegex,
   indexOfDuplicateElement,
   regexGroupCount,
-} from "../src/helpers";
+// @ts-ignore
+} from "../src/helpers.ts";
 
 tape("escapeStringForRegex", (t: tape.Test) => {
   const expected = "\\[\\-\\/\\\\\\^\\$\\*\\+\\?\\.\\(\\)\\|\\[\\]\\{\\}\\]";

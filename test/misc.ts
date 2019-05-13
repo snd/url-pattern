@@ -1,6 +1,7 @@
 import * as tape from "tape";
 
-import UrlPattern from "../src/url-pattern";
+// @ts-ignore
+import UrlPattern from "../src/url-pattern.ts";
 
 tape("instance of UrlPattern is handled correctly as constructor argument", (t: tape.Test) => {
   const pattern = new UrlPattern("/user/:userId/task/:taskId");

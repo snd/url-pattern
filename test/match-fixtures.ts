@@ -3,7 +3,8 @@
 // tslint:disable:max-line-length
 import * as tape from "tape";
 
-import UrlPattern from "../src/url-pattern";
+// @ts-ignore
+import UrlPattern from "../src/url-pattern.ts";
 
 tape("match", (t: tape.Test) => {
   let pattern = new UrlPattern("/foo");

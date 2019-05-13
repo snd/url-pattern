@@ -1,7 +1,8 @@
 /* tslint:disable:no-unused-expression */
 import * as tape from "tape";
 
-import UrlPattern from "../src/url-pattern";
+// @ts-ignore
+import UrlPattern from "../src/url-pattern.ts";
 
 const UntypedUrlPattern: any = UrlPattern;
 

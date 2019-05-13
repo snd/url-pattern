@@ -56,10 +56,10 @@ prefer a different syntax? [customize it:](#customize-the-pattern-syntax)
 - [parser](src/parser.ts) implemented using simple, precise, reusable [parser combinators](src/parsercombinators.ts)
 - continuously tested in Node.js (10.15 (LTS), 12) and all relevant browsers:
 - [huge test suite](test)
-  passing [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
+  [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
   with [![codecov.io](http://codecov.io/github/snd/url-pattern/coverage.svg?branch=master)](http://codecov.io/github/snd/url-pattern?branch=master)
   code coverage
-- [customizable](#customize-the-pattern-syntax)
+- [customizable pattern syntax](#customize-the-pattern-syntax)
 - [frequently asked questions](#frequently-asked-questions)
 
 ## a more complex example showing the power of url-pattern

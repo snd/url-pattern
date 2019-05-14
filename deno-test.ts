@@ -5,3 +5,4 @@ const pattern = new UrlPattern("/api/users/:id");
 
 assertEquals(pattern.match("/api/users/5"), {id: "5"});
 assertEquals(pattern.stringify({id: 10}), "/api/users/10");
+console.log("OK");

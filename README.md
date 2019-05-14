@@ -54,7 +54,7 @@ prefer a different syntax? [customize it:](#customize-the-pattern-syntax)
 - widely used [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
 - zero dependencies
 - [parser](src/parser.ts) implemented using simple, precise, reusable [parser combinators](src/parsercombinators.ts)
-- continuously tested in Node.js (10.15 (LTS), 12) and all relevant browsers:
+- continuously tested in Node.js (10.15 (LTS), 12) and all relevant browsers
 - [huge test suite](test)
   [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
   with [![codecov.io](http://codecov.io/github/snd/url-pattern/coverage.svg?branch=master)](http://codecov.io/github/snd/url-pattern?branch=master)

@@ -71,6 +71,7 @@
   "devDependencies": {
     "@types/tape": "^4.2.33",
     "nyc": "^14.1.0",
+    "parcel-bundler": "^1.12.3",
     "tape": "^4.10.1",
     "ts-node": "^8.1.0",
     "tslint": "^5.16.0",
@@ -85,6 +86,7 @@
     "test": "tape -r ts-node/register test/*.ts",
     "node": "ts-node",
     "coverage": "rm -r .nyc_output || true && rm -r coverage || true && nyc npm test",
+    "bundle": "parcel build src/url-pattern.ts",
     "test-in-browsers": "zuul test/*",
     "test-zuul-local": "zuul --local 8080 test/*"
   },

@@ -94,7 +94,7 @@ and
 ```
 or
 ```typescript
-> const UrlPattern = require("url-pattern");
+> const UrlPattern = require("url-pattern").default;
 ```
 
 ## works with [deno](https://deno.land/):

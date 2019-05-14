@@ -7,6 +7,8 @@ matrix:
     - npm run compile
     - npm run lint
     - npm run coverage
+    - npm run bundle
+    - node parcel-bundle-test.js
   - language: node_js
     node_js: "10.15"
     script:

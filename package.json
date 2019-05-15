@@ -30,6 +30,11 @@
     "processing"
   ],
   "homepage": "http://github.com/snd/url-pattern",
+  "bugs": {
+    "url": "http://github.com/snd/url-pattern/issues",
+    "email": "kruemaxi@gmail.com"
+  },
+  "license": "MIT",
   "author": {
     "name": "Maximilian Krüger",
     "email": "kruemaxi@gmail.com",
@@ -58,29 +63,18 @@
       "url": "https://github.com/caasi"
     }
   ],
-  "bugs": {
-    "url": "http://github.com/snd/url-pattern/issues",
-    "email": "kruemaxi@gmail.com"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/snd/url-pattern.git"
-  },
-  "license": "MIT",
-  "dependencies": {},
-  "devDependencies": {
-    "@types/tape": "^4.2.33",
-    "nyc": "^14.1.0",
-    "parcel-bundler": "^1.12.3",
-    "tape": "^4.10.1",
-    "ts-node": "^8.1.0",
-    "tslint": "^5.16.0",
-    "typescript": "^3.4.5"
-  },
+  "files": [
+    "src",
+    "dist"
+  ],
   "main": "dist/url-pattern.js",
   "browser": "dist/url-pattern.js",
   "jsdelivr": "dist/url-pattern.js",
   "types": "dist/url-pattern.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/snd/url-pattern.git"
+  },
   "scripts": {
     "compile": "tsc",
     "doc": "typedoc --out doc",
@@ -90,8 +84,21 @@
     "node": "ts-node",
     "coverage": "rm -r .nyc_output || true && rm -r coverage || true && nyc npm test",
     "bundle": "parcel build src/url-pattern.ts",
-    "test-in-browsers": "zuul test/*",
+    "test-in-browsers": "karma start test/*",
     "test-zuul-local": "zuul --local 8080 test/*"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/tape": "^4.2.33",
+    "karma": "^4.1.0",
+    "karma-sauce-launcher": "^2.0.2",
+    "karma-typescript": "^4.0.0",
+    "nyc": "^14.1.0",
+    "parcel-bundler": "^1.12.3",
+    "tape": "^4.10.1",
+    "ts-node": "^8.1.0",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5"
   },
   "sideEffects": false,
   "nyc": {

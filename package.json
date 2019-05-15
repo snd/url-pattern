@@ -77,7 +77,10 @@
     "tslint": "^5.16.0",
     "typescript": "^3.4.5"
   },
-  "main": "lib/url-pattern",
+  "main": "dist/url-pattern.js",
+  "browser": "dist/url-pattern.js",
+  "jsdelivr": "dist/url-pattern.js",
+  "types": "dist/url-pattern.d.ts",
   "scripts": {
     "compile": "tsc",
     "doc": "typedoc --out doc",
@@ -90,7 +93,7 @@
     "test-in-browsers": "zuul test/*",
     "test-zuul-local": "zuul --local 8080 test/*"
   },
-  "typings": "index.d.ts",
+  "sideEffects": false,
   "nyc": {
     "include": [
       "src/*.ts"

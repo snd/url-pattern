@@ -12,147 +12,155 @@ turn strings into data or data into strings.**
 > This is a great little library -- thanks!  
 > [michael](https://github.com/snd/url-pattern/pull/7)
 
-[make pattern:](#make-pattern-from-string)
-``` javascript
-var pattern = new UrlPattern('/api/users(/:id)');
+[make a pattern:](#make-pattern-from-string)
+```typescript
+> const pattern = new UrlPattern("/api/users(/:id)");
 ```
 
-[match pattern against string and extract values:](#match-pattern-against-string)
-``` javascript
-pattern.match('/api/users/10'); // {id: '10'}
-pattern.match('/api/users'); // {}
-pattern.match('/api/products/5'); // null
+[match a pattern against a string and extract values:](#match-pattern-against-string)
+```typescript
+> pattern.match("/api/users/10");
+{id: "10"}
+
+> pattern.match("/api/users");
+{}
+
+> pattern.match("/api/products/5");
+undefined
 ```
 
-[generate string from pattern and values:](#stringify-patterns)
-``` javascript
-pattern.stringify() // '/api/users'
-pattern.stringify({id: 20}) // '/api/users/20'
+[generate a string from a pattern and values:](#stringify-patterns)
+```typescript
+> pattern.stringify()
+"/api/users"
+
+> pattern.stringify({id: 20})
+"/api/users/20"
 ```
 
-- continuously tested in Node.js (0.12, 4.2.3 and 5.3) and all relevant browsers:
-  [![Sauce Test Status](https://saucelabs.com/browser-matrix/urlpattern.svg)](https://saucelabs.com/u/urlpattern)
-- [tiny single file with just under 500 lines of simple, readable, maintainable code](src/url-pattern.coffee)
+prefer a different syntax? [customize it:](#customize-the-pattern-syntax)
+```typescript
+> const pattern = new UrlPattern("/api/users/{id}", {
+  segmentNameEndChar: "}",
+  segmentNameStartChar: "{",
+}
+
+> pattern.match("/api/users/5")
+{id: "5"}
+```
+
+- very fast matching as each pattern is compiled into a regex
+- [tiny source of around 500 lines of simple, readable typescript](src/)
+- widely used [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
+- zero dependencies
+- [parser](src/parser.ts) implemented using simple, precise, reusable [parser combinators](src/parsercombinators.ts)
+- continuously tested in Node.js (10.15 (LTS), 12) and all relevant browsers
 - [huge test suite](test)
-  passing [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
+  [![Build Status](https://travis-ci.org/snd/url-pattern.svg?branch=master)](https://travis-ci.org/snd/url-pattern/branches)
   with [![codecov.io](http://codecov.io/github/snd/url-pattern/coverage.svg?branch=master)](http://codecov.io/github/snd/url-pattern?branch=master)
   code coverage
-- widely used [![Downloads per Month](https://img.shields.io/npm/dm/url-pattern.svg?style=flat)](https://www.npmjs.org/package/url-pattern)
-- supports CommonJS, [AMD](http://requirejs.org/docs/whyamd.html) and browser globals
-  - `require('url-pattern')`
-  - use [lib/url-pattern.js](lib/url-pattern.js) in the browser
-  - sets the global variable `UrlPattern` when neither CommonJS nor [AMD](http://requirejs.org/docs/whyamd.html) are available.
-- very fast matching as each pattern is compiled into a regex exactly once
-- zero dependencies
-- [customizable](#customize-the-pattern-syntax)
+- [customizable pattern syntax](#customize-the-pattern-syntax)
 - [frequently asked questions](#frequently-asked-questions)
-- npm package: `npm install url-pattern`
-- bower package: `bower install url-pattern`
-- pattern parser implemented using simple, combosable, testable [parser combinators](https://en.wikipedia.org/wiki/Parser_combinator)
-- [typescript typings](index.d.ts)
 
-[check out **passage** if you are looking for simple composable routing that builds on top of url-pattern](https://github.com/snd/passage)
+## a more complex example showing the power of url-pattern
+
+``` typescript
+> const pattern = new UrlPattern("(http(s)\\://)(:subdomain.):domain.:tld(\\::port)(/*:path)")
+
+> pattern.match("google.de");
+{domain: "google", tld: "de"}
+
+> pattern.match("https://www.google.com");
+{subdomain: "www", domain: "google", tld: "com"}
+
+> pattern.match("http://mail.google.com/mail");
+{subdomain: "mail", domain: "google", tld: "com", path: "mail"}
+
+> pattern.match("http://mail.google.com:80/mail/inbox");
+{subdomain: "mail", domain: "google", tld: "com", port: "80", path: "mail/inbox"}
+
+> pattern.match("google");
+undefined
+```
+
+## install
 
 ```
 npm install url-pattern
 ```
-
+and
+```typescript
+> import UrlPattern from "url-pattern";
 ```
-bower install url-pattern
-```
-
-```javascript
-> var UrlPattern = require('url-pattern');
-```
-
-``` javascript
-> var pattern = new UrlPattern('/v:major(.:minor)/*');
-
-> pattern.match('/v1.2/');
-{major: '1', minor: '2', _: ''}
-
-> pattern.match('/v2/users');
-{major: '2', _: 'users'}
-
-> pattern.match('/v/');
-null
-```
-``` javascript
-> var pattern = new UrlPattern('(http(s)\\://)(:subdomain.):domain.:tld(\\::port)(/*)')
-
-> pattern.match('google.de');
-{domain: 'google', tld: 'de'}
-
-> pattern.match('https://www.google.com');
-{subdomain: 'www', domain: 'google', tld: 'com'}
-
-> pattern.match('http://mail.google.com/mail');
-{subdomain: 'mail', domain: 'google', tld: 'com', _: 'mail'}
-
-> pattern.match('http://mail.google.com:80/mail');
-{subdomain: 'mail', domain: 'google', tld: 'com', port: '80', _: 'mail'}
-
-> pattern.match('google');
-null
+or
+```typescript
+> const UrlPattern = require("url-pattern").default;
 ```
 
-## make pattern from string
+## works with [deno](https://deno.land/):
 
-```javascript
-> var pattern = new UrlPattern('/api/users/:id');
+**stable** latest release:
+```typescript
+import UrlPattern from "https://raw.githubusercontent.com/snd/url-pattern/2.0.0/src/url-pattern.ts";
 ```
 
-a `pattern` is immutable after construction.  
+**bleeding edge** master:
+```typescript
+import UrlPattern from "https://raw.githubusercontent.com/snd/url-pattern/master/src/url-pattern.ts";
+```
+
+## reference
+
+### make pattern from string
+
+```typescript
+> const pattern = new UrlPattern("/api/users/:id");
+```
+
+a `UrlPattern` is immutable after construction.  
 none of its methods changes its state.  
 that makes it easier to reason about.
 
-## match pattern against string
+### match pattern against string
 
 match returns the extracted segments:
 
-```javascript
-> pattern.match('/api/users/10');
-{id: '10'}
+```typescript
+> pattern.match("/api/users/10");
+{id: "10"}
 ```
 
-or `null` if there was no match:
+or `undefined` if there was no match:
 
-``` javascript
-> pattern.match('/api/products/5');
-null
+```typescript
+> pattern.match("/api/products/5");
+undefined
 ```
 
 patterns are compiled into regexes which makes `.match()` superfast.
 
-## named segments
+### named segments
 
 `:id` (in the example above) is a named segment:
 
 a named segment starts with `:` followed by the **name**.  
-the **name** must be at least one character in the regex character set `a-zA-Z0-9`.
+the **name** must be at least one character in the regex character set `a-zA-Z0-9_`.
 
 when matching, a named segment consumes all characters in the regex character set
-`a-zA-Z0-9-_~ %`.
+`a-zA-Z0-9-_~ %`.  
 a named segment match stops at `/`, `.`, ... but not at `_`, `-`, ` `, `%`...
 
 [you can change these character sets. click here to see how.](#customize-the-pattern-syntax)
 
-if a named segment **name** occurs more than once in the pattern string,
-then the multiple results are stored in an array on the returned object:
+names must be unique. a **name** may not appear twice in a pattern.
 
-```javascript
-> var pattern = new UrlPattern('/api/users/:ids/posts/:ids');
-> pattern.match('/api/users/10/posts/5');
-{ids: ['10', '5']}
-```
-
-## optional segments, wildcards and escaping
+### optional segments, wildcards and escaping
 
 to make part of a pattern optional just wrap it in `(` and `)`:
 
-```javascript
-> var pattern = new UrlPattern(
-  '(http(s)\\://)(:subdomain.):domain.:tld(/*)'
+```typescript
+> const pattern = new UrlPattern(
+  "(http(s)\\://)(:subdomain.):domain.:tld(/*:path)"
 );
 ```
 
@@ -162,89 +170,94 @@ url-pattern.
 
 optional named segments are stored in the corresponding property only if they are present in the source string:
 
-```javascript
-> pattern.match('google.de');
-{domain: 'google', tld: 'de'}
+```typescript
+> pattern.match("google.de");
+{domain: "google", tld: "de"}
 ```
 
-```javascript
-> pattern.match('https://www.google.com');
-{subdomain: 'www', domain: 'google', tld: 'com'}
+```typescript
+> pattern.match("https://www.google.com");
+{subdomain: "www", domain: "google", tld: "com"}
 ```
 
-`*` in patterns are wildcards and match anything.
-wildcard matches are collected in the `_` property:
+`:*path` in the pattern above is a named wildcard with the name `path`.
+named wildcards match anything. that makes them different from named segments which
+only match characters inside the `options.segmentNameCharset` (default: `a-zA-Z0-9_-`).
 
-```javascript
-> pattern.match('http://mail.google.com/mail');
-{subdomain: 'mail', domain: 'google', tld: 'com', _: 'mail'}
+```typescript
+> pattern.match("http://mail.google.com/mail/inbox");
+{subdomain: "mail", domain: "google", tld: "com", path: "mail/inbox"}
 ```
 
-if there is only one wildcard then `_` contains the matching string.
-otherwise `_` contains an array of matching strings.
+there are also
 
-[look at the tests for additional examples of `.match`](test/match-fixtures.coffee)
+unnamed wildcards are not collected.
 
-## make pattern from regex
-
-```javascript
-> var pattern = new UrlPattern(/^\/api\/(.*)$/);
+```typescript
+> const pattern = new UrlPattern('/search/*:term');
+> pattern.match('/search/fruit');
+{term: 'fruit'}
 ```
 
-if the pattern was created from a regex an array of the captured groups is returned on a match:
+[look at the tests for additional examples of `.match`](test/match-fixtures.ts)
 
-```javascript
-> pattern.match('/api/users');
-['users']
+### make pattern from regex
 
-> pattern.match('/apiii/test');
-null
+```typescript
+> const pattern = new UrlPattern(/^\/api\/(.*)$/, ["path"]);
+
+> pattern.match("/api/users");
+{path: "users"}
+
+> pattern.match("/apiii/test");
+undefined
 ```
 
 when making a pattern from a regex
-you can pass an array of keys as the second argument.
+you have to pass an array of keys as the second argument.
 returns objects on match with each key mapped to a captured value:
 
-```javascript
-> var pattern = new UrlPattern(
+```typescript
+> const pattern = new UrlPattern(
   /^\/api\/([^\/]+)(?:\/(\d+))?$/,
-  ['resource', 'id']
+  ["resource", "id"]
 );
 
-> pattern.match('/api/users');
-{resource: 'users'}
+> pattern.match("/api/users");
+{resource: "users"}
 
-> pattern.match('/api/users/5');
-{resource: 'users', id: '5'}
+> pattern.match("/api/users/5");
+{resource: "users", id: "5"}
 
-> pattern.match('/api/users/foo');
-null
+> pattern.match("/api/users/foo");
+undefined
 ```
 
-## stringify patterns
+### stringify patterns
 
-```javascript
-> var pattern = new UrlPattern('/api/users/:id');
+```typescript
+> const pattern = new UrlPattern("/api/users/:id");
 
 > pattern.stringify({id: 10})
-'/api/users/10'
+"/api/users/10"
 ```
 
 optional segments are only included in the output if they contain named segments
 and/or wildcards and values for those are provided:
 
-```javascript
-> var pattern = new UrlPattern('/api/users(/:id)');
+```typescript
+> const pattern = new UrlPattern("/api/users(/:id)");
 
 > pattern.stringify()
-'/api/users'
+"/api/users"
 
 > pattern.stringify({id: 10})
-'/api/users/10'
+"/api/users/10"
 ```
 
-wildcards (key = `_`), deeply nested optional groups and multiple value arrays should stringify as expected.
+named wildcards and deeply nested optional groups should stringify as expected.
 
+TODO
 an error is thrown if a value that is not in an optional group is not provided.
 
 an error is thrown if an optional segment contains multiple
@@ -252,73 +265,82 @@ params and not all of them are provided.
 *one provided value for an optional segment
 makes all values in that optional segment required.*
 
-[look at the tests for additional examples of `.stringify`](test/stringify-fixtures.coffee)
+TODO
+anonymous wildcards are ignored.
 
-## customize the pattern syntax
+[look at the tests for additional examples of `.stringify`](test/stringify-fixtures.ts)
+
+### customize the pattern syntax
 
 finally we can completely change pattern-parsing and regex-compilation to suit our needs:
 
-```javascript
-> var options = {};
+```typescript
+> let options = {};
 ```
 
 let's change the char used for escaping (default `\\`):
 
-```javascript
-> options.escapeChar = '!';
+```typescript
+> options.escapeChar = "!";
 ```
 
 let's change the char used to start a named segment (default `:`):
 
-```javascript
-> options.segmentNameStartChar = '$';
+```typescript
+> options.segmentNameStartChar = "{";
 ```
 
-let's change the set of chars allowed in named segment names (default `a-zA-Z0-9`)
-to also include `_` and `-`:
+let's add a char required at the end of a named segment (default nothing):
 
-```javascript
-> options.segmentNameCharset = 'a-zA-Z0-9_-';
+```typescript
+> options.segmentNameEndChar = "}";
+```
+
+let's change the set of chars allowed in named segment names (default `a-zA-Z0-9_`)
+to also include `-`:
+
+```typescript
+> options.segmentNameCharset = "a-zA-Z0-9_-";
 ```
 
 let's change the set of chars allowed in named segment values
 (default `a-zA-Z0-9-_~ %`) to not allow non-alphanumeric chars:
 
-```javascript
-> options.segmentValueCharset = 'a-zA-Z0-9';
+```typescript
+> options.segmentValueCharset = "a-zA-Z0-9";
 ```
 
 let's change the chars used to surround an optional segment (default `(` and `)`):
 
-```javascript
-> options.optionalSegmentStartChar = '[';
-> options.optionalSegmentEndChar = ']';
+```typescript
+> options.optionalSegmentStartChar = "<";
+> options.optionalSegmentEndChar = ">";
 ```
 
 let's change the char used to denote a wildcard (default `*`):
 
-```javascript
-> options.wildcardChar = '?';
+```typescript
+> options.wildcardChar = "#";
 ```
 
 pass options as the second argument to the constructor:
 
-```javascript
-> var pattern = new UrlPattern(
-  '[http[s]!://][$sub_domain.]$domain.$toplevel-domain[/?]',
+```typescript
+> const pattern = new UrlPattern(
+  "<http<s>!://><{sub_domain}.>{domain}.{toplevel-domain}</#{path}>",
   options
 );
 ```
 
 then match:
 
-```javascript
-> pattern.match('http://mail.google.com/mail');
+```typescript
+> pattern.match("http://mail.google.com/mail");
 {
-  sub_domain: 'mail',
-  domain: 'google',
-  'toplevel-domain': 'com',
-  _: 'mail'
+  sub_domain: "mail",
+  domain: "google",
+  "toplevel-domain": "com",
+  path: "mail"
 }
 ```
 

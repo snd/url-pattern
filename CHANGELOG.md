@@ -82,3 +82,10 @@ non breaking
 non breaking
 
 messages on errors thrown on invalid patterns have changed slightly.
+
+#### 2.0
+
+- UrlPattern now uses typescript instead of coffeescript
+- renamed `UrlPattern.newParser` to `UrlPattern.newUrlPatternParser`
+- renamed `UrlPattern.escapeStringForRegex` to `UrlPattern.escapeStringForRegex`
+- `UrlPattern.match` now returns `undefined` (previously `null`) if there's no match

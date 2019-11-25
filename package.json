@@ -1,6 +1,6 @@
 {
   "name": "url-pattern",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "easier than regex string matching patterns for urls and other strings. turn strings into data or data into strings.",
   "keywords": [
     "url",
@@ -30,6 +30,11 @@
     "processing"
   ],
   "homepage": "http://github.com/snd/url-pattern",
+  "bugs": {
+    "url": "http://github.com/snd/url-pattern/issues",
+    "email": "kruemaxi@gmail.com"
+  },
+  "license": "MIT",
   "author": {
     "name": "Maximilian Krüger",
     "email": "kruemaxi@gmail.com",
@@ -58,37 +63,55 @@
       "url": "https://github.com/caasi"
     }
   ],
-  "bugs": {
-    "url": "http://github.com/snd/url-pattern/issues",
-    "email": "kruemaxi@gmail.com"
-  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "main": "dist/url-pattern.js",
+  "browser": "dist/url-pattern.js",
+  "jsdelivr": "dist/url-pattern.js",
+  "types": "dist/url-pattern.d.ts",
   "repository": {
     "type": "git",
     "url": "git://github.com/snd/url-pattern.git"
   },
-  "license": "MIT",
-  "engines": {
-    "node": ">=0.12.0"
+  "scripts": {
+    "compile": "tsc",
+    "doc": "typedoc --out doc",
+    "prepublish": "npm run compile",
+    "lint": "tslint --project .",
+    "test": "tape -r ts-node/register test/*.ts",
+    "node": "ts-node",
+    "coverage": "rm -r .nyc_output || true && rm -r coverage || true && nyc npm test",
+    "bundle": "parcel build src/url-pattern.ts",
+    "test-in-browsers": "karma start test/*",
+    "test-zuul-local": "zuul --local 8080 test/*"
   },
   "dependencies": {},
   "devDependencies": {
-    "codecov.io": "0.1.6",
-    "coffee-script": "1.10.0",
-    "coffeeify": "2.0.1",
-    "coffeetape": "1.0.1",
-    "istanbul": "0.4.1",
-    "tape": "4.2.2",
-    "zuul": "3.8.0"
+    "@types/tape": "^4.2.33",
+    "karma": "^4.1.0",
+    "karma-sauce-launcher": "^2.0.2",
+    "karma-typescript": "^4.0.0",
+    "nyc": "^14.1.0",
+    "parcel-bundler": "^1.12.3",
+    "tape": "^4.10.1",
+    "ts-node": "^8.1.0",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5"
   },
-  "main": "lib/url-pattern",
-  "scripts": {
-    "compile": "coffee --bare --compile --output lib src",
-    "prepublish": "npm run compile",
-    "pretest": "npm run compile",
-    "test": "coffeetape test/*",
-    "test-with-coverage": "istanbul cover coffeetape test/* && cat ./coverage/coverage.json | ./node_modules/codecov.io/bin/codecov.io.js",
-    "test-in-browsers": "zuul test/*",
-    "test-zuul-local": "zuul --local 8080 test/*"
-  },
-  "typings": "index.d.ts"
+  "sideEffects": false,
+  "nyc": {
+    "include": [
+      "src/*.ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "reporter": [
+      "json",
+      "html"
+    ],
+    "all": true
+  }
 }

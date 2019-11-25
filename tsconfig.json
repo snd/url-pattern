@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "ES6",
+        "strict": true,
+        "noUnusedLocals": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "sourceMap": true,
+        "allowUnreachableCode": false,
+        "declaration": true,
+        "outDir": "dist"
+    },
+    "include": [
+      "src/*.ts"
+    ]
+}

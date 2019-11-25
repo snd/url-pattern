@@ -2,3 +2,7 @@ node_modules/**
 test/url-pattern.js
 **.DS_Store
 npm-debug.log
+dist
+package-lock.json
+.nyc_output
+coverage

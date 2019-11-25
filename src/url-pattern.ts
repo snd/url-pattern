@@ -73,7 +73,7 @@ export default class UrlPattern {
       const regexNameIndex = indexOfDuplicateElement(this.names);
       if (regexNameIndex !== -1) {
         throw new Error(
-          `duplicate name "${ this.names[regexNameIndex] }" in pattern. names must be unique`,
+          `duplicate group name "${ this.names[regexNameIndex] }". group names must be unique`,
         );
       }
       return;

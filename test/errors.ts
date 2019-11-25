@@ -114,7 +114,7 @@ tape("unclosed parentheses", (t: tape.Test) => {
 });
 
 tape("regex names", (t: tape.Test) => {
-  t.plan(3);
+  t.plan(4);
   try {
     new UntypedUrlPattern(/x/, 5);
   } catch (error) {
@@ -131,6 +131,11 @@ tape("regex names", (t: tape.Test) => {
     new UrlPattern(/(((foo)bar(boo))far)/, ["a", "b"]);
   } catch (error) {
     t.equal(error.message, "regex contains 4 groups but array of group names contains 2");
+  }
+  try {
+    new UrlPattern(/(\d).(\d).(\d)/, ["a", "b", "a"]);
+  } catch (error) {
+    t.equal(error.message, "duplicate group name \"a\". group names must be unique");
   }
   t.end();
 });

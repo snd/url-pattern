@@ -350,7 +350,7 @@
       @names = arg1.names
       return
 
-    @isRegex = arg1 instanceof RegExp
+    @isRegex = Object.prototype.toString.call(arg1) is '[object RegExp]'
 
     unless ('string' is typeof arg1) or @isRegex
       throw new TypeError 'argument must be a regex or a string'
